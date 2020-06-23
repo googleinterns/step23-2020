@@ -1,0 +1,31 @@
+name: Validate Pull Requests
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: install clang-format
+      run: npm install clang-format
+    - name: Check Java formatting
+      run: diff -u <(cat **/*.java) <(node_modules/clang-format/bin/linux_x64/clang-format --style=Google **/*.java)
+  unit-test-frontend:
+    runs-on: ubuntu-latest
+    seps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    - name: Unit test Frontend
+      run: mvn -B test --file frontend/pom.xml

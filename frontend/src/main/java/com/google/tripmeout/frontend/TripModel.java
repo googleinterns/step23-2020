@@ -3,10 +3,11 @@ package com.google.sps.tripmeout.frontend;
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-public class TripModel {
+public abstract class TripModel {
   public abstract String id();
   public abstract String name();
-  public abstract String location();
+  public abstract long locationLat();
+  public abstract long locationLong();
 
   public static Builder builder() {
     return new AutoValue_TripModel.Builder();
@@ -16,7 +17,8 @@ public class TripModel {
   public static abstract class Builder {
     public abstract Builder setId(String id);
     public abstract Builder setName(String name);
-    public abstract Builder setLocation(String location);
+    public abstract Builder setLocationLat(long latitude);
+    public abstract Builder setLocationLong(long longitude);
     public abstract TripModel build();
   }
 }

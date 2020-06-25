@@ -10,15 +10,15 @@ public abstract class TripModel {
   
   public abstract String id();
   public abstract String name();
-  public abstract long locationLat();
-  public abstract long locationLong();
+  public abstract float locationLat();
+  public abstract float locationLong();
   
   @AutoValue.Builder
   public static abstract class Builder {
     public abstract Builder setId(String id);
     public abstract Builder setName(String name);
-    public abstract Builder setLocationLat(long latitude);
-    public abstract Builder setLocationLong(long longitude);
+    public abstract Builder setLocationLat(float latitude);
+    public abstract Builder setLocationLong(float longitude);
     public abstract TripModel build();
   }
 }

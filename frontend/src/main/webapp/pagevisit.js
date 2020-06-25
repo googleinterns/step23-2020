@@ -1,4 +1,4 @@
-function PageData() {
+function pageData() {
   var visit = {
     'name': 'Big Ben',
     'distance': 1,
@@ -6,10 +6,11 @@ function PageData() {
         'It is a big clock tower that is currently under contruction',
     'image': 'image here'
   };
+
   createVisitElement(visit);
 }
 
-function createVisitElement(visit) {
+function createVisitElement(visist) {
   const nameContainer = document.getElementById('name');
 
   nameContainer.appendChild(createNameElement(visit));

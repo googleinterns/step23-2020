@@ -4,6 +4,15 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class TripModel {
+  public static Builder builder() {
+    return new AutoValue_TripModel.Builder();
+  }
+  
+  public abstract String id();
+  public abstract String name();
+  public abstract long locationLat();
+  public abstract long locationLong();
+  
   @AutoValue.Builder
   public static abstract class Builder {
     public abstract Builder setId(String id);
@@ -12,15 +21,4 @@ public abstract class TripModel {
     public abstract Builder setLocationLong(long longitude);
     public abstract TripModel build();
   }
-  
-  public abstract String id();
-  public abstract String name();
-  public abstract long locationLat();
-  public abstract long locationLong();
-
-  public static Builder builder() {
-    return new AutoValue_TripModel.Builder();
-  }
-
-  
 }

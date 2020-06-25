@@ -1,23 +1,20 @@
-function tripData(){
-var trips=[
-    {'name':'Uk trip'},
-    {'name':'Bora Bora trip'},
-    {'name':'Mexico trip'},
-    {'name':'Japan trip'},
-    {'name':'European trip'}
-];
-getTripList(trips);
+function tripData() {
+  var trips = [
+    {'name': 'Uk trip'}, {'name': 'Bora Bora trip'}, {'name': 'Mexico trip'},
+    {'name': 'Japan trip'}, {'name': 'European trip'}
+  ];
+  getTripList(trips);
 }
 
-function getTripList(trips){
-    const tripList = document.getElementById('trip-list');
-    trips.forEach((trip)=>{
-        tripList.appendChild(createTripElement(trip));
-    })
+function getTripList(trips) {
+  const tripList = document.getElementById('trip-list');
+  trips.forEach((trip) => {
+    tripList.appendChild(createTripElement(trip));
+  })
 }
 
-function createTripElement(trip){
-    const tripElement = document.createElement('li');
-    tripElement.innerHTML = trip.name;
-    return tripElement;
+function createTripElement(trip) {
+  const tripElement = document.createElement('li');
+  tripElement.innerHTML = trip.name;
+  return tripElement;
 }

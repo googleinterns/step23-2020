@@ -3,14 +3,16 @@
   <head>
     <meta charset="UTF-8">
     <title>Trip Me Out</title>
+    <script src="ViewTripJavaScript.js"></script>
   </head>
-  <body>
+  <body onload="setTripPlaceContainerWithServlet()">
     <h1>Trip Me Out!</h1>
     <h2> View Trip</h2>
     <button>Fake Plus Button</button>
     <button>Fake Minus Button</button>
-    <section id="Trip_Place">
+    <section id="Trip-Place">
         <p>Trips will live below</p>
+        <dl id="places"></dl>    
     
     </section>
   </body>

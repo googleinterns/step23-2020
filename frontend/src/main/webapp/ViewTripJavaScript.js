@@ -1,22 +1,34 @@
 
 function setTripPlaceContainerWithServlet() {
-  const tripContainer = document.getElementById('Trip-Place');
-  
-  var randomEvent = {"name":"Random Event", "description":"This is the description"};
-  var stringEvent = formatEvent(randomEvent);
-  
-  tripContainer.appendChild(createParagraphElement(stringEvent));
+  var randomEvent = [
+    {'name': 'Random Event', 'description': 'This is the description'},
+    {
+      'name': 'Middle Event',
+      'description': 'Just making sure my function works'
+    },
+    {'name': 'Last Event', 'description': 'Last event just checking'},
+  ];
+
+  randomEvent.forEach(createPlacesElement);
 }
 
-function formatEvent(event) {
-  var formatted = '';
-  formatted += event.name;
-  formatted += ' Description: ' + event.description;
-  return formatted + '      ';
+function createPlacesElement(event) {
+  const tripContainer = document.getElementById('places');
+
+  const nameElement = createEventNameElement(event.name);
+  const descriptionElement = createDescription(event.description);
+
+  tripContainer.appendChild(nameElement);
+  tripContainer.appendChild(descriptionElement);
 }
 
-function createParagraphElement(text) {
-  const pElement = document.createElement('p');
-  pElement.innerText = text;
-  return pElement;
+function createEventNameElement(text) {
+  const dtElement = document.createElement('dt');
+  dtElement.innerText = text;
+  return dtElement;
+}
+function createDescription(text) {
+  const ddElement = document.createElement('dd');
+  ddElement.innerText = '-  ' + text;
+  return ddElement;
 }

@@ -1,15 +1,17 @@
 
-function setTripPlaceContainerWithServlet() {
-  var randomEvent = [
+function fetchAndSetTripPlace() {
+  const eventsList = fetchPlace();
+  eventsList.forEach(createPlacesElement);
+}
+
+function fetchPlace(){
+    var randomEvent = [
     {'name': 'Random Event', 'description': 'This is the description'},
-    {
-      'name': 'Middle Event',
-      'description': 'Just making sure my function works'
-    },
+    {'name': 'Middle Event','description': 'Just making sure my function works'},
     {'name': 'Last Event', 'description': 'Last event just checking'},
   ];
 
-  randomEvent.forEach(createPlacesElement);
+  return randomEvent;
 }
 
 function createPlacesElement(event) {

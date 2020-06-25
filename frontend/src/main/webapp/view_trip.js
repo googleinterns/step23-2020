@@ -1,17 +1,22 @@
 
-function fetchAndSetTripPlace() {
-  const eventsList = fetchPlace();
+async function fetchAndSetTripPlace() {
+  const eventsList = await fetchPlace();
   eventsList.forEach(createPlacesElement);
 }
 
-function fetchPlace(){
-    var randomEvent = [
-    {'name': 'Random Event', 'description': 'This is the description'},
-    {'name': 'Middle Event','description': 'Just making sure my function works'},
-    {'name': 'Last Event', 'description': 'Last event just checking'},
-  ];
+function fetchPlace() {
+  return new Promise((resolve, reject) => {
+    let randomEvent = [
+      {'name': 'Random Event', 'description': 'This is the description'},
+      {
+        'name': 'Middle Event',
+        'description': 'Just making sure my function works'
+      },
+      {'name': 'Last Event', 'description': 'Last event just checking'},
+    ];
 
-  return randomEvent;
+    resolve(randomEvent);
+  });
 }
 
 function createPlacesElement(event) {

@@ -13,10 +13,10 @@ public abstract class PlaceVisitModel {
   public abstract String tripId();
   public abstract String userMark(); // must-see, if-time, don't-care, null
   public abstract float latitude();
-  public abstract float logitude();
+  public abstract float longitude();
 
   @AutoValue.Builder
-  public abstract class Builder {
+  public static abstract class Builder {
     public abstract Builder setPlaceId(String placeId);
     public abstract Builder setName(String name);
     public abstract Builder setTripId(String tripId);

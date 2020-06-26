@@ -1,5 +1,7 @@
 package com.google.tripmeout.frontend;
 
+import com.google.tripmeout.frontend.PlaceVisitModel;
+
 public interface PlaceVisitStorage {
   public void addPlaceVisit(PlaceVisitModel placeVisit);
   public void removePlaceVisit(String tripId, String placeId);

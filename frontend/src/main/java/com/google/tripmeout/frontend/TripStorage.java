@@ -1,7 +1,5 @@
 package com.google.tripmeout.frontend;
 
-<<<<<<< HEAD
-=======
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.PlaceVisitModel;

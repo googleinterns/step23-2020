@@ -10,7 +10,7 @@ function pageData() {
   createVisitElement(visit);
 }
 
-function createVisitElement(visist) {
+function createVisitElement(visit) {
   const nameContainer = document.getElementById('name');
 
   nameContainer.appendChild(createNameElement(visit));

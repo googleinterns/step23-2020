@@ -1,5 +1,6 @@
 package com.google.tripmeout.frontend;
 
+import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import java.util.List;

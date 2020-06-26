@@ -3,10 +3,10 @@ function tripData() {
     {'name': 'Uk trip'}, {'name': 'Bora Bora trip'}, {'name': 'Mexico trip'},
     {'name': 'Japan trip'}, {'name': 'European trip'}
   ];
-  getTripList(trips);
+  setTripListPage(trips);
 }
 
-function getTripList(trips) {
+function setTripListPage(trips) {
   const tripList = document.getElementById('trip-list');
   trips.forEach((trip) => {
     tripList.appendChild(createTripElement(trip));

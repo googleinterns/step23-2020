@@ -12,8 +12,8 @@ public abstract class PlaceVisitModel {
   public abstract String name();
   public abstract String tripId();
   public abstract String userMark(); // must-see, if-time, don't-care, null
-  public abstract float latitude();
-  public abstract float longitude();
+  public abstract double latitude();
+  public abstract double longitude();
 
   @AutoValue.Builder
   public static abstract class Builder {
@@ -21,8 +21,8 @@ public abstract class PlaceVisitModel {
     public abstract Builder setName(String name);
     public abstract Builder setTripId(String tripId);
     public abstract Builder setUserMark(String userMark);
-    public abstract Builder setLatitude(float latitude);
-    public abstract Builder setLongitude(float longitude);
+    public abstract Builder setLatitude(double latitude);
+    public abstract Builder setLongitude(double longitude);
     public abstract PlaceVisitModel build();
   }
 }

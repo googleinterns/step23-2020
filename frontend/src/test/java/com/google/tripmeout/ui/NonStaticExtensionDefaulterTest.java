@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 public class NonStaticExtensionDefaulterTest {
-
   @Mock FilterConfig config;
   @Mock ServletContext context;
   @Mock HttpServletRequest request;
@@ -38,9 +37,7 @@ public class NonStaticExtensionDefaulterTest {
 
   @Test
   public void doFilter_uriDoesNotEndWithExtension_servesDefaultContent() throws Exception {
-    setupConfig(
-        Optional.of("js,css,png"),
-        Optional.of("random-file"),
+    setupConfig(Optional.of("js,css,png"), Optional.of("random-file"),
         ImmutableMap.of("random-file", "random-contents"));
     NonStaticExtensionDefaulter nonStaticExtensionDefaulter = new NonStaticExtensionDefaulter();
     nonStaticExtensionDefaulter.init(config);
@@ -56,9 +53,7 @@ public class NonStaticExtensionDefaulterTest {
 
   @Test
   public void doFilter_uriDoesEndWithExtension_callsFilterChain() throws Exception {
-    setupConfig(
-        Optional.of("js,css,png"),
-        Optional.of("random-file"),
+    setupConfig(Optional.of("js,css,png"), Optional.of("random-file"),
         ImmutableMap.of("random-file", "random-contents"));
     NonStaticExtensionDefaulter nonStaticExtensionDefaulter = new NonStaticExtensionDefaulter();
     nonStaticExtensionDefaulter.init(config);
@@ -74,9 +69,7 @@ public class NonStaticExtensionDefaulterTest {
 
   @Test
   public void doFilter_contentsDefaultToRootIndex() throws Exception {
-    setupConfig(
-        Optional.of("js,css,png"),
-        Optional.empty(),
+    setupConfig(Optional.of("js,css,png"), Optional.empty(),
         ImmutableMap.of("random-file", "random-contents", "/index.html", "index-contents"));
     NonStaticExtensionDefaulter nonStaticExtensionDefaulter = new NonStaticExtensionDefaulter();
     nonStaticExtensionDefaulter.init(config);
@@ -99,9 +92,7 @@ public class NonStaticExtensionDefaulterTest {
   }
 
   // This is kinda bad because it REALLLLY depends on implementation...
-  private void setupConfig(
-      Optional<String> extensionParam,
-      Optional<String> defaultContentParam,
+  private void setupConfig(Optional<String> extensionParam, Optional<String> defaultContentParam,
       Map<String, String> resourcesToContents) {
     extensionParam.ifPresent(ep -> when(config.getInitParameter("extensions")).thenReturn(ep));
     defaultContentParam.ifPresent(
@@ -109,9 +100,8 @@ public class NonStaticExtensionDefaulterTest {
     when(config.getServletContext()).thenReturn(context);
     for (Map.Entry<String, String> resourceToContents : resourcesToContents.entrySet()) {
       when(context.getResourceAsStream(resourceToContents.getKey()))
-          .thenReturn(
-              new ByteArrayInputStream(
-                  resourceToContents.getValue().getBytes(StandardCharsets.UTF_8)));
+          .thenReturn(new ByteArrayInputStream(
+              resourceToContents.getValue().getBytes(StandardCharsets.UTF_8)));
     }
   }
 }

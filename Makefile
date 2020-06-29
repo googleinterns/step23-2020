@@ -11,7 +11,7 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
 format:
 	$(CLANG_FORMAT) --style=Google -i --sort-includes $(call rwildcard,frontend/,*.java)
-	$(ANGULAR_CLI) lint $(ANGULAR_APP_ROOT)
+	pushd $(ANGULAR_APP_ROOT) && $(ANGULAR_CLI) lint && popd
 
 clean:
 	# TODO: Figure out the right thing to do to clean up angular trash.
@@ -19,7 +19,7 @@ clean:
 
 build-and-copy-angular:
 	pushd $(ANGULAR_APP_ROOT) && $(ANGULAR_CLI) build && popd
-	cp -r $(ANGULAR_APP_ROOT)/dist/* $(MAVEN_FRONTEND_ROOT)/src/main/webapp/
+	cp -r $(ANGULAR_APP_ROOT)/dist/tripmeout/* $(MAVEN_FRONTEND_ROOT)/src/main/webapp/
 
 test-angular:
 	pushd $(ANGULAR_APP_ROOT) && $(ANGULAR_CLI) test && popd

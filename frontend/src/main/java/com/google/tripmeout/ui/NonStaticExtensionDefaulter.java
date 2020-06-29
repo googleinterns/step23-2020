@@ -49,7 +49,7 @@ public class NonStaticExtensionDefaulter extends HttpFilter {
       defaultContentPath = DEFAULT_DEFAULT_CONTENT;
     }
     try (InputStream inputStream =
-        filterConfig.getServletContext().getResourceAsStream(defaultContentPath)) {
+             filterConfig.getServletContext().getResourceAsStream(defaultContentPath)) {
       // getResourceAsStream returns a null stream if not found...
       if (inputStream == null) {
         throw new ServletException(

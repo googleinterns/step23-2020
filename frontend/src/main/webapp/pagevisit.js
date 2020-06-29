@@ -1,13 +1,20 @@
-function pageData() {
-  var visit = {
-    'name': 'Big Ben',
-    'distance': 1,
-    'description':
-        'It is a big clock tower that is currently under contruction',
-    'image': 'image here'
-  };
 
+async function fetchAndSetPlace() {
+  let visit = await fetchPlace();
   createVisitElement(visit);
+}
+
+function fetchPlace() {
+  return new Promise((resolve, reject) => {
+    let visit = {
+      'name': 'Big Ben',
+      'distance': 1,
+      'description':
+          'It is a big clock tower that is currently under contruction',
+      'image': 'image here'
+    };
+    resolve(visit);
+  });
 }
 
 function createVisitElement(visit) {

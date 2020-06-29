@@ -37,7 +37,7 @@ public interface PlaceVisitStorage {
    * @param placeId the id to match PlaceVisitModel object's placeId field on
    *
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel 
-   * object in storage with the given tripId and placeId 
+   *     object in storage with the given tripId and placeId 
    */
   public PlaceVisitModel getPlaceVisit(String tripId, String placeId);
 

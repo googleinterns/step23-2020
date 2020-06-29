@@ -18,7 +18,7 @@ function setTripListPage(trips) {
   const tripList = document.getElementById('trip-list');
   trips.forEach((trip) => {
     tripList.appendChild(createTripElement(trip));
-  })
+  });
 }
 
 function createTripElement(trip) {

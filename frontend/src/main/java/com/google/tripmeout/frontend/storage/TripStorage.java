@@ -41,6 +41,18 @@ public interface TripStorage {
   public void updateTripLocation(String tripId, double latitude, double longitude);
 
   /**
+   * updates the name field of the TripModel object in storage whose tripId 
+   * matches the given tripId
+   *
+   * @param tripId the id to match TripModel object's tripId field on
+   * @param name the new name of the TripModel
+   *
+   * @throws a TripModelNotFound exception if there is no TripModel object with 
+   *     the given tripId in storage
+   */
+  public void updateTripName(String tripId, String tripName);
+
+  /**
    * returns the TripModel object in storage whose tripId matched the given tripId
    *
    * @param tripId the id to match TripModel object's tripId field on

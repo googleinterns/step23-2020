@@ -1,6 +1,7 @@
 package com.google.tripmeout.frontend.storage;
 
 import com.google.tripmeout.frontend.PlaceVisitModel;
+import java.util.List;
 
 /**
  * stores PlaceVisit objects

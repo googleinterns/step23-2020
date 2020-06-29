@@ -12,7 +12,7 @@ public interface PlaceVisitStorage {
    * @param placeVisit the PlaceVisitModel object to add to storage
    *
    * @throws a PlaceAlreadyExists exception if there is a PlaceVisitModel in 
-   * storage with the same tripId and placeId as placeVisit
+   *     storage with the same tripId and placeId as placeVisit
    */
   public void addPlaceVisit(PlaceVisitModel placeVisit);
 
@@ -24,7 +24,7 @@ public interface PlaceVisitStorage {
    * @param placeId the id to match PlaceVisitModel object's placeId field on
    *
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel 
-   * object in storage with the given tripId and placeId 
+   *     object in storage with the given tripId and placeId 
    */
   public void removePlaceVisit(String tripId, String placeId);
 
@@ -48,7 +48,7 @@ public interface PlaceVisitStorage {
    * @param placeId the id to match PlaceVisitModel object's placeId field on
    *
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel 
-   * object in storage with the given tripId and placeId 
+   *     object in storage with the given tripId and placeId 
    */
   public void changePlaceVisitStatus(String tripId, String placeId, String newStatus);
 

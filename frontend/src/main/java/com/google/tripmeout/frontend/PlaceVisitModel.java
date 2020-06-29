@@ -1,4 +1,4 @@
-package com.google.tripmeout.frontend;
+package com.google.tripmeout.frontend.storage;
 
 import com.google.auto.value.AutoValue;
 

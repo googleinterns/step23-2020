@@ -1,9 +1,17 @@
-function tripData() {
-  var trips = [
-    {'name': 'Uk trip'}, {'name': 'Bora Bora trip'}, {'name': 'Mexico trip'},
-    {'name': 'Japan trip'}, {'name': 'European trip'}
-  ];
+async function fetchAndSetTrips() {
+  let trips = await fetchTrips();
   setTripListPage(trips);
+}
+
+
+function fetchTrips() {
+  return new Promise((resolve, reject) => {
+    let trips = [
+      {'name': 'Uk trip'}, {'name': 'Bora Bora trip'}, {'name': 'Mexico trip'},
+      {'name': 'Japan trip'}, {'name': 'European trip'}
+    ];
+    resolve(trips);
+  });
 }
 
 function setTripListPage(trips) {

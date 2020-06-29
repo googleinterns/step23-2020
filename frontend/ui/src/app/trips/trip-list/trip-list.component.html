@@ -1,0 +1,6 @@
+<h2 class="trip-list-header">Trips:</h2>
+<ul class="trip-list-ul">
+  <li *ngFor="let trip of trips">
+    <span class="badge">{{trip.id}}</span> {{trip.name}}
+  </li>
+</ul>

@@ -7,12 +7,12 @@ public abstract class TripModel {
   public static Builder builder() {
     return new AutoValue_TripModel.Builder();
   }
-  
+
   public abstract String id();
   public abstract String name();
   public abstract float locationLat();
   public abstract float locationLong();
-  
+
   @AutoValue.Builder
   public static abstract class Builder {
     public abstract Builder setId(String id);

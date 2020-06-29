@@ -5,3 +5,53 @@ target/
 .idea
 .vscode
 .theia
+
+# Ignore everything in webapp except WEB-INF...
+frontend/src/main/webapp/*
+!frontend/src/main/webapp/WEB-INF/*
+
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/frontend/ui/dist
+/frontend/ui/ddist-server
+/frontend/ui/dtmp
+/frontend/ui/dout-tsc
+
+# dependencies
+/frontend/ui/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/frontend/ui/d.sass-cache
+/frontend/ui/dconnect.lock
+/frontend/ui/dcoverage
+/frontend/ui/dlibpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/frontend/ui/dtypings
+
+# e2e
+/frontend/ui/de2e/*.js
+/frontend/ui/de2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db
+

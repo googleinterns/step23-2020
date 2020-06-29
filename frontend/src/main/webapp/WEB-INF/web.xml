@@ -4,19 +4,40 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
    version="2.5">
- <filter>
+  <!-- Serve /api/ content through the guice context listener -->
+  <filter>
     <filter-name>guiceFilter</filter-name>
     <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
   </filter>
-
   <filter-mapping>
     <filter-name>guiceFilter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </filter-mapping>
-
   <listener>
     <listener-class>
         com.google.tripmeout.frontend.FrontendGuiceServletContextListener
     </listener-class>
   </listener>
+
+  <!-- Filter all requests that don't have a known static content extension.
+       This is pretty gross, but I don't have a better solution. -->
+  <filter>
+    <filter-name>nonStaticExtensionDefaulter</filter-name>
+    <filter-class>com.google.tripmeout.ui.NonStaticExtensionDefaulter</filter-class>
+    <!-- A comma seperated list of extensions to not filter. -->
+    <init-param>
+      <param-name>extensions</param-name>
+      <param-value>js,jpg,png,css</param-value>
+    </init-param>
+    <!-- The default content to serve for all requests that do not use one of the
+         specified extensions. -->
+    <init-param>
+      <param-name>default-content</param-name>
+      <param-value>/index.html</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>nonStaticExtensionDefaulter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 </web-app>

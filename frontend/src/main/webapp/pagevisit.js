@@ -1,4 +1,3 @@
-
 async function fetchAndSetPlace() {
   let visit = await fetchPlace();
   createVisitElement(visit);

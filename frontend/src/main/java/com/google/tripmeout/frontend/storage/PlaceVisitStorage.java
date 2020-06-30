@@ -15,7 +15,7 @@ public interface PlaceVisitStorage {
    * @throws a PlaceVisitAlreadyExists exception if there is a PlaceVisitModel 
    *     in storage with the same tripId and placeId as placeVisit
    */
-  public void addPlaceVisit(PlaceVisitModel placeVisit);
+  void addPlaceVisit(PlaceVisitModel placeVisit);
 
   /**
    * removes from storage the PlaceVisitModel whose tripId and placeId match the
@@ -27,7 +27,7 @@ public interface PlaceVisitStorage {
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel 
    *     object in storage with the given tripId and placeId 
    */
-  public void removePlaceVisit(String tripId, String placeId);
+  void removePlaceVisit(String tripId, String placeId);
 
   /**
    * returns the PlaceVisitModel whose tripId and placeId match the given tripId
@@ -39,7 +39,7 @@ public interface PlaceVisitStorage {
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel 
    *     object in storage with the given tripId and placeId 
    */
-  public PlaceVisitModel getPlaceVisit(String tripId, String placeId);
+  PlaceVisitModel getPlaceVisit(String tripId, String placeId);
 
   /**
    * updates the userMark parameter of the PlaceVisitModel object whose tripId 
@@ -51,7 +51,7 @@ public interface PlaceVisitStorage {
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel 
    *     object in storage with the given tripId and placeId 
    */
-  public void changePlaceVisitStatus(String tripId, String placeId, String newStatus);
+  void changePlaceVisitStatus(String tripId, String placeId, String newStatus);
 
   /**
    * gets a list of all of the PlaceVisitModel objects whose tripId matches the 
@@ -59,5 +59,5 @@ public interface PlaceVisitStorage {
    *
    * @param tripId the id to match PlaceVisitModel object's placeId field on
    */
-  public List<PlaceVisitModel> getTripPlaceVisits(String tripId);
+  List<PlaceVisitModel> getTripPlaceVisits(String tripId);
 }

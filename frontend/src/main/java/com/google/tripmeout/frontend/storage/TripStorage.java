@@ -15,7 +15,7 @@ public interface TripStorage {
    * @throws a TripAlreadyExists exception if there is a TripModel object 
    *     already in storage with the same tripId as the trip
    */
-  public void addTrip(TripModel trip);
+  void addTrip(TripModel trip);
 
   /**
    * removes from storage the TripModel object whose tripId matches the given tripId
@@ -25,7 +25,7 @@ public interface TripStorage {
    * @throws a TripNotFound exception if there is no TripModel object with 
    *     the given tripId in storage
    */
-  public void removeTrip(String tripId);
+  void removeTrip(String tripId);
 
   /**
    * updates the locationLat and locationLong fields of the TripModel object
@@ -38,7 +38,7 @@ public interface TripStorage {
    * @throws a TripNotFound exception if there is no TripModel object with 
    *     the given tripId in storage
    */
-  public void updateTripLocation(String tripId, double latitude, double longitude);
+  void updateTripLocation(String tripId, double latitude, double longitude);
 
   /**
    * updates the name field of the TripModel object in storage whose tripId 
@@ -50,7 +50,7 @@ public interface TripStorage {
    * @throws a TripNotFound exception if there is no TripModel object with 
    *     the given tripId in storage
    */
-  public void updateTripName(String tripId, String tripName);
+  void updateTripName(String tripId, String tripName);
 
   /**
    * returns the TripModel object in storage whose tripId matched the given tripId
@@ -60,12 +60,12 @@ public interface TripStorage {
    * @throws a TripNotFound exception if there is no TripModel object with 
    *     the given tripId in storage
    */
-  public TripModel getTrip(String tripId);
+  TripModel getTrip(String tripId);
 
   /**
    * returns all TripModel objects in storage whose userId matches the given userId
    *
    * @param userId the id to match TripModel object's userId field on
    */
-  public List<TripModel> getAllUserTrips(String userId);
+  List<TripModel> getAllUserTrips(String userId);
 }

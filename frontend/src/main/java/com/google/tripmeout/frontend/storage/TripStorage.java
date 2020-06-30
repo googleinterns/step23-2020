@@ -22,7 +22,7 @@ public interface TripStorage {
    *
    * @param tripId the id to match TripModel object's tripId field on
    *
-   * @throws a TripModelNotFound exception if there is no TripModel object with 
+   * @throws a TripNotFound exception if there is no TripModel object with 
    *     the given tripId in storage
    */
   public void removeTrip(String tripId);
@@ -35,7 +35,7 @@ public interface TripStorage {
    * @param latitude the new latitude of the TripModel
    * @param longitude the new longitude of the TripModel
    *
-   * @throws a TripModelNotFound exception if there is no TripModel object with 
+   * @throws a TripNotFound exception if there is no TripModel object with 
    *     the given tripId in storage
    */
   public void updateTripLocation(String tripId, double latitude, double longitude);
@@ -47,7 +47,7 @@ public interface TripStorage {
    * @param tripId the id to match TripModel object's tripId field on
    * @param name the new name of the TripModel
    *
-   * @throws a TripModelNotFound exception if there is no TripModel object with 
+   * @throws a TripNotFound exception if there is no TripModel object with 
    *     the given tripId in storage
    */
   public void updateTripName(String tripId, String tripName);
@@ -57,7 +57,7 @@ public interface TripStorage {
    *
    * @param tripId the id to match TripModel object's tripId field on
    *
-   * @throws a TripModelNotFound exception if there is no TripModel object with 
+   * @throws a TripNotFound exception if there is no TripModel object with 
    *     the given tripId in storage
    */
   public TripModel getTrip(String tripId);

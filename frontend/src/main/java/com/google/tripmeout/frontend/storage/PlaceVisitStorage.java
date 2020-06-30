@@ -12,8 +12,8 @@ public interface PlaceVisitStorage {
    * 
    * @param placeVisit the PlaceVisitModel object to add to storage
    *
-   * @throws a PlaceAlreadyExists exception if there is a PlaceVisitModel in 
-   *     storage with the same tripId and placeId as placeVisit
+   * @throws a PlaceVisitAlreadyExists exception if there is a PlaceVisitModel 
+   *     in storage with the same tripId and placeId as placeVisit
    */
   public void addPlaceVisit(PlaceVisitModel placeVisit);
 

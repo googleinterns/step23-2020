@@ -3,7 +3,6 @@ async function fetchAndSetTrips() {
   setTripListPage(trips);
 }
 
-
 function fetchTrips() {
   return new Promise((resolve, reject) => {
     let trips = [

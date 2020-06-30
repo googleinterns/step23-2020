@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletResponse;
  * exception to throw if a TripModel object already exists in storage
  */
 public class TripAlreadyExistsException extends TripMeOutException {
-  public TripAlreadyExistsException(String errorMssg) {
-    super(errorMssg);
+  public TripAlreadyExistsException(String errorMsg) {
+    super(errorMsg);
   }
 
-  public TripAlreadyExistsException(String errorMssg, Throwable cause) {
-    super(errorMssg, cause);
+  public TripAlreadyExistsException(String errorMsg, Throwable cause) {
+    super(errorMsg, cause);
   }
 
   @Override

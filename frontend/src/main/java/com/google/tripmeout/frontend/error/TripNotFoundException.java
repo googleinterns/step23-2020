@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletResponse;
  * exception to throw if a TripModel object is not found in storage 
  */
 public class TripNotFoundException extends TripMeOutException {
-  public TripNotFoundException(String errorMssg) {
-    super(errorMssg);
+  public TripNotFoundException(String errorMsg) {
+    super(errorMsg);
   }
 
-  public TripNotFoundException(String errorMssg, Throwable cause) {
-    super(errorMssg, cause);
+  public TripNotFoundException(String errorMsg, Throwable cause) {
+    super(errorMsg, cause);
   }
 
   @Override

@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletResponse;
  * exception to throw if a PlaceVisitModel object already exists in storage
  */
 public class PlaceVisitAlreadyExistsException extends TripMeOutException {
-  public PlaceVisitAlreadyExistsException(String errorMssg) {
-    super(errorMssg);
+  public PlaceVisitAlreadyExistsException(String errorMsg) {
+    super(errorMsg);
   }
 
-  public PlaceVisitAlreadyExistsException(String errorMssg, Throwable cause) {
-    super(errorMssg, cause);
+  public PlaceVisitAlreadyExistsException(String errorMsg, Throwable cause) {
+    super(errorMsg, cause);
   }
 
   @Override

@@ -8,12 +8,12 @@ import java.lang.Throwable;
  * abstract class for custom exceptions in the TripMeOut REST API
  */
 public abstract class TripMeOutException extends Exception {
-  public TripMeOutException(String errorMssg) {
-    super(errorMssg);
+  public TripMeOutException(String errorMsg) {
+    super(errorMsg);
   }
 
-  public TripMeOutException(String errorMssg, Throwable cause) {
-    super(errorMssg, cause);
+  public TripMeOutException(String errorMsg, Throwable cause) {
+    super(errorMsg, cause);
   }
 
   /**

@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletResponse;
  * exception to throw if a PlaceVisitModel object is not found in storage 
  */
 public class PlaceVisitNotFoundException extends TripMeOutException {
-  public PlaceVisitNotFoundException(String errorMssg) {
-    super(errorMssg);
+  public PlaceVisitNotFoundException(String errorMsg) {
+    super(errorMsg);
   }
 
-  public PlaceVisitNotFoundException(String errorMssg, Throwable cause) {
-    super(errorMssg, cause);
+  public PlaceVisitNotFoundException(String errorMsg, Throwable cause) {
+    super(errorMsg, cause);
   }
 
   @Override

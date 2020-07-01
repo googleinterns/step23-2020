@@ -2,70 +2,72 @@ package com.google.tripmeout.frontend.storage;
  
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
+import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
+import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
 import com.google.common.collect.Tables;
 import com.google.common.collect.Table;
 import com.google.common.collect.HashBasedTable;
 import java.util.Map;
 import java.util.List;
 import java.util.Collection;
- 
-@Singleton
+import java.util.ArrayList;
+
 public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   // <placeId, tripId, PlaceVisitModel> 
   Table<String, String, PlaceVisitModel> storage = Tables.synchronizedTable(HashBasedTable.create());
  
   @Override
-  void addPlaceVisit(PlaceVisitModel placeVisit) {
-    for (PlaceVisitModel place: storage) {
-      if (place.tripId().equals(placeVisit.tripId()) && place.placeId().equals(placeVisit.placeId())) {
-        throw Exception;
-      }
+  public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
+    PlaceVisitModel place = storage.get(placeVisit.placeId(), placeVisit.tripId());
+    if (place == null) {
+      storage.put(placeVisit.placeId(), placeVisit.tripId(), placeVisit);
+    } else {
+      throw new PlaceVisitAlreadyExistsException("PlaceVisit " + 
+          place.name() + " already exists for trip " + place.tripId());
     }
-    storage.put(placeVisit.placeId(), placeVisit.tripId(), placeVisit);
   }
 
   @Override
-  void removePlaceVisit(String tripId, String placeId) {
-    if (!storage.remove(placeId, tripId)) {
-      throw Exception;
-    } 
+  public void removePlaceVisit(String tripId, String placeId) throws PlaceVisitNotFoundException {
+    if (storage.remove(placeId, tripId) == null) {
+      throw new PlaceVisitNotFoundException("PlaceVisit with id" + placeId + 
+      " not found for trip " + tripId);
+    }
+    
   }
 
   @Override
-  PlaceVisitModel getPlaceVisit(String tripId, String placeId) {
+  public PlaceVisitModel getPlaceVisit(String tripId, String placeId) throws PlaceVisitNotFoundException {
     PlaceVisitModel place = storage.get(placeId, tripId);
-    if (place) {
+    if (place != null) {
       return place;
     }
-    throw Exception;
+    throw new PlaceVisitNotFoundException("PlaceVisit with id" + placeId + 
+      " not found for trip " + tripId);
   }
 
   @Override
-  void changePlaceVisitStatus(String tripId, String placeId, String newStatus) {
-    for (PlaceVisitModel place: storage) {
-      if (place.tripId().equals(tripId) && place.placeId().equals(placeId)) {
-        PlaceVisitModel updatedPlace = PlaceVisitModel.buildFromStatus(place);
-        storage.remove(place);
-        storage.add(updatedPlace);
-        return;
-      }
+  public void changePlaceVisitStatus(String tripId, String placeId, String newStatus) throws PlaceVisitNotFoundException {
+    PlaceVisitModel place = storage.get(placeId, tripId);
+    if (place != null) {
+      PlaceVisitModel updatedPlace = PlaceVisitModel.buildFromStatus(place);
+      storage.put(placeId, tripId, updatedPlace);
+    } else {
+      throw new PlaceVisitNotFoundException("PlaceVisit with id" + placeId + 
+        " not found for trip " + tripId);
     }
-    throw Exception;
   }
 
   @Override
-  List<PlaceVisitModel> getTripPlaceVisits(String tripId) {
+  public List<PlaceVisitModel> getTripPlaceVisits(String tripId) {
     Map<String, PlaceVisitModel> placeIdPlaceMap = storage.column(tripId);
     Collection<PlaceVisitModel> placeVisits = placeIdPlaceMap.values();
-
     List<PlaceVisitModel> tripPlaceVisits = new ArrayList<>();
-    
     for (PlaceVisitModel place: placeVisits) {
       if (place.userMark().equals("must-see")) {
         tripPlaceVisits.add(place);
       }
     }
-
     return tripPlaceVisits;
   }
  

@@ -14,6 +14,7 @@ public abstract class PlaceVisitModel {
     return new AutoValue_PlaceVisitModel.Builder();
   }
 
+  public abstract Builder toBuilder();
   public abstract String placeId();
   public abstract String name();
   public abstract String tripId();

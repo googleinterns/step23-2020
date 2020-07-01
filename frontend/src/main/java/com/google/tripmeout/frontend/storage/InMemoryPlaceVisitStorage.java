@@ -46,15 +46,14 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   @Override
-  public void changePlaceVisitStatus(String tripId, String placeId, String newStatus) throws PlaceVisitNotFoundException {
+  public boolean changePlaceVisitStatus(String tripId, String placeId, String newStatus) {
     PlaceVisitModel place = storage.get(placeId, tripId);
     if (place != null) {
-      PlaceVisitModel updatedPlace = PlaceVisitModel.buildFromStatus(place, newStatus);
+      PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
       storage.put(placeId, tripId, updatedPlace);
-    } else {
-      throw new PlaceVisitNotFoundException("PlaceVisit with id" + placeId + 
-        " not found for trip " + tripId);
+      return true;
     }
+    return false;
   }
 
   @Override
@@ -63,7 +62,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
     Collection<PlaceVisitModel> placeVisits = placeIdPlaceMap.values();
     List<PlaceVisitModel> tripPlaceVisits = new ArrayList<>();
     for (PlaceVisitModel place: placeVisits) {
-      if (place.userMark().equals("must-see")) {
+      if (place.userMark().equals("must-see") || place.userMark().equals("if-time")) {
         tripPlaceVisits.add(place);
       }
     }

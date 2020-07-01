@@ -1,6 +1,8 @@
 package com.google.tripmeout.frontend.storage;
 
 import com.google.tripmeout.frontend.PlaceVisitModel;
+import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
+import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public interface PlaceVisitStorage {
    * @throws a PlaceVisitAlreadyExists exception if there is a PlaceVisitModel
    *     in storage with the same tripId and placeId as placeVisit
    */
-  void addPlaceVisit(PlaceVisitModel placeVisit);
+  void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException;
 
   /**
    * removes from storage the PlaceVisitModel whose tripId and placeId match the
@@ -27,7 +29,7 @@ public interface PlaceVisitStorage {
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel
    *     object in storage with the given tripId and placeId
    */
-  void removePlaceVisit(String tripId, String placeId);
+  void removePlaceVisit(String tripId, String placeId) throws PlaceVisitNotFoundException;
 
   /**
    * returns the PlaceVisitModel whose tripId and placeId match the given tripId
@@ -39,7 +41,7 @@ public interface PlaceVisitStorage {
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel
    *     object in storage with the given tripId and placeId
    */
-  PlaceVisitModel getPlaceVisit(String tripId, String placeId);
+  PlaceVisitModel getPlaceVisit(String tripId, String placeId) throws PlaceVisitNotFoundException;
 
   /**
    * updates the userMark parameter of the PlaceVisitModel object whose tripId

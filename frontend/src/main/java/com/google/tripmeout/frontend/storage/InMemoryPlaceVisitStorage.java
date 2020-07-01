@@ -33,7 +33,6 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
       throw new PlaceVisitNotFoundException("PlaceVisit with id" + placeId + 
       " not found for trip " + tripId);
     }
-    
   }
 
   @Override
@@ -50,7 +49,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   public void changePlaceVisitStatus(String tripId, String placeId, String newStatus) throws PlaceVisitNotFoundException {
     PlaceVisitModel place = storage.get(placeId, tripId);
     if (place != null) {
-      PlaceVisitModel updatedPlace = PlaceVisitModel.buildFromStatus(place);
+      PlaceVisitModel updatedPlace = PlaceVisitModel.buildFromStatus(place, newStatus);
       storage.put(placeId, tripId, updatedPlace);
     } else {
       throw new PlaceVisitNotFoundException("PlaceVisit with id" + placeId + 

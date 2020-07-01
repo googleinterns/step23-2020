@@ -12,7 +12,6 @@ void main() {
 class TripMeOut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('wait what');
     //TODO: remove this...
     TripService tripService = InMemoryTripService();
     tripService.createTrip(Trip(
@@ -23,7 +22,6 @@ class TripMeOut extends StatelessWidget {
         latitude: 0.0,
       ),
     ));
-    print('loading tripmeout');
 
     return MaterialApp(
       title: 'Trip Me Out',

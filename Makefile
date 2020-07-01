@@ -23,10 +23,12 @@ build-and-copy-flutter:
 	cp -r $(FLUTTER_APP_ROOT)/build/web/* $(MAVEN_FRONTEND_ROOT)/src/main/webapp/
 
 test-flutter:
-	$(FLUTTER_CLI) test --packages $(FLUTTER_APP_ROOT)
+	pushd $(FLUTTER_APP_ROOT) && $(FLUTTER_CLI) test && popd
 
 test-frontend-server:
 	$(MAVEN_CLI) test --file $(MAVEN_FRONTEND_ROOT)/pom.xml
+
+test: test-flutter test-frontend-server
 
 package: build-and-copy-flutter
 	$(MAVEN_CLI) package --file $(MAVEN_FRONTEND_ROOT)/pom.xml

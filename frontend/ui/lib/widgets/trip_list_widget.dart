@@ -69,25 +69,28 @@ class _TripListWidgetState extends State<TripListWidget> {
         this.fetchedTrips = fetchedTrips;
       });
     } catch (err) {
-      // TODO: Redirect on login error?
-      setState(() {
-        this.fetching = false;
-        this.error = err;
-        this.fetchedTrips = null;
-      });
+      setStateError(err);
     }
+  }
+
+  void setStateError(Exception err) {
+    setState(() {
+      this.fetching = false;
+      this.error = err;
+      this.fetchedTrips = null;
+    });
   }
 }
 
 class _FetchedTripListWidget extends StatelessWidget {
-  final List<Trip> _trips;
+  final List<Trip> trips;
 
-  _FetchedTripListWidget(this._trips);
+  _FetchedTripListWidget(this.trips);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: _trips.map(toListTile).toList(),
+      children: trips.map(toListTile).toList(),
     );
   }
 

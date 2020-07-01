@@ -5,19 +5,20 @@ import 'package:tripmeout/services/trip_service.dart';
 
 class InMemoryTripService implements TripService {
   final Map<String, Trip> tripsById = Map();
+  final Duration asyncWaitDuration;
+
+  InMemoryTripService({asyncWaitDuration})
+      : asyncWaitDuration = asyncWaitDuration ?? Duration();
 
   Future<List<Trip>> listTrips() async {
-    return Future.delayed(
-      Duration(seconds: 3),
-      () => tripsById.values.toList(),
-    );
+    return Future.delayed(asyncWaitDuration, () => tripsById.values.toList());
   }
 
   Future<Trip> getTrip(String id) async {
-    return Future.sync(() => tripsById[id]);
+    return Future.delayed(asyncWaitDuration, () => tripsById[id]);
   }
 
   Future<Trip> createTrip(Trip trip) async {
-    return Future.sync(() => tripsById[trip.id] = trip);
+    return Future.delayed(asyncWaitDuration, () => tripsById[trip.id] = trip);
   }
 }

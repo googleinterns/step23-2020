@@ -23,7 +23,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
       storage.put(placeVisit.placeId(), placeVisit.tripId(), placeVisit);
     } else {
       throw new PlaceVisitAlreadyExistsException("PlaceVisit " + 
-          place.name() + " already exists for trip " + place.tripId());
+        place.name() + " already exists for trip " + place.tripId());
     }
   }
 

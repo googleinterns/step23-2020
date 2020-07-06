@@ -18,12 +18,14 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
  
   @Override
   public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
-    PlaceVisitModel place = storage.get(placeVisit.placeId(), placeVisit.tripId());
-    if (place == null) {
-      storage.put(placeVisit.placeId(), placeVisit.tripId(), placeVisit);
-    } else {
-      throw new PlaceVisitAlreadyExistsException("PlaceVisit " + 
-        place.name() + " already exists for trip " + place.tripId());
+    synchronized(storage) {
+      PlaceVisitModel place = storage.get(placeVisit.placeId(), placeVisit.tripId());
+      if (place == null) {
+        storage.put(placeVisit.placeId(), placeVisit.tripId(), placeVisit);
+      } else {
+        throw new PlaceVisitAlreadyExistsException("PlaceVisit " + 
+          place.name() + " already exists for trip " + place.tripId());
+      }
     }
   }
 
@@ -47,13 +49,15 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public boolean changePlaceVisitStatus(String tripId, String placeId, String newStatus) {
-    PlaceVisitModel place = storage.get(placeId, tripId);
-    if (place != null) {
-      PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
-      storage.put(placeId, tripId, updatedPlace);
-      return true;
+    synchronized(storage) {
+      PlaceVisitModel place = storage.get(placeId, tripId);
+      if (place != null) {
+        PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
+        storage.put(placeId, tripId, updatedPlace);
+        return true;
+      }
+      return false;
     }
-    return false;
   }
 
   @Override

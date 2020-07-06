@@ -54,6 +54,10 @@ public class InMemoryTripModelStorageTest {
       .build();
 
 
+  /**
+   * test that an exception is thrown when adding a TripModel that has already 
+   * been added to storage
+   */
   @Test
   public void addTrip_tripAlreadyAdded_throwsException() 
       throws TripAlreadyExistsException {
@@ -64,6 +68,10 @@ public class InMemoryTripModelStorageTest {
     
   }
 
+  /**
+   * test that an exception is thrown when adding a TripModel when there is 
+   * already a TripModel object in storage with the same tripId
+   */
   @Test
   public void addTrip_tripWithSameIdAlreadyAdded_throwsException() 
       throws TripAlreadyExistsException {
@@ -74,6 +82,10 @@ public class InMemoryTripModelStorageTest {
     
   }
 
+  /**
+   * test that adding a different TripModel object does not cause an exception
+   * to be thrown
+   */
   @Test
   public void addTrip_tripNotInStorage_exceptionNotThrown() 
       throws TripAlreadyExistsException {
@@ -82,6 +94,10 @@ public class InMemoryTripModelStorageTest {
     storage.addTrip(LONDON_TRIP2);
   }
 
+  /**
+   * test that removing a trip from empty storage causes an exception to be 
+   * thrown
+   */
   @Test
   public void removeTrip_emptyStorage_thowsException() 
       throws TripNotFoundException {
@@ -90,6 +106,10 @@ public class InMemoryTripModelStorageTest {
         storage.removeTrip(LONDON_TRIP1.id()));
   }
 
+  /**
+   * test that removing a trip from storage when there is not a TripModel object 
+   * with the given tripId in storage causes an exception to be thrown
+   */
   @Test
   public void removeTrip_tripNotInStorage_thowsException() 
       throws TripAlreadyExistsException, TripNotFoundException {
@@ -99,6 +119,10 @@ public class InMemoryTripModelStorageTest {
         storage.removeTrip(LONDON_TRIP1_2022.id()));
   }
 
+  /**
+   * test that getting a trip from empty storage causes an exception to be 
+   * thrown
+   */
   @Test
   public void getTrip_emptyStorage_thowsException() throws TripNotFoundException {
     InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
@@ -106,6 +130,10 @@ public class InMemoryTripModelStorageTest {
         storage.getTrip(LONDON_TRIP1.id()));
   }
 
+  /**
+   * test that getting a trip from storage when there is not a TripModel object 
+   * with the given tripId in storage causes an exception to be thrown
+   */
   @Test
   public void getTrip_tripNotInStorage_thowsException() 
       throws TripAlreadyExistsException, TripNotFoundException {
@@ -115,6 +143,11 @@ public class InMemoryTripModelStorageTest {
         storage.getTrip(LONDON_TRIP1_2022.id()));
   }
 
+  /**
+   * test that after adding a TripModel object to storage, getting the TripModel 
+   * object with the same tripId returns the same TripModel object as the added
+   * object
+   */
   @Test
   public void addTrip_getTrip_addedTripEqualsGottenTrip() 
       throws TripAlreadyExistsException, TripNotFoundException {
@@ -125,6 +158,10 @@ public class InMemoryTripModelStorageTest {
     Assert.assertEquals(LONDON_TRIP2, gottenTrip);
   }
 
+  /**
+   * test that error is thrown when updating location fields when there does
+   * not exist a TripModel object in storage with the given tripId
+   */
   @Test
   public void updateTripLocation_tripNotInStorage_throwsException() 
       throws TripAlreadyExistsException, TripNotFoundException {
@@ -135,6 +172,10 @@ public class InMemoryTripModelStorageTest {
         storage.updateTripLocation(TOKYO_TRIP1.id(), 22, 19));
   }
 
+  /**
+   * test that location fields are updated for the TripModel object in storage 
+   * with the given tripId after calling updateTripLocation
+   */
   @Test
   public void updateTripLocation_tripInStorage_changesLocationLatAndLong() 
       throws TripAlreadyExistsException, TripNotFoundException {
@@ -147,6 +188,10 @@ public class InMemoryTripModelStorageTest {
     Assert.assertEquals(19, newLondonTrip1.locationLong(), 1e-15);
   }
 
+  /**
+   * test that error is thrown when updating name field when there does
+   * not exist a TripModel object in storage with the given tripId
+   */
   @Test
   public void updateTripName_tripNotInStorage_throwsException() 
       throws TripAlreadyExistsException, TripNotFoundException {
@@ -157,6 +202,10 @@ public class InMemoryTripModelStorageTest {
         storage.updateTripName(TOKYO_TRIP1.id(), "Yay Tokyo!!!"));
   }
 
+  /**
+   * test that name field are updated for the TripModel object in storage 
+   * with the given tripId after calling updateTripLocation
+   */
   @Test
   public void updateTripName_tripInStorage_changesName() 
       throws TripAlreadyExistsException, TripNotFoundException {
@@ -168,6 +217,10 @@ public class InMemoryTripModelStorageTest {
     Assert.assertEquals(newLondonTrip1.name(), "London Trip 2020");
   }
 
+  /**
+   * test that all TripModel objects in storage with given userId are returned 
+   * when calling getAllUserTrips when storage only contains one userId
+   */
   @Test
   public void getAllUserTrips_onlyOneUserInStorage_returnsAllTripsInStorage() 
       throws TripAlreadyExistsException {
@@ -179,6 +232,10 @@ public class InMemoryTripModelStorageTest {
     assertThat(tripsList).containsExactly(LONDON_TRIP1, LONDON_TRIP1_2022, TOKYO_TRIP1);
   }
 
+  /**
+   * test that only the TripModel objects in storage with given userId are 
+   * returned when calling getAllUserTrips when storage contains multiple userId
+   */
   @Test
   public void getAllUserTrips_multipleUsersInStorage_returnsOnlyTripsOfUserInStorage() 
       throws TripAlreadyExistsException {
@@ -191,6 +248,10 @@ public class InMemoryTripModelStorageTest {
     assertThat(tripsList).containsExactly(LONDON_TRIP1, LONDON_TRIP1_2022, TOKYO_TRIP1);
   }
 
+  /**
+   * test that empty list is returned when getAllUserTrips is called when 
+   * storage does not contain any TripModel objects with the given userId
+   */
   @Test
   public void getAllUserTrips_userNotInStorage_returnsEmptyList() 
       throws TripAlreadyExistsException{

@@ -12,52 +12,65 @@ public class InMemoryTripModelStorage {
   Map<String, TripModel> storage = new ConcurrentHashMap<>();
 
   public void addTrip(TripModel trip) throws TripAlreadyExistsException {
-    if (storage.get(trip.id()) == null) {
-      storage.put(trip.id(), trip);
-    } else {
-      throw new TripAlreadyExistsException("Trip with id: " + trip.id() + " already exisits");
+    synchronized(storage) {
+      if (storage.get(trip.id()) == null) {
+        storage.put(trip.id(), trip);
+      } else {
+        throw new TripAlreadyExistsException("Trip with id: " + trip.id() + 
+            " already exisits");
+      }
     }
   }
 
   public void removeTrip(String tripId) throws TripNotFoundException {
     TripModel trip = storage.remove(tripId);
     if (trip == null) {
-      throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
+      throw new TripNotFoundException("Trip with id: " + tripId + 
+          " not found in storage");
     }
   }
 
   public void updateTripLocation(String tripId, double latitude, double longitude) 
       throws TripNotFoundException {
-    TripModel trip = storage.get(tripId);
-    if (trip == null) {
-      throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
-    }
-    TripModel updatedTrip = trip.toBuilder()
-        .setLocationLat(latitude)
-        .setLocationLong(longitude)
-        .build();
+    synchronized(storage) {
+      TripModel trip = storage.get(tripId);
+      if (trip == null) {
+        throw new TripNotFoundException("Trip with id: " + tripId + 
+            " not found in storage");
+      }
+      TripModel updatedTrip = trip.toBuilder()
+          .setLocationLat(latitude)
+          .setLocationLong(longitude)
+          .build();
 
-    storage.put(tripId, updatedTrip);
+      storage.put(tripId, updatedTrip);
+    }
   }
 
   public void updateTripName(String tripId, String name) throws TripNotFoundException {
-    TripModel trip = storage.get(tripId);
-    if (trip == null) {
-      throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
-    }
-    TripModel updatedTrip = trip.toBuilder()
-        .setName(name)
-        .build();
+    synchronized(storage) {
+      TripModel trip = storage.get(tripId);
+      if (trip == null) {
+        throw new TripNotFoundException("Trip with id: " + tripId + 
+            " not found in storage");
+      }
+      TripModel updatedTrip = trip.toBuilder()
+          .setName(name)
+          .build();
 
-    storage.put(tripId, updatedTrip);
+      storage.put(tripId, updatedTrip);
+    }
   }
 
   public TripModel getTrip(String tripId) throws TripNotFoundException {
-    TripModel trip = storage.get(tripId);
-    if (trip != null) {
-      return trip;
-    }
-    throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
+    synchronized(storage) {
+      TripModel trip = storage.get(tripId);
+      if (trip != null) {
+        return trip;
+      }
+      throw new TripNotFoundException("Trip with id: " + tripId + 
+          " not found in storage");
+    } 
   }
 
   public List<TripModel> getAllUserTrips(String userId) {

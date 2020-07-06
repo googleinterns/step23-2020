@@ -59,6 +59,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public boolean changePlaceVisitStatus(String tripId, String placeId, String newStatus) {
+<<<<<<< HEAD
     Map<String, PlaceVisitModel> tripsMap = storage.get(placeId);
     if (tripsMap == null || tripsMap.get(tripId) == null) {
       return false;
@@ -67,6 +68,16 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
       PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
       tripsMap.put(tripId, updatedPlace);
       return true;
+=======
+    synchronized(storage) {
+      PlaceVisitModel place = storage.get(placeId, tripId);
+      if (place != null) {
+        PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
+        storage.put(placeId, tripId, updatedPlace);
+        return true;
+      }
+      return false;
+>>>>>>> add synchronized blocks
     }
   }
 

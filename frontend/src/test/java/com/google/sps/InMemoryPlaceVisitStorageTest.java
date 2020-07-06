@@ -14,7 +14,6 @@ import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
 
 @RunWith(JUnit4.class)
 public final class InMemoryPlaceVisitStorageTest {
-  private static final InMemoryPlaceVisitStorage NO_PLACE_VISITS = new InMemoryPlaceVisitStorage();
 
   // PlaceVisitModel objects to use in testing
   private static final PlaceVisitModel LONDON = PlaceVisitModel.builder()
@@ -93,11 +92,12 @@ public final class InMemoryPlaceVisitStorageTest {
    * test that a PlaceVisitAlreadyExistsException is thrown when a place that 
    * has already been added to the storage is added again 
    */
-  @Test(expected = PlaceVisitAlreadyExistsException.class)
-  public void testAddSamePlaceVisit_throwsException() throws PlaceVisitAlreadyExistsException {
+  @Test
+  public void addPlaceVisit_placeAlreadyAdded_throwsException()
+      throws PlaceVisitAlreadyExistsException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
-    storage.addPlaceVisit(LONDON);
+    Assert.assertThrows(PlaceVisitAlreadyExistsException.class, () -> storage.addPlaceVisit(LONDON));
   }
 
   /** 
@@ -105,11 +105,12 @@ public final class InMemoryPlaceVisitStorageTest {
    * added but another place with the same placeId and tripId has already been 
    * added to the storage
    */
-  @Test(expected = PlaceVisitAlreadyExistsException.class)
-  public void testAddPlaceVisit_samePlaceIdAndTripId_throwsException() throws PlaceVisitAlreadyExistsException {
+  @Test
+  public void addPlaceVisit_samePlaceIdAndTripIdAlreadyAdded_throwsException()
+      throws PlaceVisitAlreadyExistsException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(SEOUL);
-    storage.addPlaceVisit(SEOUL_B);
+    Assert.assertThrows(PlaceVisitAlreadyExistsException.class, () -> storage.addPlaceVisit(SEOUL_B));
   }
 
   /**
@@ -117,7 +118,8 @@ public final class InMemoryPlaceVisitStorageTest {
    * with different tripId and/or placeId are added to storage
    */
   @Test
-  public void testAddSamePlaceDiffTrip() throws PlaceVisitAlreadyExistsException {
+  public void addPlaceVisit_sameLocationDiffTripAdded_noExceptionThrown()
+      throws PlaceVisitAlreadyExistsException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
@@ -127,9 +129,11 @@ public final class InMemoryPlaceVisitStorageTest {
    * test that a PlaceNotFoundException is thrown when getting a place from
    * an empty storage
    */
-  @Test(expected = PlaceVisitNotFoundException.class)
-  public void testGetPlace_emptyStorage() throws PlaceVisitNotFoundException {
-    NO_PLACE_VISITS.getPlaceVisit(TOKYO.tripId(), TOKYO.placeId());
+  @Test
+  public void getPlaceVisit_emptyStorage_throwsException() throws PlaceVisitNotFoundException {
+    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
+    Assert.assertThrows(PlaceVisitNotFoundException.class, () -> 
+        storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placeId()));
   }
 
   /**
@@ -137,16 +141,14 @@ public final class InMemoryPlaceVisitStorageTest {
    * from storage when there is no place in storage with the given tripId and
    * placeId
    */
-  @Test(expected = PlaceVisitNotFoundException.class)
-  public void testGetPlace_notInStorage() throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+  @Test
+  public void getPlaceVisit_placeNotInStorage_throwsException()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    storage.addPlaceVisit(LONDON);
-    storage.addPlaceVisit(PARIS);
-    storage.addPlaceVisit(ROME);
-    storage.addPlaceVisit(BEIJING);
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
-    storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId());
+    Assert.assertThrows(PlaceVisitNotFoundException.class, () -> 
+        storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId()));
   }
 
   /**
@@ -154,7 +156,8 @@ public final class InMemoryPlaceVisitStorageTest {
    * placeId exist in storage
    */
   @Test
-  public void testAddPlace_getPlace() throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+  public void addPlaceVisitGetPlaceVisit_placeAddedEqualsPlaceGot()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
@@ -171,9 +174,12 @@ public final class InMemoryPlaceVisitStorageTest {
    * test that a PlaceNotFoundException is thrown when removing a place from
    * an empty storage
    */
-  @Test(expected = PlaceVisitNotFoundException.class)
-  public void testRemovePlace_emptyStorage() throws PlaceVisitNotFoundException {
-    NO_PLACE_VISITS.removePlaceVisit(TOKYO.tripId(), TOKYO.placeId());
+  @Test
+  public void removePlaceVisit_emptyStorage_throwsException()
+      throws PlaceVisitNotFoundException {
+    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
+    Assert.assertThrows(PlaceVisitNotFoundException.class, () -> 
+        storage.removePlaceVisit(TOKYO.tripId(), TOKYO.placeId()));
   }
 
   /**
@@ -181,16 +187,15 @@ public final class InMemoryPlaceVisitStorageTest {
    * from storage when there is no place in storage with the given tripId and
    * placeId
    */
-  @Test(expected = PlaceVisitNotFoundException.class)
-  public void testremovePlace_notInStorage() throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+  @Test
+  public void removePlaceVisit_placeNotInStorage_throwsException()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    storage.addPlaceVisit(LONDON);
-    storage.addPlaceVisit(PARIS);
-    storage.addPlaceVisit(ROME);
-    storage.addPlaceVisit(BEIJING);
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
-    storage.removePlaceVisit(SEOUL.tripId(), SEOUL.placeId());
+    Assert.assertThrows(PlaceVisitNotFoundException.class, () -> 
+        storage.removePlaceVisit(SEOUL.tripId(), SEOUL.placeId()));
+    
   }
 
   /**
@@ -198,14 +203,11 @@ public final class InMemoryPlaceVisitStorageTest {
    * there is a place in storage with the given tripId and placeId
    */
   @Test
-  public void testremovePlace_noException() throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+  public void removePlace_placeInStorage_noException()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    storage.addPlaceVisit(LONDON);
-    storage.addPlaceVisit(PARIS);
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
-    storage.addPlaceVisit(TOKYO);
-    storage.addPlaceVisit(TOKYO_B);
     storage.removePlaceVisit(ROME.tripId(), ROME.placeId());
   }
 
@@ -215,17 +217,15 @@ public final class InMemoryPlaceVisitStorageTest {
    * that calling getPlaceVisit on the removed PlaceVisit tripId and placeId
    * results in PlaceVisitNotFoundException being thrown
    */
-  @Test(expected = PlaceVisitNotFoundException.class)
-  public void testremovePlace_getRemovedPlace() throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+  @Test
+  public void getRemovedPlaceVisit_throwsExeption()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    storage.addPlaceVisit(LONDON);
-    storage.addPlaceVisit(PARIS);
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
-    storage.addPlaceVisit(TOKYO);
-    storage.addPlaceVisit(TOKYO_B);
     storage.removePlaceVisit(ROME.tripId(), ROME.placeId());
-    storage.getPlaceVisit(ROME.tripId(), ROME.placeId());
+    Assert.assertThrows(PlaceVisitNotFoundException.class, () -> 
+        storage.getPlaceVisit(ROME.tripId(), ROME.placeId()));
   }
 
   /**
@@ -233,7 +233,8 @@ public final class InMemoryPlaceVisitStorageTest {
    * when PlaceVisitModel object with the given tripId and placeId is in storage
    */
   @Test
-  public void testChangeStatus_inStorage() throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+  public void changePlaceVisitStatus_placeInStorage_returnsTrueAndStatusChanged()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
     storage.addPlaceVisit(PARIS);
@@ -250,7 +251,8 @@ public final class InMemoryPlaceVisitStorageTest {
    * with the given tripId and placeId is not in storage
    */
   @Test
-  public void testChangeStatus_notInStorage() throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+  public void changePlaceVisitStatus_placeNotInStorage_returnsFalse()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
     storage.addPlaceVisit(PARIS);
@@ -266,7 +268,8 @@ public final class InMemoryPlaceVisitStorageTest {
    * when PlaceVisitModel object with the given tripId and placeId is in storage
    */
   @Test
-  public void testChangeStatusSame_inStorage() throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+  public void changePlaceVisitStatus_placeInStorage_returnsTrueAndStatusSame()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
     storage.addPlaceVisit(PARIS);
@@ -284,7 +287,8 @@ public final class InMemoryPlaceVisitStorageTest {
    * one unique tripId in storage
    */
   @Test
-  public void testListPlaces_oneTripInStorage() throws PlaceVisitAlreadyExistsException {
+  public void listTripPlaceVIsits_oneTripInStorage_returnsOnlyTripsWithCorrectMark()
+      throws PlaceVisitAlreadyExistsException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
     storage.addPlaceVisit(PARIS);
@@ -300,7 +304,8 @@ public final class InMemoryPlaceVisitStorageTest {
    * multiple unique tripIds in storage
    */
   @Test
-  public void testListPlaces_multipleTripsInStorage() throws PlaceVisitAlreadyExistsException {
+  public void listTripPlaceVisits_multipleTripsInStorage_returnsOnlyTripsWithCorrectTripIdAndMark()
+      throws PlaceVisitAlreadyExistsException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
     storage.addPlaceVisit(PARIS);
@@ -318,7 +323,7 @@ public final class InMemoryPlaceVisitStorageTest {
    * PlaceVisitModel objects in storage with the given tripId
    */
   @Test
-  public void testListPlaces_tripNotInStorage() throws PlaceVisitAlreadyExistsException {
+  public void listTripPlaceVisits_tripNotInStorage_returnsEmptyList() throws PlaceVisitAlreadyExistsException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
     storage.addPlaceVisit(PARIS);

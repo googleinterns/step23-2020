@@ -14,13 +14,14 @@ public abstract class PlaceVisitModel {
     return new AutoValue_PlaceVisitModel.Builder();
   }
 
-  public abstract Builder toBuilder();
   public abstract String placeId();
   public abstract String name();
   public abstract String tripId();
   public abstract UserMark userMark();
   public abstract double latitude();
   public abstract double longitude();
+
+  public abstract Builder toBuilder();
 
   @AutoValue.Builder
   public static abstract class Builder {

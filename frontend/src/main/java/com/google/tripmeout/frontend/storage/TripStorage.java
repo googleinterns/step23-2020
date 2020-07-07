@@ -14,7 +14,7 @@ public interface TripStorage {
    *
    * @param trip the TripModel object to add to storage
    *
-   * @throws a TripAlreadyExists exception if there is a TripModel object 
+   * @throws a TripAlreadyExists exception if there is a TripModel object
    *     already in storage with the same tripId as the trip
    */
   void addTrip(TripModel trip) throws TripAlreadyExistsException;
@@ -24,7 +24,7 @@ public interface TripStorage {
    *
    * @param tripId the id to match TripModel object's tripId field on
    *
-   * @throws a TripNotFound exception if there is no TripModel object with 
+   * @throws a TripNotFound exception if there is no TripModel object with
    *     the given tripId in storage
    */
   void removeTrip(String tripId) throws TripNotFoundException;
@@ -37,19 +37,20 @@ public interface TripStorage {
    * @param latitude the new latitude of the TripModel
    * @param longitude the new longitude of the TripModel
    *
-   * @throws a TripNotFound exception if there is no TripModel object with 
+   * @throws a TripNotFound exception if there is no TripModel object with
    *     the given tripId in storage
    */
-  void updateTripLocation(String tripId, double latitude, double longitude) throws TripNotFoundException;
+  void updateTripLocation(String tripId, double latitude, double longitude)
+      throws TripNotFoundException;
 
   /**
-   * updates the name field of the TripModel object in storage whose tripId 
+   * updates the name field of the TripModel object in storage whose tripId
    * matches the given tripId
    *
    * @param tripId the id to match TripModel object's tripId field on
    * @param name the new name of the TripModel
    *
-   * @throws a TripNotFound exception if there is no TripModel object with 
+   * @throws a TripNotFound exception if there is no TripModel object with
    *     the given tripId in storage
    */
   void updateTripName(String tripId, String tripName) throws TripNotFoundException;
@@ -59,7 +60,7 @@ public interface TripStorage {
    *
    * @param tripId the id to match TripModel object's tripId field on
    *
-   * @throws a TripNotFound exception if there is no TripModel object with 
+   * @throws a TripNotFound exception if there is no TripModel object with
    *     the given tripId in storage
    */
   TripModel getTrip(String tripId) throws TripNotFoundException;

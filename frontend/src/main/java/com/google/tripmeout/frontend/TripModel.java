@@ -15,7 +15,7 @@ public abstract class TripModel {
   public abstract double locationLong();
 
   public abstract Builder toBuilder();
-  
+
   @AutoValue.Builder
   public static abstract class Builder {
     public abstract Builder setId(String id);

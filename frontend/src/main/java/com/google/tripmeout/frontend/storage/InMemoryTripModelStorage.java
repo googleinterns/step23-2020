@@ -4,8 +4,8 @@ import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
 import com.google.tripmeout.frontend.storage.TripStorage;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,8 +18,7 @@ public class InMemoryTripModelStorage implements TripStorage {
       if (storage.get(trip.id()) == null) {
         storage.put(trip.id(), trip);
       } else {
-        throw new TripAlreadyExistsException("Trip with id: " + trip.id() + 
-            " already exisits");
+        throw new TripAlreadyExistsException("Trip with id: " + trip.id() + " already exisits");
       }
     }
   }
@@ -28,24 +27,20 @@ public class InMemoryTripModelStorage implements TripStorage {
   public void removeTrip(String tripId) throws TripNotFoundException {
     TripModel trip = storage.remove(tripId);
     if (trip == null) {
-      throw new TripNotFoundException("Trip with id: " + tripId + 
-          " not found in storage");
+      throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
     }
   }
 
   @Override
-  public void updateTripLocation(String tripId, double latitude, double longitude) 
+  public void updateTripLocation(String tripId, double latitude, double longitude)
       throws TripNotFoundException {
     synchronized (storage) {
       TripModel trip = storage.get(tripId);
       if (trip == null) {
-        throw new TripNotFoundException("Trip with id: " + tripId + 
-            " not found in storage");
+        throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
       }
-      TripModel updatedTrip = trip.toBuilder()
-          .setLocationLat(latitude)
-          .setLocationLong(longitude)
-          .build();
+      TripModel updatedTrip =
+          trip.toBuilder().setLocationLat(latitude).setLocationLong(longitude).build();
 
       storage.put(tripId, updatedTrip);
     }
@@ -56,12 +51,9 @@ public class InMemoryTripModelStorage implements TripStorage {
     synchronized (storage) {
       TripModel trip = storage.get(tripId);
       if (trip == null) {
-        throw new TripNotFoundException("Trip with id: " + tripId + 
-            " not found in storage");
+        throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
       }
-      TripModel updatedTrip = trip.toBuilder()
-          .setName(name)
-          .build();
+      TripModel updatedTrip = trip.toBuilder().setName(name).build();
 
       storage.put(tripId, updatedTrip);
     }
@@ -73,8 +65,7 @@ public class InMemoryTripModelStorage implements TripStorage {
     if (trip != null) {
       return trip;
     }
-    throw new TripNotFoundException("Trip with id: " + tripId + 
-        " not found in storage"); 
+    throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
   }
 
   @Override

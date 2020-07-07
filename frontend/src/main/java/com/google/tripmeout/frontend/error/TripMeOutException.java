@@ -3,7 +3,6 @@ package com.google.tripmeout.frontend.error;
 import java.lang.Exception;
 import java.lang.Throwable;
 
-
 /**
  * abstract class for custom exceptions in the TripMeOut REST API
  */

@@ -8,6 +8,7 @@ import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
 import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
 import com.google.tripmeout.frontend.storage.InMemoryPlaceVisitStorage;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -108,10 +109,9 @@ public final class InMemoryPlaceVisitStorageTest {
    * an empty storage
    */
   @Test
-  public void getPlaceVisit_emptyStorage_throwsException() throws PlaceVisitNotFoundException {
+  public void getPlaceVisit_emptyStorage_returnsEmptyOptional() {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    Assert.assertThrows(PlaceVisitNotFoundException.class,
-        () -> storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placeId()));
+    assertThat(storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placeId())).isEmpty();
   }
 
   /**
@@ -120,13 +120,12 @@ public final class InMemoryPlaceVisitStorageTest {
    * placeId
    */
   @Test
-  public void getPlaceVisit_placeNotInStorage_throwsException()
+  public void getPlaceVisit_placeNotInStorage_returnsEmptyOptional()
       throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
-    Assert.assertThrows(PlaceVisitNotFoundException.class,
-        () -> storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId()));
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).isEmpty();
   }
 
   /**
@@ -140,11 +139,11 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
 
-    PlaceVisitModel tokyo = storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placeId());
-    assertThat(tokyo).isEqualTo(TOKYO);
+    Optional<PlaceVisitModel> tokyo = storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placeId());
+    assertThat(tokyo).hasValue(TOKYO);
 
-    PlaceVisitModel tokyoB = storage.getPlaceVisit(TOKYO_B.tripId(), TOKYO_B.placeId());
-    assertThat(tokyoB).isEqualTo(TOKYO_B);
+    Optional<PlaceVisitModel> tokyoB = storage.getPlaceVisit(TOKYO_B.tripId(), TOKYO_B.placeId());
+    assertThat(tokyoB).hasValue(TOKYO_B);
   }
 
   /**
@@ -199,8 +198,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
     storage.removePlaceVisit(ROME.tripId(), ROME.placeId());
-    Assert.assertThrows(PlaceVisitNotFoundException.class,
-        () -> storage.getPlaceVisit(ROME.tripId(), ROME.placeId()));
+    assertThat(storage.getPlaceVisit(ROME.tripId(), ROME.placeId())).isEmpty();
   }
 
   /**
@@ -217,7 +215,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(BEIJING);
     boolean response =
         storage.changePlaceVisitStatus(PARIS.tripId(), PARIS.placeId(), "don't-care");
-    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId());
+    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId()).get();
     assertThat(response).isTrue();
     assertThat(changedParis.userMark()).isEqualTo("don't-care");
   }
@@ -253,7 +251,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
     boolean response = storage.changePlaceVisitStatus(PARIS.tripId(), PARIS.placeId(), "if-time");
-    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId());
+    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId()).get();
     assertThat(response).isTrue();
     assertThat(changedParis.userMark()).isEqualTo("if-time");
   }

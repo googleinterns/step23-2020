@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
 
 public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   // <tripId, placeId, PlaceVisitModel>
@@ -49,15 +50,12 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   @Override
-  public PlaceVisitModel getPlaceVisit(String tripId, String placeId)
-      throws PlaceVisitNotFoundException {
+  public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeId) {
     Map<String, PlaceVisitModel> placesMap = storage.get(tripId);
-    if (placesMap == null || placesMap.get(placeId) == null) {
-      throw new PlaceVisitNotFoundException(
-          "PlaceVisit with id" + placeId + " not found for trip " + tripId);
-    } else {
-      return placesMap.get(placeId);
+    if (placesMap != null && placesMap.get(placeId) != null) {
+      return Optional.of(placesMap.get(placeId));
     }
+    return Optional.empty();
   }
 
   @Override

@@ -53,16 +53,6 @@ public class InMemoryTripModelStorageTest {
                                                                .setLocationLong(52.1)
                                                                .build();
 
-  /**
-   * test that an exception is thrown when adding a TripModel that has already
-   * been added to storage
-   */
-  @Test
-  public void addTrip_tripAlreadyAdded_throwsException() throws TripAlreadyExistsException {
-    InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
-    storage.addTrip(LONDON_TRIP1);
-    Assert.assertThrows(TripAlreadyExistsException.class, () -> storage.addTrip(LONDON_TRIP1));
-  }
 
   /**
    * test that an exception is thrown when adding a TripModel when there is
@@ -75,17 +65,6 @@ public class InMemoryTripModelStorageTest {
     storage.addTrip(LONDON_TRIP1);
     Assert.assertThrows(
         TripAlreadyExistsException.class, () -> storage.addTrip(LONDON_TRIP_DUPLICATE_ID));
-  }
-
-  /**
-   * test that adding a different TripModel object does not cause an exception
-   * to be thrown
-   */
-  @Test
-  public void addTrip_tripNotInStorage_exceptionNotThrown() throws TripAlreadyExistsException {
-    InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
-    storage.addTrip(LONDON_TRIP1);
-    storage.addTrip(LONDON_TRIP2);
   }
 
   /**
@@ -145,7 +124,7 @@ public class InMemoryTripModelStorageTest {
     storage.addTrip(LONDON_TRIP1);
     storage.addTrip(LONDON_TRIP2);
     TripModel gottenTrip = storage.getTrip(LONDON_TRIP2.id());
-    Assert.assertEquals(LONDON_TRIP2, gottenTrip);
+    assertThat(gottenTrip).isEqualTo(LONDON_TRIP2);
   }
 
   /**
@@ -174,8 +153,8 @@ public class InMemoryTripModelStorageTest {
     storage.addTrip(LONDON_TRIP2);
     storage.updateTripLocation(LONDON_TRIP1.id(), 22, 19);
     TripModel newLondonTrip1 = storage.getTrip(LONDON_TRIP1.id());
-    Assert.assertEquals(22, newLondonTrip1.locationLat(), 1e-15);
-    Assert.assertEquals(19, newLondonTrip1.locationLong(), 1e-15);
+    assertThat(newLondonTrip1.locationLat()).isWithin(1e-15).of(22);
+    assertThat(newLondonTrip1.locationLong()).isWithin(1e-15).of(19);
   }
 
   /**
@@ -204,7 +183,7 @@ public class InMemoryTripModelStorageTest {
     storage.addTrip(LONDON_TRIP2);
     storage.updateTripName(LONDON_TRIP1.id(), "London Trip 2020");
     TripModel newLondonTrip1 = storage.getTrip(LONDON_TRIP1.id());
-    Assert.assertEquals(newLondonTrip1.name(), "London Trip 2020");
+    assertThat(newLondonTrip1.name()).isEqualTo("London Trip 2020");
   }
 
   /**

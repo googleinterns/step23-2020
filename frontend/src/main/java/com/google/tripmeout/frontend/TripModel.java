@@ -7,7 +7,7 @@ public abstract class TripModel {
   public static Builder builder() {
     return new AutoValue_TripModel.Builder();
   }
-  
+
   public abstract String id();
   public abstract String name();
   public abstract String userId();

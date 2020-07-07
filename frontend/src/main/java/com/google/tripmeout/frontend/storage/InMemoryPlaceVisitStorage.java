@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   // <placeId, tripId, PlaceVisitModel> 
@@ -46,20 +47,16 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   @Override
-  public PlaceVisitModel getPlaceVisit(String tripId, String placeId) throws PlaceVisitNotFoundException {
+  public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeId) {
     Map<String, PlaceVisitModel> tripsMap = storage.get(placeId);
-    if (tripsMap == null || tripsMap.get(tripId) == null) {
-      throw new PlaceVisitNotFoundException("PlaceVisit with id" + placeId + 
-          " not found for trip " + tripId);
-    } else {
-      return tripsMap.get(tripId);
+    if (tripsMap != null && tripsMap.get(tripId) != null) {
+      return Optional.ofNullable(tripsMap.get(tripId));
     }
-    
+    return Optional.empty();
   }
 
   @Override
   public boolean changePlaceVisitStatus(String tripId, String placeId, String newStatus) {
-<<<<<<< HEAD
     Map<String, PlaceVisitModel> tripsMap = storage.get(placeId);
     if (tripsMap == null || tripsMap.get(tripId) == null) {
       return false;
@@ -68,16 +65,6 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
       PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
       tripsMap.put(tripId, updatedPlace);
       return true;
-=======
-    synchronized(storage) {
-      PlaceVisitModel place = storage.get(placeId, tripId);
-      if (place != null) {
-        PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
-        storage.put(placeId, tripId, updatedPlace);
-        return true;
-      }
-      return false;
->>>>>>> add synchronized blocks
     }
   }
 

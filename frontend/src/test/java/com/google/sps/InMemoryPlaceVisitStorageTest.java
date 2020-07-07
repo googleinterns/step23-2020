@@ -88,18 +88,6 @@ public final class InMemoryPlaceVisitStorageTest {
                                                      .setLongitude(0)
                                                      .build();
 
-  /**
-   * test that a PlaceVisitAlreadyExistsException is thrown when a place that
-   * has already been added to the storage is added again
-   */
-  @Test
-  public void addPlaceVisit_placeAlreadyAdded_throwsException()
-      throws PlaceVisitAlreadyExistsException {
-    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    storage.addPlaceVisit(LONDON);
-    Assert.assertThrows(
-        PlaceVisitAlreadyExistsException.class, () -> storage.addPlaceVisit(LONDON));
-  }
 
   /**
    * test that a PlaceVisitAlreadyExistsException is thrown when a place is
@@ -113,18 +101,6 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(SEOUL);
     Assert.assertThrows(
         PlaceVisitAlreadyExistsException.class, () -> storage.addPlaceVisit(SEOUL_B));
-  }
-
-  /**
-   * test that an exception is not thrown when two PlaceVisitModel objects
-   * with different tripId and/or placeId are added to storage
-   */
-  @Test
-  public void addPlaceVisit_sameLocationDiffTripAdded_noExceptionThrown()
-      throws PlaceVisitAlreadyExistsException {
-    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    storage.addPlaceVisit(TOKYO);
-    storage.addPlaceVisit(TOKYO_B);
   }
 
   /**
@@ -165,10 +141,10 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(TOKYO_B);
 
     PlaceVisitModel tokyo = storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placeId());
-    Assert.assertEquals(tokyo, TOKYO);
+    assertThat(tokyo).isEqualTo(TOKYO);
 
     PlaceVisitModel tokyoB = storage.getPlaceVisit(TOKYO_B.tripId(), TOKYO_B.placeId());
-    Assert.assertEquals(tokyoB, TOKYO_B);
+    assertThat(tokyoB).isEqualTo(TOKYO_B);
   }
 
   /**
@@ -242,8 +218,8 @@ public final class InMemoryPlaceVisitStorageTest {
     boolean response =
         storage.changePlaceVisitStatus(PARIS.tripId(), PARIS.placeId(), "don't-care");
     PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId());
-    Assert.assertTrue(response);
-    Assert.assertEquals(changedParis.userMark(), "don't-care");
+    assertThat(response).isTrue();
+    assertThat(changedParis.userMark()).isEqualTo("don't-care");
   }
 
   /**
@@ -260,7 +236,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(BEIJING);
     boolean response =
         storage.changePlaceVisitStatus(SEOUL.tripId(), SEOUL.placeId(), "don't-care");
-    Assert.assertFalse(response);
+    assertThat(response).isFalse();
   }
 
   /**
@@ -278,8 +254,8 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(BEIJING);
     boolean response = storage.changePlaceVisitStatus(PARIS.tripId(), PARIS.placeId(), "if-time");
     PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId());
-    Assert.assertTrue(response);
-    Assert.assertEquals(changedParis.userMark(), "if-time");
+    assertThat(response).isTrue();
+    assertThat(changedParis.userMark()).isEqualTo("if-time");
   }
 
   /**

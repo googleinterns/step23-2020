@@ -6,6 +6,7 @@ import static com.google.common.truth.Truth8.assertThat;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
 import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
+import com.google.tripmeout.frontend.error.TripNotFoundException;
 import com.google.tripmeout.frontend.storage.InMemoryPlaceVisitStorage;
 import java.util.List;
 import java.util.Optional;
@@ -309,5 +310,39 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(SEOUL);
     List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("c");
     assertThat(tripAPlaces).isEmpty();
+  }
+
+  /**
+   * test that no PlaceVisitModel objects are returned in list after removing
+   * PlaceVisitModel objects with the given tripId
+   */
+  @Test
+  public void removeTripPlaceVisits_getTripPlaceVisits_tripInStorage_returnsEmptyList()
+      throws PlaceVisitAlreadyExistsException, TripNotFoundException {
+    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
+    storage.addPlaceVisit(LONDON);
+    storage.addPlaceVisit(PARIS);
+    storage.addPlaceVisit(ROME);
+    storage.addPlaceVisit(TOKYO);
+    storage.addPlaceVisit(BEIJING);
+    storage.addPlaceVisit(TOKYO_B);
+    storage.addPlaceVisit(SEOUL);
+    storage.removeTripPlaceVisits("a");
+    List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("a");
+    assertThat(tripAPlaces).isEmpty();
+  }
+
+  @Test
+  public void removeTripPlaceVisits_tripNotInStorage_throwsException()
+      throws PlaceVisitAlreadyExistsException, TripNotFoundException {
+    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
+    storage.addPlaceVisit(LONDON);
+    storage.addPlaceVisit(PARIS);
+    storage.addPlaceVisit(ROME);
+    storage.addPlaceVisit(TOKYO);
+    storage.addPlaceVisit(BEIJING);
+    storage.addPlaceVisit(TOKYO_B);
+    storage.addPlaceVisit(SEOUL);
+    Assert.assertThrows(TripNotFoundException.class, () -> storage.removeTripPlaceVisits("c"));
   }
 }

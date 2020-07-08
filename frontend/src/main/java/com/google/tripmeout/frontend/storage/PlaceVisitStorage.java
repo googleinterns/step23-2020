@@ -69,5 +69,5 @@ public interface PlaceVisitStorage {
    * @throws TripNotFoundException if there are no PlaceVisitModel objects with
    *     the given tripId
    */
-  void removeTrip(String tripId) throws TripNotFoundException;
+  void removeTripPlaceVisits(String tripId) throws TripNotFoundException;
 }

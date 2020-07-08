@@ -94,7 +94,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   @Override
-  public void removeTrip(String tripId) throws TripNotFoundException {
+  public void removeTripPlaceVisits(String tripId) throws TripNotFoundException {
     if (storage.remove(tripId) == null) {
       throw new TripNotFoundException("No PlaceVisitModel objects found with tripId: " + tripId);
     }

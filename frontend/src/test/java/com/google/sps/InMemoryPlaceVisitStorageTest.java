@@ -89,7 +89,6 @@ public final class InMemoryPlaceVisitStorageTest {
                                                      .setLongitude(0)
                                                      .build();
 
-
   /**
    * test that a PlaceVisitAlreadyExistsException is thrown when a place is
    * added but another place with the same placeId and tripId has already been

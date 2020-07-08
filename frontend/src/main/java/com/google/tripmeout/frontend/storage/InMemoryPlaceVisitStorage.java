@@ -8,6 +8,7 @@ import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
 import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
+import java.lang.RuntimeException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,20 +21,24 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   Map<String, Map<String, PlaceVisitModel>> storage = new ConcurrentHashMap<>();
 
   @Override
-  public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
-    Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
-    newPlaceMap.put(placeVisit.placeId(), placeVisit);
-
-    Map<String, PlaceVisitModel> alreadyThereMap =
-        storage.putIfAbsent(placeVisit.tripId(), newPlaceMap);
-
-    if (alreadyThereMap != null) {
-      PlaceVisitModel alreadyTherePlace =
-          alreadyThereMap.putIfAbsent(placeVisit.placeId(), placeVisit);
-      if (alreadyTherePlace != null) {
-        throw new PlaceVisitAlreadyExistsException(
-            "PlaceVisit " + placeVisit.name() + " already exists for trip " + placeVisit.tripId());
-      }
+  public void addPlaceVisit(PlaceVisitModel placeVisit)
+      throws PlaceVisitAlreadyExistsException, Throwable {
+    try {
+      storage.compute(placeVisit.tripId(), (tripKey, placesMap) -> {
+        if (placesMap == null) {
+          Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
+          newPlaceMap.put(placeVisit.placeId(), placeVisit);
+          return newPlaceMap;
+        }
+        if (placesMap.get(placeVisit.placeId()) != null) {
+          throw new RuntimeException(new PlaceVisitAlreadyExistsException("PlaceVisit "
+              + placeVisit.name() + " already exists for trip " + placeVisit.tripId()));
+        }
+        placesMap.put(placeVisit.placeId(), placeVisit);
+        return placesMap;
+      });
+    } catch (RuntimeException e) {
+      throw e.getCause();
     }
   }
 
@@ -53,11 +58,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeId) {
-    Map<String, PlaceVisitModel> placesMap = storage.get(tripId);
-    if (placesMap != null && placesMap.get(placeId) != null) {
-      return Optional.of(placesMap.get(placeId));
-    }
-    return Optional.empty();
+    return Optional.ofNullable(storage.get(tripId)).map(placesMap -> placesMap.get(placeId));
   }
 
   @Override

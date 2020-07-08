@@ -8,12 +8,13 @@ public abstract class TripModel {
     return new AutoValue_TripModel.Builder();
   }
 
-  public abstract Builder toBuilder();
   public abstract String id();
   public abstract String name();
   public abstract String userId();
   public abstract double locationLat();
   public abstract double locationLong();
+
+  public abstract Builder toBuilder();
 
   @AutoValue.Builder
   public static abstract class Builder {

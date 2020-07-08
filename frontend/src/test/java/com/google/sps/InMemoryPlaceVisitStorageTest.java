@@ -324,12 +324,29 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(PARIS);
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(TOKYO);
-    storage.addPlaceVisit(BEIJING);
-    storage.addPlaceVisit(TOKYO_B);
-    storage.addPlaceVisit(SEOUL);
     storage.removeTripPlaceVisits("a");
     List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("a");
     assertThat(tripAPlaces).isEmpty();
+  }
+
+  /**
+   * test that after deleting one trip's PlaceVisits, other trip's PlaceVisits
+   * remain
+   */
+  @Test
+  public void removeTripPlaceVisits_getOtherTripPlaceVisits_tripInStorage_returnsTripList()
+      throws PlaceVisitAlreadyExistsException, TripNotFoundException, Throwable {
+    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
+    storage.addPlaceVisit(LONDON);
+    storage.addPlaceVisit(PARIS);
+    storage.addPlaceVisit(ROME);
+    storage.addPlaceVisit(TOKYO);
+    storage.addPlaceVisit(BEIJING);
+    storage.addPlaceVisit(TOKYO_B);
+    storage.addPlaceVisit(SEOUL);
+    storage.removeTripPlaceVisits("b");
+    List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("a");
+    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS);
   }
 
   @Test

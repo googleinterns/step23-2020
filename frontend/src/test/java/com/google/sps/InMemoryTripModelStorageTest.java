@@ -53,7 +53,6 @@ public class InMemoryTripModelStorageTest {
                                                                .setLocationLong(52.1)
                                                                .build();
 
-
   /**
    * test that an exception is thrown when adding a TripModel when there is
    * already a TripModel object in storage with the same tripId

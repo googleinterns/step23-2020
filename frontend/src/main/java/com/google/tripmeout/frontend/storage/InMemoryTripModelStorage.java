@@ -14,12 +14,9 @@ public class InMemoryTripModelStorage implements TripStorage {
 
   @Override
   public void addTrip(TripModel trip) throws TripAlreadyExistsException {
-    synchronized (storage) {
-      if (storage.get(trip.id()) == null) {
-        storage.put(trip.id(), trip);
-      } else {
-        throw new TripAlreadyExistsException("Trip with id: " + trip.id() + " already exisits");
-      }
+    TripModel previousTrip = storage.putIfAbsent(trip.id(), trip);
+    if (previousTrip != null) {
+      throw new TripAlreadyExistsException("Trip with id: " + trip.id() + " already exisits");
     }
   }
 
@@ -34,28 +31,19 @@ public class InMemoryTripModelStorage implements TripStorage {
   @Override
   public void updateTripLocation(String tripId, double latitude, double longitude)
       throws TripNotFoundException {
-    synchronized (storage) {
-      TripModel trip = storage.get(tripId);
-      if (trip == null) {
-        throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
-      }
-      TripModel updatedTrip =
-          trip.toBuilder().setLocationLat(latitude).setLocationLong(longitude).build();
-
-      storage.put(tripId, updatedTrip);
+    TripModel newTripObject = storage.computeIfPresent(tripId,
+        (id, trip) -> trip.toBuilder().setLocationLat(latitude).setLocationLong(longitude).build());
+    if (newTripObject == null) {
+      throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
     }
   }
 
   @Override
   public void updateTripName(String tripId, String name) throws TripNotFoundException {
-    synchronized (storage) {
-      TripModel trip = storage.get(tripId);
-      if (trip == null) {
-        throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
-      }
-      TripModel updatedTrip = trip.toBuilder().setName(name).build();
-
-      storage.put(tripId, updatedTrip);
+    TripModel newTripObject =
+        storage.computeIfPresent(tripId, (id, trip) -> trip.toBuilder().setName(name).build());
+    if (newTripObject == null) {
+      throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
     }
   }
 

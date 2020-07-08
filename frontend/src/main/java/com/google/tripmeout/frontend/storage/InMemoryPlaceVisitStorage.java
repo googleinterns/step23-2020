@@ -6,16 +6,14 @@ import com.google.common.collect.Tables;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
 import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
+import com.google.tripmeout.frontend.error.TripNotFoundException;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-<<<<<<< HEAD
 import java.util.Optional;
-=======
 import java.util.concurrent.ConcurrentHashMap;
->>>>>>> fix formatting
 
 public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   // <tripId, placeId, PlaceVisitModel>
@@ -23,18 +21,16 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
-    synchronized (storage) {
-      Map<String, PlaceVisitModel> placesMap = storage.get(placeVisit.tripId());
+    Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
+    newPlaceMap.put(placeVisit.placeId(), placeVisit);
 
-      if (placesMap == null) {
-        Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
-        newPlaceMap.put(placeVisit.placeId(), placeVisit);
-        storage.put(placeVisit.tripId(), newPlaceMap);
+    Map<String, PlaceVisitModel> alreadyThereMap =
+        storage.putIfAbsent(placeVisit.tripId(), newPlaceMap);
 
-      } else if (placesMap.get(placeVisit.placeId()) == null) {
-        placesMap.put(placeVisit.placeId(), placeVisit);
-
-      } else {
+    if (alreadyThereMap != null) {
+      PlaceVisitModel alreadyTherePlace =
+          alreadyThereMap.putIfAbsent(placeVisit.placeId(), placeVisit);
+      if (alreadyTherePlace != null) {
         throw new PlaceVisitAlreadyExistsException(
             "PlaceVisit " + placeVisit.name() + " already exists for trip " + placeVisit.tripId());
       }
@@ -43,12 +39,15 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public void removePlaceVisit(String tripId, String placeId) throws PlaceVisitNotFoundException {
-    synchronized (storage) {
-      Map<String, PlaceVisitModel> placesMap = storage.get(tripId);
-      if (placesMap == null || placesMap.remove(placeId) == null) {
-        throw new PlaceVisitNotFoundException(
-            "PlaceVisit with id" + placeId + " not found for trip " + tripId);
-      }
+    Map<String, PlaceVisitModel> placesMap = storage.get(tripId);
+    if (placesMap == null) {
+      throw new PlaceVisitNotFoundException(
+          "PlaceVisit with id" + placeId + " not found for trip " + tripId);
+    }
+
+    if (placesMap.remove(placeId) == null) {
+      throw new PlaceVisitNotFoundException(
+          "PlaceVisit with id" + placeId + " not found for trip " + tripId);
     }
   }
 
@@ -63,17 +62,18 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public boolean changePlaceVisitStatus(String tripId, String placeId, String newStatus) {
-    synchronized (storage) {
-      Map<String, PlaceVisitModel> placesMap = storage.get(tripId);
-      if (placesMap == null || placesMap.get(placeId) == null) {
-        return false;
-      } else {
-        PlaceVisitModel place = placesMap.get(placeId);
-        PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
-        placesMap.put(placeId, updatedPlace);
-        return true;
-      }
+    Map<String, PlaceVisitModel> placesMap = storage.get(tripId);
+    if (placesMap == null) {
+      return false;
     }
+
+    PlaceVisitModel originalPlace = placesMap.computeIfPresent(
+        placeId, (placeKey, place) -> place.toBuilder().setUserMark(newStatus).build());
+    if (originalPlace == null) {
+      return false;
+    }
+
+    return true;
   }
 
   @Override
@@ -91,5 +91,12 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
     }
 
     return tripPlaceVisits;
+  }
+
+  @Override
+  public void removeTrip(String tripId) throws TripNotFoundException {
+    if (storage.remove(tripId) == null) {
+      throw new TripNotFoundException("No PlaceVisitModel objects found with tripId: " + tripId);
+    }
   }
 }

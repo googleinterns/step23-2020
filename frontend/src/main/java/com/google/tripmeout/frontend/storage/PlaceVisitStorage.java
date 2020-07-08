@@ -3,6 +3,7 @@ package com.google.tripmeout.frontend.storage;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
 import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
+import com.google.tripmeout.frontend.error.TripNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,4 +60,14 @@ public interface PlaceVisitStorage {
    * @param tripId the id to match PlaceVisitModel object's placeId field on
    */
   List<PlaceVisitModel> getTripPlaceVisits(String tripId);
+
+  /**
+   * removes all PlaceVisitModel objects with the given tripId
+   *
+   * @param tripId the id of the trip to remove all PlaceVisitModel objects for
+   *
+   * @throws TripNotFoundException if there are no PlaceVisitModel objects with
+   *     the given tripId
+   */
+  void removeTrip(String tripId) throws TripNotFoundException;
 }

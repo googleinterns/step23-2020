@@ -9,6 +9,7 @@ import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
 import com.google.tripmeout.frontend.storage.InMemoryPlaceVisitStorage;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                     .setPlaceId("LCY")
                                                     .setName("London, UK")
                                                     .setTripId("a")
-                                                    .setUserMark("don't-care")
+                                                    .setUserMark(PlaceVisitModel.UserMark.NO)
                                                     .setLatitude(56)
                                                     .setLongitude(23.64)
                                                     .build();
@@ -30,7 +31,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                   .setPlaceId("FCO")
                                                   .setName("Rome, Italy")
                                                   .setTripId("a")
-                                                  .setUserMark("must-see")
+                                                  .setUserMark(PlaceVisitModel.UserMark.YES)
                                                   .setLatitude(44.32)
                                                   .setLongitude(32.1244)
                                                   .build();
@@ -39,7 +40,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                    .setPlaceId("CDG")
                                                    .setName("Paris, France")
                                                    .setTripId("a")
-                                                   .setUserMark("if-time")
+                                                   .setUserMark(PlaceVisitModel.UserMark.MAYBE)
                                                    .setLatitude(48.3288)
                                                    .setLongitude(34)
                                                    .build();
@@ -48,7 +49,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                    .setPlaceId("HND")
                                                    .setName("Tokyo, Japan")
                                                    .setTripId("a")
-                                                   .setUserMark("must-see")
+                                                   .setUserMark(PlaceVisitModel.UserMark.YES)
                                                    .setLatitude(35.32)
                                                    .setLongitude(139.33)
                                                    .build();
@@ -57,7 +58,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                      .setPlaceId("PEK")
                                                      .setName("Beijing, China")
                                                      .setTripId("b")
-                                                     .setUserMark("must-see")
+                                                     .setUserMark(PlaceVisitModel.UserMark.YES)
                                                      .setLatitude(35.32)
                                                      .setLongitude(125.33)
                                                      .build();
@@ -66,7 +67,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                    .setPlaceId("ICN")
                                                    .setName("Seoul, South Korea")
                                                    .setTripId("b")
-                                                   .setUserMark("if-time")
+                                                   .setUserMark(PlaceVisitModel.UserMark.MAYBE)
                                                    .setLatitude(26.32)
                                                    .setLongitude(135.33)
                                                    .build();
@@ -75,7 +76,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                      .setPlaceId("HND")
                                                      .setName("Tokyo, Japan")
                                                      .setTripId("b")
-                                                     .setUserMark("must-see")
+                                                     .setUserMark(PlaceVisitModel.UserMark.YES)
                                                      .setLatitude(35.32)
                                                      .setLongitude(139.33)
                                                      .build();
@@ -84,7 +85,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                      .setPlaceId("ICN")
                                                      .setName("some city in Korea")
                                                      .setTripId("b")
-                                                     .setUserMark("if-time")
+                                                     .setUserMark(PlaceVisitModel.UserMark.MAYBE)
                                                      .setLatitude(0)
                                                      .setLongitude(0)
                                                      .build();
@@ -138,11 +139,11 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
 
-    PlaceVisitModel tokyo = storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placeId());
-    assertThat(tokyo).isEqualTo(TOKYO);
+    Optional<PlaceVisitModel> tokyo = storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placeId());
+    assertThat(tokyo).hasValue(TOKYO);
 
-    PlaceVisitModel tokyoB = storage.getPlaceVisit(TOKYO_B.tripId(), TOKYO_B.placeId());
-    assertThat(tokyoB).isEqualTo(TOKYO_B);
+    Optional<PlaceVisitModel> tokyoB = storage.getPlaceVisit(TOKYO_B.tripId(), TOKYO_B.placeId());
+    assertThat(tokyoB).hasValue(TOKYO_B);
   }
 
   /**
@@ -150,8 +151,7 @@ public final class InMemoryPlaceVisitStorageTest {
    * an empty storage
    */
   @Test
-  public void removePlaceVisit_emptyStorage_throwsException()
-      throws PlaceVisitNotFoundException {
+  public void removePlaceVisit_emptyStorage_throwsException() throws PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     Assert.assertThrows(PlaceVisitNotFoundException.class,
         () -> storage.removePlaceVisit(TOKYO.tripId(), TOKYO.placeId()));
@@ -214,10 +214,10 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
 
-    boolean response = storage.updateUserMarkOrAddPlaceVisit(PARIS, "don't-care");
+    boolean response = storage.updateUserMarkOrAddPlaceVisit(PARIS, PlaceVisitModel.UserMark.NO);
     PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId()).get();
     assertThat(response).isTrue();
-    assertThat(changedParis.userMark()).isEqualTo("don't-care");
+    assertThat(changedParis.userMark()).isEqualTo(PlaceVisitModel.UserMark.NO);
   }
 
   /**
@@ -232,7 +232,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(PARIS);
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
-    boolean response = storage.updateUserMarkOrAddPlaceVisit(SEOUL, "don't-care");
+    boolean response = storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
     assertThat(response).isFalse();
     assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(SEOUL);
   }
@@ -251,10 +251,10 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
 
-    boolean response = storage.updateUserMarkOrAddPlaceVisit(PARIS, "if-time");
+    boolean response = storage.updateUserMarkOrAddPlaceVisit(PARIS, PlaceVisitModel.UserMark.MAYBE);
     PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId()).get();
     assertThat(response).isTrue();
-    assertThat(changedParis.userMark()).isEqualTo("if-time");
+    assertThat(changedParis.userMark()).isEqualTo(PlaceVisitModel.UserMark.MAYBE);
   }
 
   /**

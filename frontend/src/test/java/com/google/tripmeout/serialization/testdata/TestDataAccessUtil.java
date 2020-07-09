@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 public final class TestDataAccessUtil {
+
   public static String getPlaceVisitWithUnkownField() throws IOException {
     return getTestDataFileContents("PlaceVisitWithUnknownField.json");
   }
@@ -33,6 +34,7 @@ public final class TestDataAccessUtil {
 
   public static String getWellFormedPlaceVisit() throws IOException {
     return getTestDataFileContents("WellFormedPlaceVisit.json");
+
   }
 
   private static String getTestDataFileContents(String fileName) throws IOException {
@@ -43,4 +45,7 @@ public final class TestDataAccessUtil {
   }
 
   private TestDataAccessUtil() {}
+
 }
+
+

@@ -1,6 +1,8 @@
 package com.google.tripmeout.frontend.storage;
 
 import com.google.tripmeout.frontend.TripModel;
+import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
+import com.google.tripmeout.frontend.error.TripNotFoundException;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public interface TripStorage {
    * @throws a TripAlreadyExists exception if there is a TripModel object
    *     already in storage with the same tripId as the trip
    */
-  void addTrip(TripModel trip);
+  void addTrip(TripModel trip) throws TripAlreadyExistsException;
 
   /**
    * removes from storage the TripModel object whose tripId matches the given tripId
@@ -25,7 +27,7 @@ public interface TripStorage {
    * @throws a TripNotFound exception if there is no TripModel object with
    *     the given tripId in storage
    */
-  void removeTrip(String tripId);
+  void removeTrip(String tripId) throws TripNotFoundException;
 
   /**
    * updates the locationLat and locationLong fields of the TripModel object
@@ -38,7 +40,8 @@ public interface TripStorage {
    * @throws a TripNotFound exception if there is no TripModel object with
    *     the given tripId in storage
    */
-  void updateTripLocation(String tripId, double latitude, double longitude);
+  void updateTripLocation(String tripId, double latitude, double longitude)
+      throws TripNotFoundException;
 
   /**
    * updates the name field of the TripModel object in storage whose tripId
@@ -50,7 +53,7 @@ public interface TripStorage {
    * @throws a TripNotFound exception if there is no TripModel object with
    *     the given tripId in storage
    */
-  void updateTripName(String tripId, String tripName);
+  void updateTripName(String tripId, String tripName) throws TripNotFoundException;
 
   /**
    * returns the TripModel object in storage whose tripId matched the given tripId
@@ -60,7 +63,7 @@ public interface TripStorage {
    * @throws a TripNotFound exception if there is no TripModel object with
    *     the given tripId in storage
    */
-  TripModel getTrip(String tripId);
+  TripModel getTrip(String tripId) throws TripNotFoundException;
 
   /**
    * returns all TripModel objects in storage whose userId matches the given userId

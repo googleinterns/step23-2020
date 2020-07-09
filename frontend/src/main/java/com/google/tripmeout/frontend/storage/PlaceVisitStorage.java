@@ -51,7 +51,7 @@ public interface PlaceVisitStorage {
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel
    *     object in storage with the given tripId and placeId
    */
-  void changePlaceVisitStatus(String tripId, String placeId, String newStatus);
+  void changePlaceVisitStatus(String tripId, String placeId, PlaceVisitModel.UserMark newStatus);
 
   /**
    * gets a list of all of the PlaceVisitModel objects whose tripId matches the

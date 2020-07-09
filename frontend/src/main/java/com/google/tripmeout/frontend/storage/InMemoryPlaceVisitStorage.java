@@ -22,7 +22,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public void addPlaceVisit(PlaceVisitModel placeVisit)
-      throws PlaceVisitAlreadyExistsException, Throwable {
+      throws PlaceVisitAlreadyExistsException {
     try {
       storage.compute(placeVisit.tripId(), (tripKey, placesMap) -> {
         if (placesMap == null) {
@@ -38,7 +38,10 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
         return placesMap;
       });
     } catch (RuntimeException e) {
-      throw e.getCause();
+      if (e.getCause() instanceof PlaceVisitAlreadyExistsException) {
+        throw (PlaceVisitAlreadyExistsException) e.getCause();
+      }
+      throw e;
     }
   }
 

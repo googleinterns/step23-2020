@@ -19,7 +19,7 @@ public interface PlaceVisitStorage {
    * @throws a PlaceVisitAlreadyExists exception if there is a PlaceVisitModel
    *     in storage with the same tripId and placeId as placeVisit
    */
-  void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException, Throwable;
+  void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException;
 
   /**
    * removes from storage the PlaceVisitModel whose tripId and placeId match the

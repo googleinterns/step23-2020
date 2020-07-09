@@ -64,20 +64,14 @@ public class GsonTripModelTypeAdapter extends TypeAdapter<TripModel> {
     writer.beginObject();
     writeUnlessNullOrEmpty(writer, TRIP_MODEL_ID_JSON_FIELD_NAME, trip.id());
     writeUnlessNullOrEmpty(writer, TRIP_MODEL_NAME_JSON_FIELD_NAME, trip.name());
-    writeUnlessNullOrEmpty(writer, TRIP_MODEL_LATITUDE_JSON_FIELD_NAME, trip.locationLat());
-    writeUnlessNullOrEmpty(writer, TRIP_MODEL_LONGITUDE_JSON_FIELD_NAME, trip.locationLong());
+    writer.name(TRIP_MODEL_LATITUDE_JSON_FIELD_NAME);
+    writer.value(trip.locationLat());
+    writer.name(TRIP_MODEL_LONGITUDE_JSON_FIELD_NAME);
+    writer.value(trip.locationLong());
     writer.endObject();
   }
 
   private static void writeUnlessNullOrEmpty(JsonWriter writer, String name, String value)
-      throws IOException {
-    if (Strings.isNullOrEmpty(value)) {
-      writer.name(name);
-      writer.value(value);
-    }
-  }
-
-  private static void writeUnlessNullOrEmpty(JsonWriter writer, String name, double value)
       throws IOException {
     if (Strings.isNullOrEmpty(value)) {
       writer.name(name);

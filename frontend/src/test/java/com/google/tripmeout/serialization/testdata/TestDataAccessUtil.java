@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 public final class TestDataAccessUtil {
-     public static String getTripModelUnknownField() throws IOException {
+  public static String getTripModelUnknownField() throws IOException {
     return getTestDataFileContents("TripModelUnknownField.json");
   }
 

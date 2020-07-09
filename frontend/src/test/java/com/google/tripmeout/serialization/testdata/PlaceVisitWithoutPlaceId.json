@@ -1,9 +1,7 @@
-{
-    
+{ 
     "name":"New York",
     "tripId":"123",
     "userMark":"must-see",
     "latitude":50.2,
-    "longitude":39.1
-    
+    "longitude":39.1 
 }

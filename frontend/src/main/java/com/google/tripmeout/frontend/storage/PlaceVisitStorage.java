@@ -53,12 +53,8 @@ public interface PlaceVisitStorage {
    * @param placeVisit the PlaceVisitModel object to update or add
    * @param newStatus the new status to update placeVisit's userMark field to
    */
-<<<<<<< HEAD
   boolean updateUserMarkOrAddPlaceVisit(
       PlaceVisitModel placeVisit, PlaceVisitModel.UserMark newStatus);
-=======
-  boolean updateUserMarkOrAddPlaceVisit(PlaceVisitModel placeVisit, String newStatus);
->>>>>>> 43e767eb4c69df083af5d76a26fee9817df6a4dd
 
   /**
    * gets a list of all of the PlaceVisitModel objects whose tripId matches the

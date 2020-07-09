@@ -29,23 +29,31 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
     while (reader.hasNext()) {
       JsonToken token = reader.peek();
       if (token.equals(JsonToken.NAME)) {
+        System.out.println("Property "+reader.peek());
         String name = reader.nextName();
         switch (name) {
           case PLACE_VISIT_MODEL_PLACE_ID_JSON_FIELD_NAME:
+           System.out.println("Place ID "+reader.peek());
             placeBuilder.setPlaceId(reader.nextString());
             break;
           case PLACE_VISIT_MODEL_NAME_JSON_FIELD_NAME:
+           System.out.println("Name "+reader.peek());
             placeBuilder.setName(reader.nextString());
             break;
           case PLACE_VISIT_MODEL_TRIP_ID_JSON_FIELD_NAME:
+           System.out.println("Trip ID "+reader.peek());
             placeBuilder.setTripId(reader.nextString());
             break;
           case PLACE_VISIT_MODEL_USER_MARK_JSON_FIELD_NAME:
+           System.out.println("User Mark "+reader.peek());
             placeBuilder.setUserMark(reader.nextString());
+            break;
           case PLACE_VISIT_MODEL_LATITUDE_JSON_FIELD_NAME:
+            System.out.println("Latitude "+reader.peek());
             placeBuilder.setLatitude(reader.nextDouble());
             break;
           case PLACE_VISIT_MODEL_LONGITUDE_JSON_FIELD_NAME:
+            System.out.println("Longitude "+reader.peek());
             placeBuilder.setLongitude(reader.nextDouble());
             break;
           default:
@@ -69,8 +77,12 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
     writeUnlessNullOrEmpty(writer, PLACE_VISIT_MODEL_NAME_JSON_FIELD_NAME, place.name());
     writeUnlessNullOrEmpty(writer, PLACE_VISIT_MODEL_TRIP_ID_JSON_FIELD_NAME, place.tripId());
     writeUnlessNullOrEmpty(writer, PLACE_VISIT_MODEL_USER_MARK_JSON_FIELD_NAME, place.userMark());
-    writeUnlessNullOrEmpty(writer, PLACE_VISIT_MODEL_LATITUDE_JSON_FIELD_NAME, place.latitude());
-    writeUnlessNullOrEmpty(writer, PLACE_VISIT_MODEL_LONGITUDE_JSON_FIELD_NAME, place.longitude());
+    writer.name(PLACE_VISIT_MODEL_LATITUDE_JSON_FIELD_NAME);
+    System.out.println("Ran Writer");
+    writer.value(place.latitude());
+    writer.name(PLACE_VISIT_MODEL_LONGITUDE_JSON_FIELD_NAME);
+    writer.value(place.longitude());
+    System.out.println("Ran Finished Writer");
     writer.endObject();
   }
 
@@ -82,11 +94,5 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
     }
   }
 
-  private static void writeUnlessNullOrEmpty(JsonWriter writer, String name, double value)
-      throws IOException {
-    if (Strings.isNullOrEmpty(value)) {
-      writer.name(name);
-      writer.value(value);
-    }
-  }
+  
 }

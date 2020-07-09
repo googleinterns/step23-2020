@@ -4,11 +4,7 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class PlaceVisitModel {
-  public static enum UserMark {
-    YES,
-    MAYBE,
-    NO
-  }
+  public static enum UserMark { YES, MAYBE, NO, UNKNOWN }
 
   public static Builder builder() {
     return new AutoValue_PlaceVisitModel.Builder();
@@ -20,6 +16,8 @@ public abstract class PlaceVisitModel {
   public abstract UserMark userMark();
   public abstract double latitude();
   public abstract double longitude();
+
+  public abstract Builder toBuilder();
 
   @AutoValue.Builder
   public static abstract class Builder {

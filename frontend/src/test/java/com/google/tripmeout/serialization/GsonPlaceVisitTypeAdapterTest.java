@@ -34,7 +34,7 @@ public class GsonPlaceVisitTypeAdapterTest {
     assertThat(place.placeId()).isEqualTo("ABC");
     assertThat(place.name()).isEqualTo("New York");
     assertThat(place.tripId()).isEqualTo("123");
-    assertThat(place.userMark()).isEqualTo("must-see");
+    assertThat(place.userMark().toString()).isEqualTo("YES");
     assertThat(place.latitude()).isEqualTo(50.2);
     assertThat(place.longitude()).isEqualTo(39.1);
   }

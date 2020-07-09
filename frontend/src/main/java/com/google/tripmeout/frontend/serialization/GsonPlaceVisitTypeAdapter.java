@@ -8,6 +8,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.google.tripmeout.frontend.PlaceVisitModel;
+import com.google.tripmeout.frontend.PlaceVisitModel.UserMark;
 import java.io.IOException;
 
 public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
@@ -41,7 +42,8 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
             placeBuilder.setTripId(reader.nextString());
             break;
           case PLACE_VISIT_MODEL_USER_MARK_JSON_FIELD_NAME:
-            placeBuilder.setUserMark(reader.nextString());
+            UserMark userMark = UserMark.valueOf(reader.nextString());
+            placeBuilder.setUserMark(userMark);
             break;
           case PLACE_VISIT_MODEL_LATITUDE_JSON_FIELD_NAME:
             placeBuilder.setLatitude(reader.nextDouble());
@@ -69,13 +71,12 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
     writeUnlessNullOrEmpty(writer, PLACE_VISIT_MODEL_PLACE_ID_JSON_FIELD_NAME, place.placeId());
     writeUnlessNullOrEmpty(writer, PLACE_VISIT_MODEL_NAME_JSON_FIELD_NAME, place.name());
     writeUnlessNullOrEmpty(writer, PLACE_VISIT_MODEL_TRIP_ID_JSON_FIELD_NAME, place.tripId());
-    writeUnlessNullOrEmpty(writer, PLACE_VISIT_MODEL_USER_MARK_JSON_FIELD_NAME, place.userMark());
+    writer.name(PLACE_VISIT_MODEL_USER_MARK_JSON_FIELD_NAME);
+    writer.value(place.userMark().toString());
     writer.name(PLACE_VISIT_MODEL_LATITUDE_JSON_FIELD_NAME);
-    System.out.println("Ran Writer");
     writer.value(place.latitude());
     writer.name(PLACE_VISIT_MODEL_LONGITUDE_JSON_FIELD_NAME);
     writer.value(place.longitude());
-    System.out.println("Ran Finished Writer");
     writer.endObject();
   }
 

@@ -7,11 +7,12 @@ public abstract class PlaceVisitModel {
   public static enum UserMark {
     YES,
     MAYBE,
-    NO
+    NO,
+    UNKNOWN
   }
 
   public static Builder builder() {
-    return new AutoValue_PlaceVisitModel.Builder();
+    return new AutoValue_PlaceVisitModel.Builder().setUserMark(UserMark.UNKNOWN);
   }
 
   public abstract String placeId();

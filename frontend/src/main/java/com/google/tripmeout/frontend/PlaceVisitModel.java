@@ -4,12 +4,7 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class PlaceVisitModel {
-  public static enum UserMark {
-    YES,
-    MAYBE,
-    NO,
-    UNKNOWN
-  }
+  public static enum UserMark { YES, MAYBE, NO, UNKNOWN }
 
   public static Builder builder() {
     return new AutoValue_PlaceVisitModel.Builder().setUserMark(UserMark.UNKNOWN);

@@ -62,19 +62,23 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   @Override
-  public boolean changePlaceVisitStatus(String tripId, String placeId, String newStatus) {
-    Map<String, PlaceVisitModel> placesMap = storage.get(tripId);
-    if (placesMap == null) {
-      return false;
+  public boolean updateUserMarkOrAddPlaceVisit(PlaceVisitModel placeVisit, String newStatus) {
+    synchronized (storage) {
+      Map<String, PlaceVisitModel> placesMap = storage.get(placeVisit.tripId());
+      if (placesMap == null) {
+        Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
+        newPlaceMap.put(placeVisit.placeId(), placeVisit);
+        return false;
+      }
+      if (placesMap.get(placeVisit.placeId()) != null) {
+        placesMap.put(placeVisit.placeId(),
+            placesMap.get(placeVisit.placeId()).toBuilder().setUserMark(newStatus).build());
+        return true;
+      } else {
+        placesMap.put(placeVisit.placeId(), placeVisit);
+        return false;
+      }
     }
-
-    PlaceVisitModel originalPlace = placesMap.computeIfPresent(
-        placeId, (placeKey, place) -> place.toBuilder().setUserMark(newStatus).build());
-    if (originalPlace == null) {
-      return false;
-    }
-
-    return true;
   }
 
   @Override

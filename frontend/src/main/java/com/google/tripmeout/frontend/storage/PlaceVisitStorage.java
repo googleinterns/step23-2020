@@ -44,14 +44,16 @@ public interface PlaceVisitStorage {
 
   /**
    * updates the userMark parameter of the PlaceVisitModel object whose tripId
-   * and placeId match the given tripId and placeId, respectively
+   * and placeId match the given tripId and placeId, respectively,
+   * if PlaceVisitModel obbject in storage
+   * adds PlaceVisitModel object otherwise
    * return true if PlaceVisitModel object with the given tripId and placeId
-   * exist in storage
+   * previously exist in storage
    *
-   * @param tripId the id to match PlaceVisitModel object's tripId field on
-   * @param placeId the id to match PlaceVisitModel object's placeId field on
+   * @param placeVisit the PlaceVisitModel object to update or add
+   * @param newStatus the new status to update placeVisit's userMark field to
    */
-  boolean changePlaceVisitStatus(String tripId, String placeId, PlaceVisitModel.UserMark newStatus);
+  boolean updateUserMarkOrAddPlaceVisit(PlaceVisitModel placeVisit, PlaceVisitModel.UserMark newStatus);
 
   /**
    * gets a list of all of the PlaceVisitModel objects whose tripId matches the

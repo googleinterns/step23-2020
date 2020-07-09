@@ -206,16 +206,16 @@ public final class InMemoryPlaceVisitStorageTest {
    * when PlaceVisitModel object with the given tripId and placeId is in storage
    */
   @Test
-  public void changePlaceVisitStatus_placeInStorage_returnsTrueAndStatusChanged()
+  public void updateUserMarkOrAddPlaceVisit_placeInStorage_returnsTrueAndStatusChanged()
       throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException, Throwable {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
     storage.addPlaceVisit(PARIS);
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
-    boolean response =
-        storage.changePlaceVisitStatus(PARIS.tripId(), PARIS.placeId(), "don't-care");
-    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId());
+
+    boolean response = storage.updateUserMarkOrAddPlaceVisit(PARIS, "don't-care");
+    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId()).get();
     assertThat(response).isTrue();
     assertThat(changedParis.userMark()).isEqualTo("don't-care");
   }
@@ -225,16 +225,16 @@ public final class InMemoryPlaceVisitStorageTest {
    * with the given tripId and placeId is not in storage
    */
   @Test
-  public void changePlaceVisitStatus_placeNotInStorage_returnsFalse()
+  public void updateUserMarkOrAddPlaceVisit_placeNotInStorage_returnsFalseAndPlaceAdded()
       throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException, Throwable {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
     storage.addPlaceVisit(PARIS);
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
-    boolean response =
-        storage.changePlaceVisitStatus(SEOUL.tripId(), SEOUL.placeId(), "don't-care");
+    boolean response = storage.updateUserMarkOrAddPlaceVisit(SEOUL, "don't-care");
     assertThat(response).isFalse();
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(SEOUL);
   }
 
   /**
@@ -243,15 +243,16 @@ public final class InMemoryPlaceVisitStorageTest {
    * when PlaceVisitModel object with the given tripId and placeId is in storage
    */
   @Test
-  public void changePlaceVisitStatus_placeInStorage_returnsTrueAndStatusSame()
+  public void updateUserMarkOrAddPlaceVisit_placeInStorage_returnsTrueAndStatusSame()
       throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException, Throwable {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(LONDON);
     storage.addPlaceVisit(PARIS);
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
-    boolean response = storage.changePlaceVisitStatus(PARIS.tripId(), PARIS.placeId(), "if-time");
-    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId());
+
+    boolean response = storage.updateUserMarkOrAddPlaceVisit(PARIS, "if-time");
+    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.placeId()).get();
     assertThat(response).isTrue();
     assertThat(changedParis.userMark()).isEqualTo("if-time");
   }

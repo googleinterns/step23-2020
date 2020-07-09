@@ -21,7 +21,12 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   Map<String, Map<String, PlaceVisitModel>> storage = new ConcurrentHashMap<>();
 
   @Override
+<<<<<<< HEAD
   public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
+=======
+  public void addPlaceVisit(PlaceVisitModel placeVisit)
+      throws PlaceVisitAlreadyExistsException {
+>>>>>>> 43e767eb4c69df083af5d76a26fee9817df6a4dd
     try {
       storage.compute(placeVisit.tripId(), (tripKey, placesMap) -> {
         if (placesMap == null) {
@@ -38,7 +43,11 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
       });
     } catch (RuntimeException e) {
       if (e.getCause() instanceof PlaceVisitAlreadyExistsException) {
+<<<<<<< HEAD
         throw(PlaceVisitAlreadyExistsException) e.getCause();
+=======
+        throw (PlaceVisitAlreadyExistsException) e.getCause();
+>>>>>>> 43e767eb4c69df083af5d76a26fee9817df6a4dd
       }
       throw e;
     }
@@ -93,8 +102,12 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
     }
     for (PlaceVisitModel place : placesMap.values()) {
       if (place != null
+<<<<<<< HEAD
           && (place.userMark().equals(PlaceVisitModel.UserMark.YES)
               || place.userMark().equals(PlaceVisitModel.UserMark.MAYBE))) {
+=======
+          && (place.userMark().equals("must-see") || place.userMark().equals("if-time"))) {
+>>>>>>> 43e767eb4c69df083af5d76a26fee9817df6a4dd
         tripPlaceVisits.add(place);
       }
     }

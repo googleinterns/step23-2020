@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 public final class TestDataAccessUtil {
-     public static String getPlaceVisitWithUnkownField() throws IOException {
-    return getTestDataFileContents("PlaceVisitWithUnkownField.json");
+  public static String getPlaceVisitWithUnkownField() throws IOException {
+    return getTestDataFileContents("PlaceVisitWithUnknownField.json");
   }
 
   public static String getPlaceVisitWithoutPlaceId() throws IOException {

@@ -1,5 +1,6 @@
 
 SHELL=/bin/bash
+DART_CLI?=dart
 FLUTTER_CLI?=flutter
 MAVEN_CLI?=mvn
 FLUTTER_APP_ROOT?=frontend/ui
@@ -12,7 +13,7 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
 format:
 	$(CLANG_FORMAT) --style=Google -i --sort-includes $(call rwildcard,frontend/,*.java)
-	$(FLUTTER_CLI) format $(FLUTTER_APP_ROOT)
+	$(DART_CLI) format $(FLUTTER_APP_ROOT)
 
 clean:
 	$(FLUTTER_CLI) clean --packages $(FLUTTER_APP_ROOT)

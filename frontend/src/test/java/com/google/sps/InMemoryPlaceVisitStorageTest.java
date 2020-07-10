@@ -151,8 +151,7 @@ public final class InMemoryPlaceVisitStorageTest {
    * an empty storage
    */
   @Test
-  public void removePlaceVisit_emptyStorage_throwsException()
-      throws PlaceVisitNotFoundException {
+  public void removePlaceVisit_emptyStorage_throwsException() throws PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     Assert.assertThrows(PlaceVisitNotFoundException.class,
         () -> storage.removePlaceVisit(TOKYO.tripId(), TOKYO.placeId()));

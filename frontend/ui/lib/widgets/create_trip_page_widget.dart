@@ -12,6 +12,19 @@ class CreateTripPageWidget extends StatelessWidget {
           Row(
             children: <Widget>[
               Padding(
+                padding: const EdgeInsets.all(10.0),
+                child:
+                    Text("This should be the text input for place  radius. "),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text("This should be the text input for radius. "),
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: MapPlaceHolder(),
               ),
@@ -21,7 +34,7 @@ class CreateTripPageWidget extends StatelessWidget {
             children: <Widget>[
               Container(
                 child: Text(
-                    "This should be the submit button under the fake map. I hope!!!"),
+                    "This should be the submit button under the fake map. "),
               ),
             ],
           ),

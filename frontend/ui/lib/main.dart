@@ -28,7 +28,7 @@ class TripMeOut extends StatelessWidget {
 
     return MaterialApp(
       title: 'Trip Me Out',
-      initialRoute: '/createTrip',
+      initialRoute: '/trips',
       onGenerateRoute: (settings) {
         // Add more pages here...
         if (settings.name == '/trips') {

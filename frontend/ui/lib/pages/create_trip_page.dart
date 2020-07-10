@@ -6,7 +6,7 @@ class CreateTripPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trips .3.'),
+        title: Text('Trips'),
       ),
       body: CreateTripPageWidget(),
     );

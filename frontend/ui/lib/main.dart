@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tripmeout/pages/create_trip_page.dart';
 import 'package:tripmeout/pages/trip_list_page.dart';
+import 'package:tripmeout/pages/trip_view_page.dart';
+
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/services/in_memory_trip_service.dart';
 import 'package:tripmeout/model/trip.dart';
@@ -25,12 +28,24 @@ class TripMeOut extends StatelessWidget {
 
     return MaterialApp(
       title: 'Trip Me Out',
-      initialRoute: '/trips',
+      initialRoute: '/createTrip',
       onGenerateRoute: (settings) {
         // Add more pages here...
         if (settings.name == '/trips') {
           return MaterialPageRoute(
             builder: (context) => TripListPage(tripService),
+            settings: settings,
+          );
+        }
+        if (settings.name == '/createTrip') {
+          return MaterialPageRoute(
+            builder: (context) => CreateTripPage(),
+            settings: settings,
+          );
+        }
+        if (settings.name == '/tripView') {
+          return MaterialPageRoute(
+            builder: (context) => TripViewPage(),
             settings: settings,
           );
         }

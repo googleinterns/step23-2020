@@ -38,7 +38,7 @@ public class PlaceParentServlet extends HttpServlet {
       Optional<PlaceVisitModel> place =
           ServletUtil.extractFromRequestBody(request, gson, PlaceVisitModel.class);
 
-      String tripId = ServletUtil.parseUri(request, TRIP_NAME_PATTERN).group(1);
+      String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
       logger.atInfo().log("finished matching");
 
       if (!place.isPresent()) {
@@ -68,8 +68,8 @@ public class PlaceParentServlet extends HttpServlet {
       PlaceVisitModel newOrUpdatedPlace =
           placeStorage.getPlaceVisit(tripId, place.get().placeId()).get();
 
-      response.setStatus(HttpServletResponse.SC_OK);
       response.setContentType("application/json");
+      response.setStatus(HttpServletResponse.SC_OK);
       PrintWriter writer = response.getWriter();
       writer.println(gson.toJson(newOrUpdatedPlace));
       writer.flush();
@@ -79,7 +79,7 @@ public class PlaceParentServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
     } catch (InvalidRequestException e) {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
     } catch (Exception e) {
       logger.atWarning().log(e.getMessage());
@@ -90,11 +90,11 @@ public class PlaceParentServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      String tripId = ServletUtil.parseUri(request, TRIP_NAME_PATTERN).group(1);
+      String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
       List<PlaceVisitModel> nearbyPlaces = placeStorage.getTripPlaceVisits(tripId);
 
-      response.setStatus(HttpServletResponse.SC_OK);
       response.setContentType("application/json");
+      response.setStatus(HttpServletResponse.SC_OK);
       PrintWriter writer = response.getWriter();
       writer.println(gson.toJson(nearbyPlaces));
       writer.flush();

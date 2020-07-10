@@ -99,7 +99,7 @@ public class PlaceParentServletTest {
   }
 
   @Test
-  public void doPost_badPlaceId_setsNotFoundStatus() throws IOException {
+  public void doPost_badPlaceId_setsBadRequestStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
@@ -111,7 +111,7 @@ public class PlaceParentServletTest {
     Optional<PlaceVisitModel> place = placeStorage.getPlaceVisit("abc123", "hello");
 
     assertThat(place).isEmpty();
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
   }
 
   @Test

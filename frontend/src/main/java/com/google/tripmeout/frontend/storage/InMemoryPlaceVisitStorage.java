@@ -21,8 +21,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   Map<String, Map<String, PlaceVisitModel>> storage = new ConcurrentHashMap<>();
 
   @Override
-  public void addPlaceVisit(PlaceVisitModel placeVisit)
-      throws PlaceVisitAlreadyExistsException {
+  public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
     try {
       storage.compute(placeVisit.tripId(), (tripKey, placesMap) -> {
         if (placesMap == null) {

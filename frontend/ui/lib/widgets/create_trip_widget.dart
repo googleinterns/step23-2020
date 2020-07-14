@@ -22,10 +22,10 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
     return Center(
         child: FittedBox(
       child: Column(
-        children: <Widget>[
+        children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: [
               Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: Container(
@@ -63,7 +63,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             ],
           ),
           Row(
-            children: <Widget>[
+            children: [
               Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: MapWidget(),
@@ -71,14 +71,14 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             ],
           ),
           Row(
-            children: <Widget>[
+            children: [
               Container(
                   child:
                       Text('$newInformation', style: TextStyle(fontSize: 21))),
             ],
           ),
           Row(
-            children: <Widget>[
+            children: [
               Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: RaisedButton(

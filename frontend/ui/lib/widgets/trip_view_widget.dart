@@ -21,9 +21,9 @@ class TripWidgetState extends State<TripViewWidget> {
         child: ExpansionTile(
           title: Text("Trip Name"),
           trailing: Text("M T D"),
-          children: <Widget>[
+          children: [
             Column(
-              children: <Widget>[
+              children: [
                 PlaceBlockWidget("Place 1"),
                 PlaceBlockWidget("Place 2"),
                 PlaceBlockWidget("Place 3"),

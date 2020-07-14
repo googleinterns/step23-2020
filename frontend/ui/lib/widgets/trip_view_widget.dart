@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tripmeout/widgets/place_block_widget.dart';
 
 class TripViewWidget extends StatefulWidget {
   TripViewWidget({Key key}) : super(key: key);
@@ -23,56 +24,11 @@ class TripWidgetState extends State<TripViewWidget> {
           children: <Widget>[
             Column(
               children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  margin: const EdgeInsets.all(15.0),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Place 1"),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  margin: const EdgeInsets.all(15.0),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Place 2"),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  margin: const EdgeInsets.all(15.0),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Place 3"),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  margin: const EdgeInsets.all(15.0),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Place 4"),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  margin: const EdgeInsets.all(15.0),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Place 5"),
-                ),
+                PlaceBlockWidget("Place 1"),
+                PlaceBlockWidget("Place 2"),
+                PlaceBlockWidget("Place 3"),
+                PlaceBlockWidget("Place 4"),
+                PlaceBlockWidget("Place 5"),
               ],
             ),
           ],

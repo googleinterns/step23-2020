@@ -1,4 +1,4 @@
-import 'package:tripmeout/widgets/create_trip_page_widget.dart';
+import 'package:tripmeout/widgets/create_trip_widget.dart';
 import 'package:flutter/material.dart';
 
 class CreateTripPage extends StatelessWidget {
@@ -8,7 +8,7 @@ class CreateTripPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Trips'),
       ),
-      body: CreateTripPageWidget(),
+      body: CreateTripWidget(),
     );
   }
 }

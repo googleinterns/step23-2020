@@ -17,11 +17,11 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class GsonPlaceVisitTypeAdapterTest {
-  private Gson gsonWithTypeAdapter;
+  private Gson gson;
 
   @Before
   public void setUp() {
-    this.gsonWithTypeAdapter =
+    this.gson =
         new GsonBuilder()
             .registerTypeAdapter(PlaceVisitModel.class, new GsonPlaceVisitTypeAdapter())
             .create();
@@ -29,7 +29,7 @@ public class GsonPlaceVisitTypeAdapterTest {
 
   @Test
   public void deserialize_wellFormed() throws Exception {
-    PlaceVisitModel place = gsonWithTypeAdapter.fromJson(
+    PlaceVisitModel place = gson.fromJson(
         TestDataAccessUtil.getWellFormedPlaceVisit(), PlaceVisitModel.class);
     assertThat(place.placeId()).isEqualTo("ABC");
     assertThat(place.name()).isEqualTo("New York");
@@ -43,7 +43,7 @@ public class GsonPlaceVisitTypeAdapterTest {
   public void deserialize_unknownField_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getPlaceVisitWithUnkownField(), PlaceVisitModel.class));
   }
 
@@ -51,35 +51,48 @@ public class GsonPlaceVisitTypeAdapterTest {
   public void deserialize_noPlaceId_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getPlaceVisitWithoutPlaceId(), PlaceVisitModel.class));
   }
   @Test
   public void deserialize_noName_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getPlaceVisitWithoutName(), PlaceVisitModel.class));
   }
   @Test
   public void deserialize_noTripId_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getPlaceVisitWithoutTripId(), PlaceVisitModel.class));
   }
   @Test
   public void deserialize_noLatitude_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getPlaceVisitWithoutLatitude(), PlaceVisitModel.class));
   }
   @Test
   public void deserialize_noLongitude_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getPlaceVisitWithoutLongitude(), PlaceVisitModel.class));
+  }
+  @Test
+  public void roundTrip_objectsAreEqual() throws Exception {
+    PlaceVisitModel place = PlaceVisitModel.builder()
+                                .setPlaceId("abc")
+                                .setName("name")
+                                .setTripId("tripId")
+                                .setLongitude(12.3)
+                                .setLatitude(34.9)
+                                .build();
+    assertThat(
+        gson.fromJson(gson.toJson(place), PlaceVisitModel.class))
+        .isEqualTo(place);
   }
 }

@@ -15,6 +15,12 @@ class TripWidgetState extends State<TripViewWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(5))),
+      margin: const EdgeInsets.all(15.0),
       padding: const EdgeInsets.all(10.0),
       width: MediaQuery.of(context).size.width * .80,
       child: ExpansionTile(

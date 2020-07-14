@@ -8,7 +8,7 @@ class CreateTripPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Trips'),
       ),
-      body: CreateTripWidget(),
+      body: Center(child: CreateTripWidget()),
     );
   }
 }

@@ -35,11 +35,16 @@ public final class TripTestDataAccessUtil {
   }
 
   private static String getTestDataFileContents(String fileName) throws IOException {
+
     try (InputStream inputStream = TripTestDataAccessUtil.class.getResourceAsStream(fileName);
+
          Reader reader = new InputStreamReader(inputStream, "UTF-8")) {
       return CharStreams.toString(reader);
     }
   }
 
+
   private TripTestDataAccessUtil() {}
+
+ 
 }

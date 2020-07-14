@@ -17,11 +17,11 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class GsonTripModelTypeAdapterTest {
-  private Gson gsonWithTypeAdapter;
+  private Gson gson;
 
   @Before
   public void setup() {
-    this.gsonWithTypeAdapter =
+    this.gson =
         new GsonBuilder()
             .registerTypeAdapter(TripModel.class, new GsonTripModelTypeAdapter())
             .create();
@@ -30,7 +30,7 @@ public class GsonTripModelTypeAdapterTest {
   @Test
   public void deserialize_wellFormed() throws Exception {
     TripModel trip =
-        gsonWithTypeAdapter.fromJson(TestDataAccessUtil.getTripModelWellFormed(), TripModel.class);
+        gson.fromJson(TestDataAccessUtil.getTripModelWellFormed(), TripModel.class);
     assertThat(trip.id()).isEqualTo("a");
     assertThat(trip.name()).isEqualTo("New Jersey");
     assertThat(trip.userId()).isEqualTo("idk");
@@ -42,7 +42,7 @@ public class GsonTripModelTypeAdapterTest {
   public void deserialize_unknownField_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getTripModelUnknownField(), TripModel.class));
   }
 
@@ -50,7 +50,7 @@ public class GsonTripModelTypeAdapterTest {
   public void deserialize_noId_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getTripModelWithoutId(), TripModel.class));
   }
 
@@ -58,7 +58,7 @@ public class GsonTripModelTypeAdapterTest {
   public void deserialize_noName_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getTripModelWithoutName(), TripModel.class));
   }
 
@@ -66,7 +66,7 @@ public class GsonTripModelTypeAdapterTest {
   public void deserialize_noUserId_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getTripModelWithoutUserId(), TripModel.class));
   }
 
@@ -74,14 +74,21 @@ public class GsonTripModelTypeAdapterTest {
   public void deserialize_noLatitude_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getTripModelWithoutLatitude(), TripModel.class));
   }
   @Test
   public void deserialize_noLongitude_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
-            -> gsonWithTypeAdapter.fromJson(
+            -> gson.fromJson(
                 TestDataAccessUtil.getTripModelWithoutLongitude(), TripModel.class));
+  }
+  @Test
+  public void roundTrip_objectsAreEqual() throws Exception {
+     TripModel trip = TripModel.builder().setId("id").setName("name").setUserId("userId").setLocationLat(23.9).setLocationLong(24.2).build();
+     assertThat(
+        gson.fromJson(gson.toJson(trip), TripModel.class))
+        .isEqualTo(trip);
   }
 }

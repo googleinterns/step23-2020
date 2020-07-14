@@ -1,0 +1,9 @@
+{
+    "placeId":"ABC",
+    "name":"New York",
+    "tripId":"123",
+    "userMark":"YES",
+    "latitude":50.2,
+    "longitude":39.1,
+    "Unknown":"random"
+}

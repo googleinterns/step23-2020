@@ -32,7 +32,7 @@ class _RetryableAsyncLoadableState<T> extends State<RetryableAsyncLoadable<T>> {
 
   _RetryableAsyncLoadableState(
       this.onLoad, this.loadFunction, this.errorMessage) {
-    preformAction();
+    startLoad();
   }
 
   @override
@@ -47,7 +47,7 @@ class _RetryableAsyncLoadableState<T> extends State<RetryableAsyncLoadable<T>> {
         actions: [
           FlatButton.icon(
             onPressed: () {
-              preformAction();
+              startLoad();
             },
             icon: Icon(Icons.refresh),
             label: Text('Retry'),
@@ -62,7 +62,7 @@ class _RetryableAsyncLoadableState<T> extends State<RetryableAsyncLoadable<T>> {
     return Container();
   }
 
-  void preformAction() async {
+  void startLoad() async {
     if (!loading) {
       setState(() {
         this.loading = true;

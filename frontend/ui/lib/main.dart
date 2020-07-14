@@ -4,6 +4,7 @@ import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/services/in_memory_trip_service.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/model/location.dart';
+import 'package:tripmeout/themes/default_theme.dart';
 
 void main() {
   runApp(TripMeOut());
@@ -25,6 +26,7 @@ class TripMeOut extends StatelessWidget {
 
     return MaterialApp(
       title: 'Trip Me Out',
+      theme: defaultTheme,
       initialRoute: '/trips',
       onGenerateRoute: (settings) {
         // Add more pages here...

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/trip_list_widget.dart';
-import 'package:tripmeout/widgets/create_trip_widget.dart';
 
 class TripListPage extends StatelessWidget {
   final TripService tripService;

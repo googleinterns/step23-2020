@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/services/trip_service.dart';
+import 'package:tripmeout/widgets/default_app_bar.dart';
 import 'package:tripmeout/widgets/trip_list_widget.dart';
 
 class TripListPage extends StatelessWidget {
@@ -10,9 +11,7 @@ class TripListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Trips'),
-      ),
+      appBar: defaultAppBar(context),
       body: TripListWidget(this.tripService),
     );
   }

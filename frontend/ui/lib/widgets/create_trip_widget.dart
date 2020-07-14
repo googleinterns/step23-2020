@@ -19,8 +19,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: FittedBox(
+    return FittedBox(
       child: Column(
         children: [
           Padding(
@@ -59,37 +58,24 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
               ],
             ),
           ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: MapWidget(),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: MapWidget(),
           ),
-          Row(
-            children: [
-              Container(
-                  child:
-                      Text('$newInformation', style: TextStyle(fontSize: 21))),
-            ],
+          Container(
+              child: Text('$newInformation', style: TextStyle(fontSize: 21))),
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: RaisedButton(
+              onPressed: () => changeText(),
+              child: Text('Submit'),
+              textColor: Colors.white,
+              color: Colors.black,
+            ),
           ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: RaisedButton(
-                  onPressed: () => changeText(),
-                  child: Text('Submit'),
-                  textColor: Colors.white,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          )
         ],
       ),
       fit: BoxFit.contain,
-    ));
+    );
   }
 }

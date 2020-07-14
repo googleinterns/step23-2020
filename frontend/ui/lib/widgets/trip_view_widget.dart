@@ -14,27 +14,25 @@ class TripWidgetState extends State<TripViewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        width: MediaQuery.of(context).size.width * .80,
-        child: ExpansionTile(
-          title: Text("Trip Name"),
-          trailing: Text("M T D"),
-          children: [
-            Column(
-              children: [
-                PlaceBlockWidget("Place 1"),
-                PlaceBlockWidget("Place 2"),
-                PlaceBlockWidget("Place 3"),
-                PlaceBlockWidget("Place 4"),
-                PlaceBlockWidget("Place 5"),
-              ],
-            ),
-          ],
-          backgroundColor: Colors.green,
-          initiallyExpanded: false,
-        ),
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      width: MediaQuery.of(context).size.width * .80,
+      child: ExpansionTile(
+        title: Text("Trip Name"),
+        trailing: Text("M T D"),
+        children: [
+          Column(
+            children: [
+              PlaceBlockWidget("Place 1"),
+              PlaceBlockWidget("Place 2"),
+              PlaceBlockWidget("Place 3"),
+              PlaceBlockWidget("Place 4"),
+              PlaceBlockWidget("Place 5"),
+            ],
+          ),
+        ],
+        backgroundColor: Colors.green,
+        initiallyExpanded: false,
       ),
     );
   }

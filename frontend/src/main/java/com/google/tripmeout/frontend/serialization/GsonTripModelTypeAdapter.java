@@ -26,28 +26,27 @@ public class GsonTripModelTypeAdapter extends TypeAdapter<TripModel> {
     TripModel.Builder tripBuilder = TripModel.builder();
     reader.beginObject();
     while (reader.hasNext()) {
-        String name = reader.nextName();
-        switch (name) {
-          case ID_JSON_FIELD_NAME:
-            tripBuilder.setId(reader.nextString());
-            break;
-          case NAME_JSON_FIELD_NAME:
-            tripBuilder.setName(reader.nextString());
-            break;
-          case USER_ID_JSON_FIELD_NAME:
-            tripBuilder.setUserId(reader.nextString());
-            break;
-          case LATITUDE_JSON_FIELD_NAME:
-            tripBuilder.setLocationLat(reader.nextDouble());
-            break;
-          case LONGITUDE_JSON_FIELD_NAME:
-            tripBuilder.setLocationLong(reader.nextDouble());
-            break;
-          default:
-            throw new JsonParseException(
-                String.format("Unknown field name %s for type Trip Model", name));
-        }
-     
+      String name = reader.nextName();
+      switch (name) {
+        case ID_JSON_FIELD_NAME:
+          tripBuilder.setId(reader.nextString());
+          break;
+        case NAME_JSON_FIELD_NAME:
+          tripBuilder.setName(reader.nextString());
+          break;
+        case USER_ID_JSON_FIELD_NAME:
+          tripBuilder.setUserId(reader.nextString());
+          break;
+        case LATITUDE_JSON_FIELD_NAME:
+          tripBuilder.setLocationLat(reader.nextDouble());
+          break;
+        case LONGITUDE_JSON_FIELD_NAME:
+          tripBuilder.setLocationLong(reader.nextDouble());
+          break;
+        default:
+          throw new JsonParseException(
+              String.format("Unknown field name %s for type Trip Model", name));
+      }
     }
     reader.endObject();
     return tripBuilder.build();

@@ -3,4 +3,11 @@ class Location {
 
   final double longitude;
   final double latitude;
+
+  static Location from(Location location, {longitude, latitude}) {
+    return Location(
+      longitude: longitude ?? location.longitude,
+      latitude: latitude ?? location.latitude,
+    );
+  }
 }

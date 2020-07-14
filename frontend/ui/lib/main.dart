@@ -25,7 +25,6 @@ class TripMeOut extends StatelessWidget {
     //TODO: remove this...
 
     tripService.createTrip(Trip(
-      id: 'fake-trip-id',
       name: 'My Fake Trip',
       location: Location(
         longitude: 0.0,

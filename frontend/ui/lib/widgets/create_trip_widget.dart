@@ -23,12 +23,12 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
         child: FittedBox(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Container(
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
                   width: 250.0,
                   child: TextFormField(
                     onChanged: (text) {
@@ -41,10 +41,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Container(
+                Container(
                   width: 125.0,
                   child: TextFormField(
                     onChanged: (text) {
@@ -59,8 +56,8 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
                         border: OutlineInputBorder(), labelText: 'Radius KM'),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Row(
             children: [

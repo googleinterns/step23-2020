@@ -1,20 +1,15 @@
 package com.google.tripmeout.frontend.storage;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-import com.google.common.collect.Tables;
-import com.google.tripmeout.frontend.PlaceVisitModel;
-import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
-import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
-import com.google.tripmeout.frontend.error.TripNotFoundException;
-import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
-import java.lang.RuntimeException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.google.tripmeout.frontend.PlaceVisitModel;
+import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
+import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
+import com.google.tripmeout.frontend.error.TripNotFoundException;
 
 public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   // <tripId, placeId, PlaceVisitModel>
@@ -30,6 +25,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
           return newPlaceMap;
         }
         if (placesMap.get(placeVisit.placeId()) != null) {
+          // cannot throw checked exception in here so wrap in RuntimeException
           throw new RuntimeException(new PlaceVisitAlreadyExistsException("PlaceVisit "
               + placeVisit.name() + " already exists for trip " + placeVisit.tripId()));
         }
@@ -37,6 +33,11 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
         return placesMap;
       });
     } catch (RuntimeException e) {
+      /**
+       * check if RuntimeException is actually because of PlaceVisitAlreadyExistsException
+       * if yes, throw PlaceVisitAlreadyExistsExceptions
+       * else, throw original RuntimeExeption
+       */ 
       if (e.getCause() instanceof PlaceVisitAlreadyExistsException) {
         throw(PlaceVisitAlreadyExistsException) e.getCause();
       }
@@ -66,23 +67,31 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   @Override
   public boolean updateUserMarkOrAddPlaceVisit(
       PlaceVisitModel placeVisit, PlaceVisitModel.UserMark newStatus) {
-    synchronized (storage) {
-      Map<String, PlaceVisitModel> placesMap = storage.get(placeVisit.tripId());
-      if (placesMap == null) {
-        Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
-        newPlaceMap.put(placeVisit.placeId(), placeVisit);
-        storage.put(placeVisit.tripId(), newPlaceMap);
-        return false;
-      }
-      if (placesMap.get(placeVisit.placeId()) != null) {
-        placesMap.put(placeVisit.placeId(),
-            placesMap.get(placeVisit.placeId()).toBuilder().setUserMark(newStatus).build());
-        return true;
-      } else {
-        placesMap.put(placeVisit.placeId(), placeVisit);
-        return false;
-      }
-    }
+
+    boolean[] alreadyInStorage = new boolean[1];
+    alreadyInStorage[0] = false;
+
+    storage.compute(placeVisit.tripId(), (tripKey, placesMap) -> {
+        if (placesMap == null) {
+          Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
+          newPlaceMap.put(placeVisit.placeId(), placeVisit);
+          return newPlaceMap;
+        }
+        
+        if (placesMap.get(placeVisit.placeId()) != null) {
+          PlaceVisitModel updatedPlace = placesMap.get(placeVisit.placeId()).toBuilder()
+            .setUserMark(newStatus)
+            .build();
+          placesMap.put(updatedPlace.placeId(), updatedPlace);
+          alreadyInStorage[0] = true;
+        } else {
+          placesMap.put(placeVisit.placeId(), placeVisit);
+        }
+        
+        return placesMap;
+    });
+
+    return alreadyInStorage[0];
   }
 
   @Override

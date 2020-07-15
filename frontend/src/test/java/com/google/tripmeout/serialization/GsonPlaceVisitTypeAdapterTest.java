@@ -56,10 +56,14 @@ public class GsonPlaceVisitTypeAdapterTest {
   }
   @Test
   public void deserialize_noName_throwsJsonParseException() throws Exception {
-    assertThrows(JsonParseException.class,
-        ()
-            -> gson.fromJson(
-                TestDataAccessUtil.getPlaceVisitWithoutName(), PlaceVisitModel.class));
+    PlaceVisitModel place = gson.fromJson(
+        TestDataAccessUtil.getPlaceVisitWithoutName(), PlaceVisitModel.class);
+    assertThat(place.placeId()).isEqualTo("ABC");
+    assertThat(place.name()).isEqualTo(null);
+    assertThat(place.tripId()).isEqualTo("123");
+    assertThat(place.userMark().toString()).isEqualTo("YES");
+    assertThat(place.latitude()).isEqualTo(50.2);
+    assertThat(place.longitude()).isEqualTo(39.1);
   }
   @Test
   public void deserialize_noTripId_throwsJsonParseException() throws Exception {
@@ -70,17 +74,25 @@ public class GsonPlaceVisitTypeAdapterTest {
   }
   @Test
   public void deserialize_noLatitude_throwsJsonParseException() throws Exception {
-    assertThrows(JsonParseException.class,
-        ()
-            -> gson.fromJson(
-                TestDataAccessUtil.getPlaceVisitWithoutLatitude(), PlaceVisitModel.class));
+    PlaceVisitModel place = gson.fromJson(
+        TestDataAccessUtil.getPlaceVisitWithoutLatitude(), PlaceVisitModel.class);
+    assertThat(place.placeId()).isEqualTo("ABC");
+    assertThat(place.name()).isEqualTo("New York");
+    assertThat(place.tripId()).isEqualTo("123");
+    assertThat(place.userMark().toString()).isEqualTo("YES");
+    assertThat(place.latitude()).isEqualTo(null);
+    assertThat(place.longitude()).isEqualTo(39.1);
   }
   @Test
   public void deserialize_noLongitude_throwsJsonParseException() throws Exception {
-    assertThrows(JsonParseException.class,
-        ()
-            -> gson.fromJson(
-                TestDataAccessUtil.getPlaceVisitWithoutLongitude(), PlaceVisitModel.class));
+    PlaceVisitModel place = gson.fromJson(
+        TestDataAccessUtil.getPlaceVisitWithoutLongitude(), PlaceVisitModel.class);
+    assertThat(place.placeId()).isEqualTo("ABC");
+    assertThat(place.name()).isEqualTo("New York");
+    assertThat(place.tripId()).isEqualTo("123");
+    assertThat(place.userMark().toString()).isEqualTo("YES");
+    assertThat(place.latitude()).isEqualTo(50.2);
+    assertThat(place.longitude()).isEqualTo(null);
   }
   @Test
   public void roundTrip_objectsAreEqual() throws Exception {

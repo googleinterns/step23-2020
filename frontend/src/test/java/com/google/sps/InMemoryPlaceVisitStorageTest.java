@@ -23,7 +23,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                     .setName("London, UK")
                                                     .setTripId("a")
                                                     .setUserMark(PlaceVisitModel.UserMark.NO)
-                                                    .setLatitude(56)
+                                                    .setLatitude(56.)
                                                     .setLongitude(23.64)
                                                     .build();
 
@@ -42,7 +42,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                    .setTripId("a")
                                                    .setUserMark(PlaceVisitModel.UserMark.MAYBE)
                                                    .setLatitude(48.3288)
-                                                   .setLongitude(34)
+                                                   .setLongitude(34.)
                                                    .build();
 
   private static final PlaceVisitModel TOKYO = PlaceVisitModel.builder()
@@ -86,8 +86,8 @@ public final class InMemoryPlaceVisitStorageTest {
                                                      .setName("some city in Korea")
                                                      .setTripId("b")
                                                      .setUserMark(PlaceVisitModel.UserMark.MAYBE)
-                                                     .setLatitude(0)
-                                                     .setLongitude(0)
+                                                     .setLatitude(0.)
+                                                     .setLongitude(0.)
                                                      .build();
 
   /**

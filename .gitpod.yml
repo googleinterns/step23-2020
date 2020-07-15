@@ -1,2 +1,7 @@
 image:
   file: .gitpod.Dockerfile
+
+vscode:
+  extensions:
+    - Dart-Code.flutter@3.12.2:8+9OCbCxNozE+NHjTY4Ubw==
+    - Dart-Code.dart-code@3.12.2:U4I/KVVS4Adq5Ain/7bqhg==

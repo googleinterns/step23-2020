@@ -9,7 +9,6 @@ import com.google.gson.JsonParseException;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.serialization.GsonPlaceVisitTypeAdapter;
 import com.google.tripmeout.serialization.testdata.TestDataAccessUtil;
-import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -98,7 +97,7 @@ public class GsonPlaceVisitTypeAdapterTest {
 
     assertThat(place).isEqualTo(expected);
   }
-  
+
   @Test
   public void roundTrip_objectsAreEqual() throws Exception {
     PlaceVisitModel place = PlaceVisitModel.builder()

@@ -1,7 +1,9 @@
 package com.google.tripmeout.frontend;
 
-import com.google.auto.value.AutoValue;
 import javax.annotation.Nullable;
+
+import com.google.auto.value.AutoValue;
+
 
 @AutoValue
 public abstract class PlaceVisitModel {

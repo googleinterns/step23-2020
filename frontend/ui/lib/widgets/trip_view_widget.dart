@@ -3,10 +3,10 @@ import 'package:tripmeout/widgets/place_block_widget.dart';
 
 class TripViewWidget extends StatefulWidget {
   TripViewWidget({Key key}) : super(key: key);
-  TripWidgetState createState() => TripWidgetState();
+  _TripWidgetState createState() => _TripWidgetState();
 }
 
-class TripWidgetState extends State<TripViewWidget> {
+class _TripWidgetState extends State<TripViewWidget> {
   @override
   void initState() {
     super.initState();

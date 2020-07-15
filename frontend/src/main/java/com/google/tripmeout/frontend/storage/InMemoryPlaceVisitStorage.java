@@ -71,6 +71,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
       if (placesMap == null) {
         Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
         newPlaceMap.put(placeVisit.placeId(), placeVisit);
+        storage.put(placeVisit.tripId(), newPlaceMap);
         return false;
       }
       if (placesMap.get(placeVisit.placeId()) != null) {
@@ -92,9 +93,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
       return tripPlaceVisits;
     }
     for (PlaceVisitModel place : placesMap.values()) {
-      if (place != null
-          && (place.userMark().equals(PlaceVisitModel.UserMark.YES)
-              || place.userMark().equals(PlaceVisitModel.UserMark.MAYBE))) {
+      if (place != null) {
         tripPlaceVisits.add(place);
       }
     }

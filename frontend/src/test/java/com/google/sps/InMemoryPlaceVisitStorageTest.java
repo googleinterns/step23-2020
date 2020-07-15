@@ -271,7 +271,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(TOKYO);
     List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("a");
-    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS);
+    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS, LONDON);
   }
 
   /**
@@ -291,7 +291,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(TOKYO_B);
     storage.addPlaceVisit(SEOUL);
     List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("a");
-    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS);
+    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS, LONDON);
   }
 
   /**
@@ -347,7 +347,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(SEOUL);
     storage.removeTripPlaceVisits("b");
     List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("a");
-    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS);
+    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS, LONDON);
   }
 
   @Test

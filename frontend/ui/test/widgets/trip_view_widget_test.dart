@@ -22,8 +22,12 @@ void main() {
 
     expect(find.text('Trip Name'), findsOneWidget);
     expect(find.text('M T D'), findsOneWidget);
-    await tester.tap(
-        find.byType(ExpansionTile));
+    expect(find.text("Place 1"), findsNothing);
+    expect(find.text("Place 2"), findsNothing);
+    expect(find.text("Place 3"), findsNothing);
+    expect(find.text("Place 4"), findsNothing);
+    expect(find.text("Place 5"), findsNothing);
+    await tester.tap(find.byType(ExpansionTile));
     await tester.pumpAndSettle();
 
     // Should be everything on the view trip screen with expansion...

@@ -25,14 +25,13 @@ void main() {
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
     await tester.pumpAndSettle();
 
-    
     expect(find.byType(RaisedButton), findsOneWidget);
     expect(find.text('Grabbed info placed here.'), findsOneWidget);
     expect(find.text('No Input 0 km'), findsNothing);
     RaisedButton button =
         find.widgetWithText(RaisedButton, 'Submit').evaluate().first.widget;
     button.onPressed();
-    
+
     // Should be showing the new text after button push
     await tester.pump();
 
@@ -47,7 +46,6 @@ void main() {
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
     await tester.pumpAndSettle();
 
-    
     expect(find.byType(RaisedButton), findsOneWidget);
     expect(find.text('Grabbed info placed here.'), findsOneWidget);
     expect(find.text('Italy 25 km'), findsNothing);

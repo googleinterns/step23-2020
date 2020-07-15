@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @Singleton
 public final class TripServlet extends HttpServlet {
+  // The Trip get and delete servlet
+  private static final long serialVersionUID = 1L;
   private final TripStorage storage;
   private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json";
 

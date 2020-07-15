@@ -238,6 +238,19 @@ public final class InMemoryPlaceVisitStorageTest {
   }
 
   /**
+   * test that changePlaceVisitStatus returns false when PlaceVisitModel object
+   * and no PlaceVistModel with same tripId in storage
+   */
+  @Test
+  public void updateUserMarkOrAddPlaceVisit_placeAndTripNotInStorage_returnsFalseAndPlaceAdded()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
+    boolean response = storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
+    assertThat(response).isFalse();
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(SEOUL);
+  }
+
+  /**
    * test that changePlaceVisitStatus returns true and userMark field stays same
    * when changing status to same status as original PlaceVisitModel
    * when PlaceVisitModel object with the given tripId and placeId is in storage

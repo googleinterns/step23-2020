@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tripmeout/widgets/map_widget.dart';
 
+//TODO: Add loading screen after to the Create Trip Widget
+//TODO: Get rid of the newInformation text on the page.
+
 class CreateTripWidget extends StatefulWidget {
   @override
   _CreateTripWidgetState createState() => _CreateTripWidgetState();

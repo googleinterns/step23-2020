@@ -12,6 +12,11 @@ void main() {
     // Should be everything on the view trip screen without being expanded...
     expect(find.text('Trip Name'), findsOneWidget);
     expect(find.text('M T D'), findsOneWidget);
+    expect(find.text("Place 1"), findsNothing);
+    expect(find.text("Place 2"), findsNothing);
+    expect(find.text("Place 3"), findsNothing);
+    expect(find.text("Place 4"), findsNothing);
+    expect(find.text("Place 5"), findsNothing);
   });
 
   testWidgets('Showing the expanded page correctly shows up',

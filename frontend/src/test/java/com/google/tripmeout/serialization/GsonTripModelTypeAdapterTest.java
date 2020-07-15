@@ -19,6 +19,8 @@ import org.junit.runners.JUnit4;
 public class GsonTripModelTypeAdapterTest {
   private Gson gson;
 
+  private TripModel baseTrip = TripModel.builder().setUserId("idk").setId("a").build();
+
   @Before
   public void setup() {
     this.gson = new GsonBuilder()
@@ -29,14 +31,15 @@ public class GsonTripModelTypeAdapterTest {
   @Test
   public void deserialize_wellFormed() throws Exception {
     TripModel trip =
-
         gson.fromJson(TripTestDataAccessUtil.getTripModelWellFormed(), TripModel.class);
 
-    assertThat(trip.id()).isEqualTo("a");
-    assertThat(trip.name()).isEqualTo("New Jersey");
-    assertThat(trip.userId()).isEqualTo("idk");
-    assertThat(trip.locationLat()).isEqualTo(12.66);
-    assertThat(trip.locationLong()).isEqualTo(34.78);
+    TripModel expected = baseTrip.toBuilder()
+                             .setName("New Jersey")
+                             .setLocationLat(12.66)
+                             .setLocationLong(34.78)
+                             .build();
+
+    assertThat(trip).isEqualTo(expected);
   }
 
   @Test
@@ -58,12 +61,13 @@ public class GsonTripModelTypeAdapterTest {
   }
 
   @Test
-  public void deserialize_noName_throwsJsonParseException() throws Exception {
-    assertThrows(JsonParseException.class,
-        ()
-            -> gson.fromJson(
+  public void deserialize_noName_returnsTripModelWithNullName() throws Exception {
+    TripModel trip =
+        gson.fromJson(TripTestDataAccessUtil.getTripModelWithoutName(), TripModel.class);
 
-                TripTestDataAccessUtil.getTripModelWithoutName(), TripModel.class));
+    TripModel expected = baseTrip.toBuilder().setLocationLat(12.66).setLocationLong(34.78).build();
+
+    assertThat(trip).isEqualTo(expected);
   }
 
   @Test
@@ -77,20 +81,24 @@ public class GsonTripModelTypeAdapterTest {
 
   @Test
   public void deserialize_noLatitude_throwsJsonParseException() throws Exception {
-    assertThrows(JsonParseException.class,
-        ()
-            -> gson.fromJson(
+    TripModel trip =
+        gson.fromJson(TripTestDataAccessUtil.getTripModelWithoutLatitude(), TripModel.class);
 
-                TripTestDataAccessUtil.getTripModelWithoutLatitude(), TripModel.class));
+    TripModel expected = baseTrip.toBuilder().setName("New Jersey").setLocationLong(34.78).build();
+
+    assertThat(trip).isEqualTo(expected);
   }
+
   @Test
   public void deserialize_noLongitude_throwsJsonParseException() throws Exception {
-    assertThrows(JsonParseException.class,
-        ()
-            -> gson.fromJson(
+    TripModel trip =
+        gson.fromJson(TripTestDataAccessUtil.getTripModelWithoutLongitude(), TripModel.class);
 
-                TripTestDataAccessUtil.getTripModelWithoutLongitude(), TripModel.class));
+    TripModel expected = baseTrip.toBuilder().setName("New Jersey").setLocationLat(12.66).build();
+
+    assertThat(trip).isEqualTo(expected);
   }
+
   @Test
   public void roundTrip_objectsAreEqual() throws Exception {
     TripModel trip = TripModel.builder()

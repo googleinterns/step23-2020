@@ -1,6 +1,7 @@
 package com.google.tripmeout.frontend;
 
 import com.google.auto.value.AutoValue;
+import javax.annotation.Nullable;
 
 @AutoValue
 public abstract class TripModel {
@@ -9,10 +10,10 @@ public abstract class TripModel {
   }
 
   public abstract String id();
-  public abstract String name();
+  @Nullable public abstract String name();
   public abstract String userId();
-  public abstract double locationLat();
-  public abstract double locationLong();
+  @Nullable public abstract Double locationLat();
+  @Nullable public abstract Double locationLong();
 
   public abstract Builder toBuilder();
 
@@ -21,8 +22,8 @@ public abstract class TripModel {
     public abstract Builder setId(String id);
     public abstract Builder setName(String name);
     public abstract Builder setUserId(String userId);
-    public abstract Builder setLocationLat(double latitude);
-    public abstract Builder setLocationLong(double longitude);
+    public abstract Builder setLocationLat(Double latitude);
+    public abstract Builder setLocationLong(Double longitude);
     public abstract TripModel build();
   }
 }

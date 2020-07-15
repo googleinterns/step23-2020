@@ -1,6 +1,5 @@
 package com.google.tripmeout.frontend.serialization;
 
-import com.google.appengine.repackaged.com.google.api.client.json.Json;
 import com.google.common.base.Strings;
 import com.google.gson.JsonParseException;
 import com.google.gson.TypeAdapter;

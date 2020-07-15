@@ -9,7 +9,6 @@ import com.google.gson.JsonParseException;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.serialization.GsonPlaceVisitTypeAdapter;
 import com.google.tripmeout.serialization.testdata.TestDataAccessUtil;
-import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +20,10 @@ public class GsonPlaceVisitTypeAdapterTest {
 
   @Before
   public void setUp() {
-    this.gson = new GsonBuilder()
-                    .registerTypeAdapter(PlaceVisitModel.class, new GsonPlaceVisitTypeAdapter())
-                    .create();
+    this.gson =
+        new GsonBuilder()
+            .registerTypeHierarchyAdapter(PlaceVisitModel.class, new GsonPlaceVisitTypeAdapter())
+            .create();
   }
 
   @Test

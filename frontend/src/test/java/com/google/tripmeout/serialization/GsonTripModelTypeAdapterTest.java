@@ -9,7 +9,6 @@ import com.google.gson.JsonParseException;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.serialization.GsonTripModelTypeAdapter;
 import com.google.tripmeout.serialization.testdata.TripTestDataAccessUtil;
-import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +21,7 @@ public class GsonTripModelTypeAdapterTest {
   @Before
   public void setup() {
     this.gson = new GsonBuilder()
-                    .registerTypeAdapter(TripModel.class, new GsonTripModelTypeAdapter())
+                    .registerTypeHierarchyAdapter(TripModel.class, new GsonTripModelTypeAdapter())
                     .create();
   }
 

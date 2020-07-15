@@ -27,10 +27,9 @@ public class GsonPlaceVisitTypeAdapterTest {
 
   @Before
   public void setUp() {
-    this.gson =
-        new GsonBuilder()
-            .registerTypeAdapter(PlaceVisitModel.class, new GsonPlaceVisitTypeAdapter())
-            .create();
+    this.gson = new GsonBuilder()
+                    .registerTypeAdapter(PlaceVisitModel.class, new GsonPlaceVisitTypeAdapter())
+                    .create();
   }
 
   @Test
@@ -114,8 +113,6 @@ public class GsonPlaceVisitTypeAdapterTest {
                                 .setLongitude(12.3)
                                 .setLatitude(34.9)
                                 .build();
-    assertThat(
-        gson.fromJson(gson.toJson(place), PlaceVisitModel.class))
-        .isEqualTo(place);
+    assertThat(gson.fromJson(gson.toJson(place), PlaceVisitModel.class)).isEqualTo(place);
   }
 }

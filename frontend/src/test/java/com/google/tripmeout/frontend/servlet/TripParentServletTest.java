@@ -94,7 +94,7 @@ public class TripParentServletTest {
   }
 
   @Test
-  public void Happy_case() throws Exception {
+  public void doPost_wellFormedRequest_fillsInDefaultsAndPersistsTrip() throws Exception {
     // TODO(issues/66): Use specif userId string
     TripModel trip = createTripForPost();
     FakeHttpServletResponse response = new FakeHttpServletResponse();

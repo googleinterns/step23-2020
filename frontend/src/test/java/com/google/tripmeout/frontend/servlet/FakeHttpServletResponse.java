@@ -231,7 +231,8 @@ public class FakeHttpServletResponse implements HttpServletResponse {
   public PrintWriter getWriter() throws IOException {
     checkState(outputStream == null, "getOutputStream() already called");
     if (printWriter == null) {
-      printWriter = new PrintWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
+      printWriter = new PrintWriter(
+          new OutputStreamWriter(output, StandardCharsets.UTF_8), /* autoFlush= */ true);
     }
     return printWriter;
   }

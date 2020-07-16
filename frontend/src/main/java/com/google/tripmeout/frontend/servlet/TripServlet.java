@@ -1,11 +1,11 @@
-package com.google.tripmeout.frontend;
+package com.google.tripmeout.frontend.servlet;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripMeOutException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
-import com.google.tripmeout.frontend.serialization.GsonTripModelTypeAdapter;
 import com.google.tripmeout.frontend.storage.InMemoryTripModelStorage;
 import java.io.IOException;
 import javax.servlet.http.HttpServlet;
@@ -18,14 +18,6 @@ public final class TripServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
   private final InMemoryTripModelStorage storage;
   private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json";
-  private final static TripModel PARIS = TripModel.builder()
-                                             .setId("CDG")
-                                             .setName("Paris, France")
-                                             .setUserId("12345")
-                                             .setLocationLat(48.3288)
-                                             .setLocationLong(34.0)
-                                             .build();
-
   private final Gson gson;
 
   @Inject
@@ -37,29 +29,30 @@ public final class TripServlet extends HttpServlet {
   @Override
   public void doGet(final HttpServletRequest request, final HttpServletResponse response)
       throws IOException {
-    final String path = request.getRequestURI();
-    final String tripID = path; // TODO: Should parse out URI into just the trip ID
     try {
-        
-
-      TripModel theTrip = storage.getTrip(tripID);
+      final String tripId = TripName.fromRequestUri(request.getRequestURI()).id();
+      TripModel theTrip = storage.getTrip(tripId);
       response.setContentType(APPLICATION_JSON_CONTENT_TYPE + ";");
       response.getWriter().print(gson.toJson(theTrip));
+      response.getWriter().flush();
     } catch (TripNotFoundException e) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    } catch (Exception e) {
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 
   @Override
   public void doDelete(final HttpServletRequest request, final HttpServletResponse response)
       throws IOException {
-    final String path = request.getRequestURI();
-    final String tripID = path; // TODO @afeenster: Should parse out URI into just the trip ID
     try {
-      storage.removeTrip(tripID);
+      final String tripId = TripName.fromRequestUri(request.getRequestURI()).id();
+      storage.removeTrip(tripId);
       response.setStatus(HttpServletResponse.SC_ACCEPTED);
     } catch (TripMeOutException e) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    } catch (Exception e) {
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 }

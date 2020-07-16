@@ -2,16 +2,18 @@ package com.google.sps;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.TripServlet;
+import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
 import com.google.tripmeout.frontend.serialization.GsonTripModelTypeAdapter;
-import com.google.tripmeout.frontend.storage.TripStorage;
+import com.google.tripmeout.frontend.storage.InMemoryTripModelStorage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -24,7 +26,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class TripServletTest {
-  private TripServlet servlet;
   private Gson gson;
   private final static TripModel PARIS = TripModel.builder()
                                              .setId("CDG")
@@ -34,8 +35,6 @@ public class TripServletTest {
                                              .setLocationLong(34.0)
                                              .build();
 
-  @Mock TripStorage storage;
-
   @Mock HttpServletRequest request;
 
   @Mock HttpServletResponse response;
@@ -43,7 +42,6 @@ public class TripServletTest {
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
-    servlet = new TripServlet(storage);
     this.gson = new GsonBuilder()
                     .registerTypeAdapter(TripModel.class, new GsonTripModelTypeAdapter())
                     .create();
@@ -51,34 +49,55 @@ public class TripServletTest {
 
   @Test
   public void returnsErrorCodeForBadID()
-      throws ServletException, IOException, TripNotFoundException {
-    when(request.getRequestURI()).thenReturn("123");
+      throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
+    InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
+    storage.addTrip(PARIS);
+    TripServlet servlet = new TripServlet(storage, gson);
 
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    when(response.getWriter()).thenReturn(pw);
-
-    when(storage.getTrip(any())).thenThrow(new TripNotFoundException("Trip 123 can not be found."));
+    when(request.getRequestURI()).thenReturn("Not CDG");
 
     servlet.doGet(request, response);
-     verify(response).setStatus(404);
+    verify(response).setStatus(404);
   }
 
   @Test
-  public void returnsTripWithGivenId() throws ServletException, IOException, TripNotFoundException {
-    when(request.getRequestURI()).thenReturn("12345");
+  public void returnsTripWithGivenId()
+      throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
+    InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
+    storage.addTrip(PARIS);
+    TripServlet servlet = new TripServlet(storage, gson);
 
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-
-    TripModel expectedResult = PARIS;
-    when(storage.getTrip(any())).thenReturn(expectedResult);
-
-    when(response.getWriter()).thenReturn(pw);
+    when(request.getRequestURI()).thenReturn("CDG");
 
     servlet.doGet(request, response);
 
-    TripModel result = gson.fromJson(sw.getBuffer().toString().trim(), TripModel.class);
-    assertThat(result.name()).isEqualTo(expectedResult.name());
+    TripModel expectedResult = PARIS;
+    assertThat(response).isEqualTo(expectedResult);
+  }
+
+  @Test
+  public void returnsSuccessCodeWhenTripIsDeleted()
+      throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
+    InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
+    storage.addTrip(PARIS);
+    TripServlet servlet = new TripServlet(storage, gson);
+
+    when(request.getRequestURI()).thenReturn("CDG");
+
+    servlet.doDelete(request, response);
+    verify(response).setStatus(202);
+  }
+
+  @Test
+  public void returnsErrorCodeWhenTripNotFound()
+      throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
+    InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
+    storage.addTrip(PARIS);
+    TripServlet servlet = new TripServlet(storage, gson);
+
+    when(request.getRequestURI()).thenReturn("Not CDG");
+
+    servlet.doDelete(request, response);
+    verify(response).setStatus(404);
   }
 }

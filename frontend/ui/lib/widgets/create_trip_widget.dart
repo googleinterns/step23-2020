@@ -14,7 +14,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
   String place = "No Input";
   int radius = 0;
   String newInformation = 'Grabbed info placed here.';
-  changeText() {
+  void changeText() {
     setState(() {
       newInformation = place + " " + radius.toString() + " km";
     });

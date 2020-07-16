@@ -68,8 +68,8 @@ public class PlaceParentServlet extends HttpServlet {
       PlaceVisitModel newOrUpdatedPlace =
           placeStorage.getPlaceVisit(tripId, place.get().placeId()).get();
 
-      response.setContentType("application/json");
       response.setStatus(HttpServletResponse.SC_OK);
+      response.setContentType("application/json");
       PrintWriter writer = response.getWriter();
       writer.println(gson.toJson(newOrUpdatedPlace));
       writer.flush();
@@ -93,8 +93,8 @@ public class PlaceParentServlet extends HttpServlet {
       String tripId = ServletUtil.parseUri(request, TRIP_NAME_PATTERN).group(1);
       List<PlaceVisitModel> nearbyPlaces = placeStorage.getTripPlaceVisits(tripId);
 
-      response.setContentType("application/json");
       response.setStatus(HttpServletResponse.SC_OK);
+      response.setContentType("application/json");
       PrintWriter writer = response.getWriter();
       writer.println(gson.toJson(nearbyPlaces));
       writer.flush();
@@ -105,8 +105,6 @@ public class PlaceParentServlet extends HttpServlet {
 
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      response.setContentType("application/json");
-      response.getWriter().println(gson.toJson("Error getting nearby places"));
     }
   }
 }

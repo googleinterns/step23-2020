@@ -8,7 +8,7 @@ void main() {
       (WidgetTester tester) async {
     var createTripsWidget = CreateTripWidget();
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
-    //TODO: Add test for loading screen after it's to the Create Trip Widget
+    //TODO: Add test for loading screen after it's added to the Create Trip Widget
 
     await tester.pumpAndSettle();
 

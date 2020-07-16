@@ -37,7 +37,7 @@ class _TripWidgetState extends State<TripViewWidget> {
             ],
           ),
         ],
-        backgroundColor: Colors.green,
+        backgroundColor: Theme.of(context).accentColor,
         initiallyExpanded: false,
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tripmeout/widgets/map_widget.dart';
+import 'package:tripmeout/themes/default_theme.dart';
 
 //TODO: Add loading screen after to the Create Trip Widget
 //TODO: Get rid of the newInformation text on the page.
@@ -16,7 +17,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
   String newInformation = 'Grabbed info placed here.';
   void changeText() {
     setState(() {
-      newInformation = place + " " + radius.toString() + " km";
+      newInformation = "$place ${radius}km";
     });
   }
 
@@ -66,7 +67,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             child: MapWidget(),
           ),
           Container(
-              child: Text('$newInformation', style: TextStyle(fontSize: 21))),
+              child: Text('$newInformation')),
           Padding(
             padding: const EdgeInsets.all(25.0),
             child: RaisedButton(

@@ -6,16 +6,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -23,12 +14,20 @@ import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 import com.google.tripmeout.frontend.servlets.ServletUtil;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.junit.runners.JUnit4;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.mockito.Mock;
 
 @RunWith(JUnit4.class)
 public class ServletUtilTest {
@@ -50,7 +49,8 @@ public class ServletUtilTest {
     when(request.getReader())
         .thenReturn(new BufferedReader(new StringReader("['hello', 'my', 'name', 'is']")));
 
-    Optional<List> extractedList = ServletUtil.extractFromRequestBody(request, gson, List.class);
+    Optional<List<String>> extractedList = ServletUtil.extractFromRequestBody(
+        request, gson, new TypeToken<List<String>>() {}.getType());
     assertThat(extractedList).isPresent();
     assertThat(extractedList.get()).containsExactly("hello", "my", "name", "is");
   }
@@ -114,36 +114,36 @@ public class ServletUtilTest {
   }
 
   @Test
-  public void parseUri_noMatchesTripNamePattern_throwsError() {
-    when(request.getRequestURI()).thenReturn("http://tripmeout.com/trip/abc123");
+  public void matchUriOrThrowError_noMatchesTripNamePattern_throwsError() {
+    when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(
-        IllegalArgumentException.class, () -> ServletUtil.parseUri(request, TRIP_URI_PATTERN));
+    assertThrows(IllegalArgumentException.class,
+        () -> ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN));
   }
 
   @Test
-  public void parseUri_matchesTripNamePattern_matcherHasCorrectGroup() {
-    when(request.getRequestURI()).thenReturn("http://tripmeout.com/trips/abc123");
+  public void matchUriOrThrowError_matchesTripNamePattern_matcherHasCorrectGroup() {
+    when(request.getRequestURI()).thenReturn("/trips/abc123");
 
-    Matcher matcher = ServletUtil.parseUri(request, TRIP_URI_PATTERN);
+    Matcher matcher = ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN);
 
     assertThat(matcher.matches()).isTrue();
     assertThat(matcher.group(1)).isEqualTo("abc123");
   }
 
   @Test
-  public void parseUri_noMatchesTripAndPlaceNamePattern_throwsError() {
-    when(request.getRequestURI()).thenReturn("http://tripmeout.com/trip/abc123");
+  public void matchUriOrThrowError_noMatchesTripAndPlaceNamePattern_throwsError() {
+    when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(
-        IllegalArgumentException.class, () -> ServletUtil.parseUri(request, PLACE_URI_PATTERN));
+    assertThrows(IllegalArgumentException.class,
+        () -> ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN));
   }
 
   @Test
-  public void parseUri_matchesTripAndPlaceNamePattern_matcherHasCorrectGroups() {
-    when(request.getRequestURI()).thenReturn("http://tripmeout.com/trips/abc123/places/123");
+  public void matchUriOrThrowError_matchesTripAndPlaceNamePattern_matcherHasCorrectGroups() {
+    when(request.getRequestURI()).thenReturn("/trips/abc123/places/123");
 
-    Matcher matcher = ServletUtil.parseUri(request, PLACE_URI_PATTERN);
+    Matcher matcher = ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN);
 
     assertThat(matcher.matches()).isTrue();
     assertThat(matcher.group(1)).isEqualTo("abc123");

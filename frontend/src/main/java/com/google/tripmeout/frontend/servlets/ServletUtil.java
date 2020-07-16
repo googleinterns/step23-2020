@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,14 +30,25 @@ public final class ServletUtil {
     }
   }
 
-  public static Matcher parseUri(HttpServletRequest request, Pattern pattern) {
+  public static <T> Optional<T> extractFromRequestBody(
+      HttpServletRequest request, Gson gson, Type t) throws IOException {
+    try (Reader reader = request.getReader()) {
+      return Optional.ofNullable(gson.fromJson(reader, t));
+    } catch (JsonParseException e) {
+      logger.atWarning().withCause(e).log(
+          "received exception while attempting to parse json from reader!");
+      return Optional.empty();
+    }
+  }
+
+  public static Matcher matchUriOrThrowError(HttpServletRequest request, Pattern pattern) {
     String uri = request.getRequestURI();
     Matcher matcher = pattern.matcher(uri);
     if (matcher.matches()) {
       return matcher;
     } else {
       throw new IllegalArgumentException(
-          String.format("URI '%s' does not match expected pattern", uri));
+          String.format("URI '%s' does not match expected pattern '%s'", uri, pattern.toString()));
     }
   }
 

@@ -32,11 +32,10 @@ public final class TripServlet extends HttpServlet {
   public void doGet(final HttpServletRequest request, final HttpServletResponse response)
       throws IOException {
     final String path = request.getRequestURI();
-    final String tripID = path; // TODO @afeenster: Should parse out URI into just the trip ID
+    final String tripID = path; // TODO: Should parse out URI into just the trip ID
     try {
       response.setContentType(APPLICATION_JSON_CONTENT_TYPE + ";");
       response.getWriter().print(gson.toJson(storage.getTrip(tripID)));
-      response.setStatus(HttpServletResponse.SC_OK);
     } catch (TripNotFoundException e) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
@@ -49,7 +48,6 @@ public final class TripServlet extends HttpServlet {
     final String tripID = path; // TODO @afeenster: Should parse out URI into just the trip ID
     try {
       storage.removeTrip(tripID);
-      response.setStatus(HttpServletResponse.SC_OK);
     } catch (TripMeOutException e) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }

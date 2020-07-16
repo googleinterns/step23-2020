@@ -3,6 +3,7 @@ package com.google.sps;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,26 +48,21 @@ public class TripServletTest {
                     .registerTypeAdapter(TripModel.class, new GsonTripModelTypeAdapter())
                     .create();
   }
-/*
+
   @Test
-  public void returnsExceptionForBadID()
+  public void returnsErrorCodeForBadID()
       throws ServletException, IOException, TripNotFoundException {
     when(request.getRequestURI()).thenReturn("123");
 
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
-
     when(response.getWriter()).thenReturn(pw);
 
-    servlet.doGet(request, response);
-
-    String expectedResult = "Trip 123 can not be found.";
     when(storage.getTrip(any())).thenThrow(new TripNotFoundException("Trip 123 can not be found."));
 
-    TripModel result = gson.fromJson(sw.getBuffer().toString().trim(), TripModel.class);
-    assertThat(result.toString()).isEqualTo(expectedResult.toString());
+    servlet.doGet(request, response);
+     verify(response).setStatus(404);
   }
-  */
 
   @Test
   public void returnsTripWithGivenId() throws ServletException, IOException, TripNotFoundException {
@@ -75,12 +71,12 @@ public class TripServletTest {
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
 
+    TripModel expectedResult = PARIS;
+    when(storage.getTrip(any())).thenReturn(expectedResult);
+
     when(response.getWriter()).thenReturn(pw);
 
     servlet.doGet(request, response);
-
-    TripModel expectedResult = PARIS;
-    when(storage.getTrip(any())).thenReturn(expectedResult);
 
     TripModel result = gson.fromJson(sw.getBuffer().toString().trim(), TripModel.class);
     assertThat(result.name()).isEqualTo(expectedResult.name());

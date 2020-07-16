@@ -233,8 +233,25 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
     boolean response = storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
+    PlaceVisitModel updatedSeoul =
+        SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
     assertThat(response).isFalse();
-    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(SEOUL);
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(updatedSeoul);
+  }
+
+  /**
+   * test that changePlaceVisitStatus returns false when PlaceVisitModel object
+   * and no PlaceVistModel with same tripId in storage
+   */
+  @Test
+  public void updateUserMarkOrAddPlaceVisit_placeAndTripNotInStorage_returnsFalseAndPlaceAdded()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
+    boolean response = storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
+    PlaceVisitModel updatedSeoul =
+        SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
+    assertThat(response).isFalse();
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(updatedSeoul);
   }
 
   /**
@@ -271,7 +288,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(TOKYO);
     List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("a");
-    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS);
+    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS, LONDON);
   }
 
   /**
@@ -291,7 +308,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(TOKYO_B);
     storage.addPlaceVisit(SEOUL);
     List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("a");
-    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS);
+    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS, LONDON);
   }
 
   /**
@@ -347,7 +364,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(SEOUL);
     storage.removeTripPlaceVisits("b");
     List<PlaceVisitModel> tripAPlaces = storage.getTripPlaceVisits("a");
-    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS);
+    assertThat(tripAPlaces).containsExactly(ROME, TOKYO, PARIS, LONDON);
   }
 
   @Test

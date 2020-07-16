@@ -1,6 +1,8 @@
 package com.google.tripmeout.frontend;
 
 import com.google.gson.Gson;
+import com.google.tripmeout.frontend.serialization.GsonTripModelTypeAdapter;
+import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.error.TripMeOutException;
@@ -17,6 +19,9 @@ public final class TripServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
   private final TripStorage storage;
   private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json";
+  private Gson gson= new GsonBuilder()
+                    .registerTypeHierarchyAdapter(TripModel.class, new GsonTripModelTypeAdapter())
+                    .create();
 
   @Inject
   public TripServlet(final TripStorage storage) {
@@ -30,7 +35,7 @@ public final class TripServlet extends HttpServlet {
     final String tripID = path; // TODO @afeenster: Should parse out URI into just the trip ID
     try {
       response.setContentType(APPLICATION_JSON_CONTENT_TYPE + ";");
-      response.getWriter().print(new Gson().toJson(storage.getTrip(tripID)));
+      response.getWriter().print(gson.toJson(storage.getTrip(tripID)));
       response.setStatus(HttpServletResponse.SC_OK);
     } catch (TripNotFoundException e) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);

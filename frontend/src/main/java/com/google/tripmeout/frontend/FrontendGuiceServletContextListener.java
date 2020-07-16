@@ -13,8 +13,6 @@ import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 public class FrontendGuiceServletContextListener extends GuiceServletContextListener {
   @Override
   protected Injector getInjector() {
-    return Guice.createInjector(
-        new GsonModelSerializationModule()
-    );
+    return Guice.createInjector(new GsonModelSerializationModule());
   }
 }

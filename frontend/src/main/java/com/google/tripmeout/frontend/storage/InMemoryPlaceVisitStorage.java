@@ -4,18 +4,12 @@ import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
 import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.google.tripmeout.frontend.PlaceVisitModel;
-import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
-import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
-import com.google.tripmeout.frontend.error.TripNotFoundException;
 
 public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   // <tripId, placeId, PlaceVisitModel>

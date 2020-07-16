@@ -8,6 +8,7 @@ import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
 import com.google.tripmeout.frontend.storage.TripStorage;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public class TripParentServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final String TRIP_PARENT_PARAM_KEY = "name";
-  private static final String LONG_PARAM_KEY = "locationLong";
-  private static final String LAT_PARAM_KEY = "locationLat";
-  private static final String USER_ID_PARAM_KEY = "userId";
+
+  static final String STUB_USER_ID = "fakeUserId";
+
   private final Gson gson;
   private final TripStorage storage;
 
@@ -36,23 +36,28 @@ public class TripParentServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String userId = getUserId();
     response.setContentType("application/json");
-    response.getWriter().print(gson.toJson(storage.getAllUserTrips(userID)));
-  }
-  private String getUserId(){
-      return "fakeUser";
+    response.setStatus(HttpServletResponse.SC_OK);
+    PrintWriter writer = response.getWriter();
+    writer.print(gson.toJson(storage.getAllUserTrips(userId)));
+    writer.flush();
+    writer.close();
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     logger.atInfo().log("received doPost");
-      String userId = getUserId();
+    try {
       Optional<TripModel> requestTrip = extractFromRequestBody(request, gson, TripModel.class);
-     
+
       if (requestTrip.isPresent()) {
         try {
-          storage.addTrip(requestTrip.get());
+          TripModel resolvedTrip = resolveDefaults(requestTrip.get());
+          storage.addTrip(resolvedTrip);
           response.setContentType("application/json");
-          response.getWriter().print(gson.toJson(requestTrip.get()));
+          PrintWriter writer = response.getWriter();
+          writer.println(gson.toJson((resolvedTrip)));
+          writer.flush();
+          writer.close();
         } catch (TripAlreadyExistsException e) {
           response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -60,15 +65,22 @@ public class TripParentServlet extends HttpServlet {
       } else {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       }
-
-    
+    } catch (IOException e) {
+      logger.atWarning().withCause(e).log("Error serving post request");
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    }
   }
 
-private static TripModel resolveDefault(){
-    return TripModel.builder().setId(UUID.randomUUID().toString()).build();
-}
+  private String getUserId() {
+    // TODO(issues/66): Gte userId from Userservice
+    return STUB_USER_ID;
+  }
 
-  //TODO: use servletutil onced pushed
+  private TripModel resolveDefaults(TripModel trip) {
+    return trip.toBuilder().setId(UUID.randomUUID().toString()).setUserId(getUserId()).build();
+  }
+
+  // TODO: use servletutil onced pushed
   private static <T> Optional<T> extractFromRequestBody(
       HttpServletRequest request, Gson gson, Class<T> clazz) throws IOException {
     try (Reader reader = request.getReader()) {

@@ -9,21 +9,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   // <tripId, placeId, PlaceVisitModel>
-  Map<String, Map<String, PlaceVisitModel>> storage = new ConcurrentHashMap<>();
+  Map<String, Map<String, PlaceVisitModel>> placesByTripIdByPlaceId = new ConcurrentHashMap<>();
 
   @Override
   public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
     try {
-      storage.compute(placeVisit.tripId(), (tripKey, placesMap) -> {
+      placesByTripIdByPlaceId.compute(placeVisit.tripId(), (tripKey, placesMap) -> {
         if (placesMap == null) {
           Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
           newPlaceMap.put(placeVisit.placeId(), placeVisit);
           return newPlaceMap;
         }
         if (placesMap.get(placeVisit.placeId()) != null) {
+          // cannot throw checked exception in here so wrap in RuntimeException
           throw new RuntimeException(new PlaceVisitAlreadyExistsException("PlaceVisit "
               + placeVisit.name() + " already exists for trip " + placeVisit.tripId()));
         }
@@ -31,6 +33,9 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
         return placesMap;
       });
     } catch (RuntimeException e) {
+      // check if RuntimeException is actually because of PlaceVisitAlreadyExistsException
+      // if yes, throw PlaceVisitAlreadyExistsExceptions
+      // else, throw original RuntimeExeption
       if (e.getCause() instanceof PlaceVisitAlreadyExistsException) {
         throw(PlaceVisitAlreadyExistsException) e.getCause();
       }
@@ -40,7 +45,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public void removePlaceVisit(String tripId, String placeId) throws PlaceVisitNotFoundException {
-    Map<String, PlaceVisitModel> placesMap = storage.get(tripId);
+    Map<String, PlaceVisitModel> placesMap = placesByTripIdByPlaceId.get(tripId);
     if (placesMap == null) {
       throw new PlaceVisitNotFoundException(
           "PlaceVisit with id" + placeId + " not found for trip " + tripId);
@@ -54,41 +59,40 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeId) {
-    return Optional.ofNullable(storage.get(tripId)).map(placesMap -> placesMap.get(placeId));
+    return Optional.ofNullable(placesByTripIdByPlaceId.get(tripId))
+        .map(placesMap -> placesMap.get(placeId));
   }
 
   @Override
   public boolean updateUserMarkOrAddPlaceVisit(
       PlaceVisitModel placeVisit, PlaceVisitModel.UserMark newStatus) {
-    synchronized (storage) {
-      Map<String, PlaceVisitModel> placesMap = storage.get(placeVisit.tripId());
-      if (placesMap == null) {
-        Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
-        newPlaceMap.put(placeVisit.placeId(), placeVisit);
-        return false;
-      }
-      if (placesMap.get(placeVisit.placeId()) != null) {
-        placesMap.put(placeVisit.placeId(),
-            placesMap.get(placeVisit.placeId()).toBuilder().setUserMark(newStatus).build());
-        return true;
+    AtomicBoolean alreadyInStorage = new AtomicBoolean(false);
+
+    Map<String, PlaceVisitModel> placesMap = placesByTripIdByPlaceId.computeIfAbsent(
+        placeVisit.tripId(), (tripKey) -> new ConcurrentHashMap<>());
+
+    placesMap.compute(placeVisit.placeId(), (placeKey, place) -> {
+      if (place != null) {
+        PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
+        alreadyInStorage.set(true);
+        return updatedPlace;
       } else {
-        placesMap.put(placeVisit.placeId(), placeVisit);
-        return false;
+        return placeVisit.toBuilder().setUserMark(newStatus).build();
       }
-    }
+    });
+
+    return alreadyInStorage.get();
   }
 
   @Override
   public List<PlaceVisitModel> getTripPlaceVisits(String tripId) {
-    Map<String, PlaceVisitModel> placesMap = storage.get(tripId);
+    Map<String, PlaceVisitModel> placesMap = placesByTripIdByPlaceId.get(tripId);
     List<PlaceVisitModel> tripPlaceVisits = new ArrayList<>();
     if (placesMap == null) {
       return tripPlaceVisits;
     }
     for (PlaceVisitModel place : placesMap.values()) {
-      if (place != null
-          && (place.userMark().equals(PlaceVisitModel.UserMark.YES)
-              || place.userMark().equals(PlaceVisitModel.UserMark.MAYBE))) {
+      if (place != null) {
         tripPlaceVisits.add(place);
       }
     }
@@ -98,7 +102,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
 
   @Override
   public void removeTripPlaceVisits(String tripId) throws TripNotFoundException {
-    if (storage.remove(tripId) == null) {
+    if (placesByTripIdByPlaceId.remove(tripId) == null) {
       throw new TripNotFoundException("No PlaceVisitModel objects found with tripId: " + tripId);
     }
   }

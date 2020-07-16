@@ -233,8 +233,10 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
     boolean response = storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
+    PlaceVisitModel updatedSeoul =
+        SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
     assertThat(response).isFalse();
-    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(SEOUL);
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(updatedSeoul);
   }
 
   /**
@@ -246,8 +248,10 @@ public final class InMemoryPlaceVisitStorageTest {
       throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     boolean response = storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
+    PlaceVisitModel updatedSeoul =
+        SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
     assertThat(response).isFalse();
-    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(SEOUL);
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placeId())).hasValue(updatedSeoul);
   }
 
   /**

@@ -132,7 +132,8 @@ public class PlaceIndividualServlet extends HttpServlet {
         newHtmlAttributions[i] = details.htmlAttributions[i - 1];
       }
       details.htmlAttributions = newHtmlAttributions;
-      response.setStatus(200);
+      
+      response.setStatus(HttpServletResponse.SC_OK);
       response.setContentType("application/json");
       PrintWriter writer = response.getWriter();
       writer.println(gson.toJson(details));

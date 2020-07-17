@@ -79,7 +79,7 @@ public class PlaceParentServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
     } catch (InvalidRequestException e) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
     } catch (Exception e) {
       logger.atWarning().log(e.getMessage());

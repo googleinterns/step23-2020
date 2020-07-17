@@ -111,7 +111,7 @@ public class PlaceParentServletTest {
     Optional<PlaceVisitModel> place = placeStorage.getPlaceVisit("abc123", "hello");
 
     assertThat(place).isEmpty();
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
   }
 
   @Test

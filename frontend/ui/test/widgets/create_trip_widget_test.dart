@@ -27,7 +27,7 @@ void main() {
 
     expect(find.byType(RaisedButton), findsOneWidget);
     expect(find.text('Grabbed info placed here.'), findsOneWidget);
-    expect(find.text('No Input 0 km'), findsNothing);
+    expect(find.text('No Input 0km'), findsNothing);
     RaisedButton button =
         find.widgetWithText(RaisedButton, 'Submit').evaluate().first.widget;
     button.onPressed();
@@ -36,7 +36,7 @@ void main() {
     await tester.pump();
 
     //TODO: Remove this part of test after inserted text on screen is deleted
-    expect(find.text('No Input 0 km'), findsOneWidget);
+    expect(find.text('No Input 0km'), findsOneWidget);
     expect(find.text('Grabbed info placed here.'), findsNothing);
   });
 
@@ -48,7 +48,7 @@ void main() {
 
     expect(find.byType(RaisedButton), findsOneWidget);
     expect(find.text('Grabbed info placed here.'), findsOneWidget);
-    expect(find.text('Italy 25 km'), findsNothing);
+    expect(find.text('Italy 25km'), findsNothing);
 
     RaisedButton button =
         find.widgetWithText(RaisedButton, 'Submit').evaluate().first.widget;
@@ -57,12 +57,12 @@ void main() {
         find.widgetWithText(TextFormField, 'Enter your Location'), "Italy");
     await tester.enterText(
         find.widgetWithText(TextFormField, 'Radius KM'), "25");
-
+        
     button.onPressed();
 
     // The inserted text should now appear on the screen
     await tester.pump();
-    expect(find.text('Italy 25 km'), findsOneWidget);
+    expect(find.text('Italy 25km'), findsOneWidget);
     expect(find.text('Grabbed info placed here.'), findsNothing);
   });
 }

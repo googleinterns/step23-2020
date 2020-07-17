@@ -54,9 +54,9 @@ void main() {
         find.widgetWithText(RaisedButton, 'Submit').evaluate().first.widget;
 
     await tester.enterText(
-        find.widgetWithText(TextFormField, 'Enter your Location'), "Italy");
+        find.widgetWithText(TextField, 'Enter your Location'), "Italy");
     await tester.enterText(
-        find.widgetWithText(TextFormField, 'Radius KM'), "25");
+        find.widgetWithText(TextField, 'Radius KM'), "25");
 
     button.onPressed();
 
@@ -81,9 +81,9 @@ void main() {
         find.widgetWithText(RaisedButton, 'Submit').evaluate().first.widget;
 
     await tester.enterText(
-        find.widgetWithText(TextFormField, 'Enter your Location'), "AnyPlace");
+        find.widgetWithText(TextField, 'Enter your Location'), "AnyPlace");
     await tester.enterText(
-        find.widgetWithText(TextFormField, 'Radius KM'), "Not a Number");
+        find.widgetWithText(TextField, 'Radius KM'), "Not a Number");
 
     button.onPressed();
 

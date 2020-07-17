@@ -33,7 +33,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
               children: [
                 Container(
                   width: 250.0,
-                  child: TextFormField(
+                  child: TextField(
                     onChanged: (text) {
                       place = text;
                     },
@@ -46,7 +46,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
                 ),
                 Container(
                   width: 125.0,
-                  child: TextFormField(
+                  child: TextField(
                     onChanged: (text) {
                       radius = int.parse(text);
                     },

@@ -99,7 +99,7 @@ public class PlaceParentServletTest {
   }
 
   @Test
-  public void doPost_badPlaceId_setsBadRequestStatus() throws IOException {
+  public void doPost_badPlaceId_setsNotFoundStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);

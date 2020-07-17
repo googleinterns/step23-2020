@@ -48,7 +48,7 @@ public final class TripServlet extends HttpServlet {
     try {
       final String tripId = TripName.fromRequestUri(request.getRequestURI()).id();
       storage.removeTrip(tripId);
-      response.setStatus(HttpServletResponse.SC_ACCEPTED);
+      response.setStatus(HttpServletResponse.SC_OK);
     } catch (TripMeOutException e) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     } catch (Exception e) {

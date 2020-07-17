@@ -14,7 +14,7 @@ void main() {
     var tripService = MockTripService();
     var listCompleter = Completer<List<Trip>>();
     when(tripService.listTrips()).thenAnswer((_) => listCompleter.future);
-    var tripListWidget = TripListWidget(tripService);
+    var tripListWidget = ServiceLoadedTripListWidget(tripService);
 
     await tester.pumpWidget(wrapForDirectionality(tripListWidget));
 
@@ -39,7 +39,7 @@ void main() {
     var tripService = MockTripService();
     var listCompleter = Completer<List<Trip>>();
     when(tripService.listTrips()).thenAnswer((_) => listCompleter.future);
-    var tripListWidget = TripListWidget(tripService);
+    var tripListWidget = ServiceLoadedTripListWidget(tripService);
 
     await tester.pumpWidget(wrapForDirectionality(tripListWidget));
 

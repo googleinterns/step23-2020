@@ -1,16 +1,15 @@
 package com.google.tripmeout.frontend.servlet;
 
-import com.google.appengine.repackaged.com.google.api.client.util.Strings;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
+import com.google.tripmeout.frontend.servlets.ServletUtil;
 import com.google.tripmeout.frontend.storage.TripStorage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -47,7 +46,8 @@ public class TripParentServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     logger.atInfo().log("received doPost");
     try {
-      Optional<TripModel> requestTrip = extractFromRequestBody(request, gson, TripModel.class);
+      Optional<TripModel> requestTrip =
+          ServletUtil.extractFromRequestBody(request, gson, TripModel.class);
 
       if (requestTrip.isPresent()) {
         try {
@@ -78,17 +78,5 @@ public class TripParentServlet extends HttpServlet {
 
   private TripModel resolveDefaults(TripModel trip) {
     return trip.toBuilder().setId(UUID.randomUUID().toString()).setUserId(getUserId()).build();
-  }
-
-  // TODO: use servletutil onced pushed
-  private static <T> Optional<T> extractFromRequestBody(
-      HttpServletRequest request, Gson gson, Class<T> clazz) throws IOException {
-    try (Reader reader = request.getReader()) {
-      return Optional.ofNullable(gson.fromJson(reader, clazz));
-    } catch (JsonParseException e) {
-      logger.atWarning().withCause(e).log(
-          "received exception while attempting to parse json from reader!");
-      return Optional.empty();
-    }
   }
 }

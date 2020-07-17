@@ -58,7 +58,7 @@ public class PlaceIndividualServletTest {
   }
 
   @Test
-  public void doPut_invalidPlaceId_setsBadRequestStatus() throws IOException {
+  public void doPut_invalidPlaceId_setNotFoundStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
@@ -68,7 +68,7 @@ public class PlaceIndividualServletTest {
 
     servlet.doPut(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
   }
 
   @Test
@@ -105,16 +105,16 @@ public class PlaceIndividualServletTest {
   }
 
   @Test
-  public void doDelete_notInStorage_setsBadRequestStatus() throws IOException {
+  public void doDelete_notInStorage_setsNotFoundStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
     when(request.getRequestURI())
-        .thenReturn("/trips/abc123/placesVisits/ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+        .thenReturn("/trips/abc123/placeVisits/ChIJ3S-JXmauEmsRUcIaWtf4MzE");
 
     servlet.doDelete(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
   }
 
   @Test
@@ -147,15 +147,15 @@ public class PlaceIndividualServletTest {
   }
 
   @Test
-  public void doGet_invalidPlaceId_setsBadRequestStatus() throws IOException {
+  public void doGet_invalidPlaceId_setsNotFoundStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
-    when(request.getRequestURI()).thenReturn("/trips/abc123/placesVisits/hello");
+    when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/hello");
 
     servlet.doGet(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
   }
 
   @Test

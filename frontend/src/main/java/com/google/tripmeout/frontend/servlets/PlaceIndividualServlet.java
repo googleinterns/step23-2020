@@ -6,6 +6,7 @@ import com.google.maps.PlaceDetailsRequest;
 import com.google.maps.errors.InvalidRequestException;
 import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
+import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
 import com.google.tripmeout.frontend.error.TripMeOutException;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class PlaceIndividualServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
     } catch (InvalidRequestException e) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -90,8 +91,8 @@ public class PlaceIndividualServlet extends HttpServlet {
     } catch (IllegalArgumentException e) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-    } catch (TripMeOutException e) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    } catch (PlaceVisitNotFoundException e) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -132,7 +133,7 @@ public class PlaceIndividualServlet extends HttpServlet {
         newHtmlAttributions[i] = details.htmlAttributions[i - 1];
       }
       details.htmlAttributions = newHtmlAttributions;
-      
+
       response.setStatus(HttpServletResponse.SC_OK);
       response.setContentType("application/json");
       PrintWriter writer = response.getWriter();
@@ -144,7 +145,7 @@ public class PlaceIndividualServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
     } catch (InvalidRequestException e) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

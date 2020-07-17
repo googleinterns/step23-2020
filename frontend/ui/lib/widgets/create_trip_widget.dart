@@ -72,8 +72,6 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             child: RaisedButton(
               onPressed: () => changeText(),
               child: Text('Submit'),
-              textColor: Colors.white,
-              color: Colors.black,
             ),
           ),
         ],

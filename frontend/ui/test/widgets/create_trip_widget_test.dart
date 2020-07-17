@@ -57,7 +57,7 @@ void main() {
         find.widgetWithText(TextFormField, 'Enter your Location'), "Italy");
     await tester.enterText(
         find.widgetWithText(TextFormField, 'Radius KM'), "25");
-        
+
     button.onPressed();
 
     // The inserted text should now appear on the screen
@@ -66,7 +66,8 @@ void main() {
     expect(find.text('Grabbed info placed here.'), findsNothing);
   });
 
-  testWidgets('Testing the to assure no words are allowed in radius input', (WidgetTester tester) async {
+  testWidgets('Testing the to assure no words are allowed in radius input',
+      (WidgetTester tester) async {
     //TODO: Remove this test after inserted text on screen is deleted
     var createTripsWidget = CreateTripWidget();
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
@@ -83,7 +84,7 @@ void main() {
         find.widgetWithText(TextFormField, 'Enter your Location'), "AnyPlace");
     await tester.enterText(
         find.widgetWithText(TextFormField, 'Radius KM'), "Not a Number");
-        
+
     button.onPressed();
 
     // The inserted text should now appear on the screen

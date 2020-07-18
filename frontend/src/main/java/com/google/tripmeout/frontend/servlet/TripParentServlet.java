@@ -4,6 +4,7 @@ import com.google.appengine.repackaged.com.google.api.client.util.Strings;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
 import com.google.tripmeout.frontend.storage.TripStorage;
@@ -17,7 +18,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.inject.Singleton;
 
 @Singleton
 public class TripParentServlet extends HttpServlet {

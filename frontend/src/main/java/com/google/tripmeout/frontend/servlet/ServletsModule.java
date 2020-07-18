@@ -10,9 +10,9 @@ public class ServletsModule extends ServletModule {
   @Override
   protected void configureServlets() {
     // TO-DO: uncomment once servlet is implemented
-    // serve("/trips/*/placeVisits/*").with(PlaceIndividualServlet.class);
-    // serve("/trips/*/placeVisits").with(PlaceParentServlet.class);
-    // serve("/trips/*").with(TripIndividualServlet.class);
-    serve("/trips").with(TripParentServlet.class);
+    // serve("/api/trips/*/placeVisits/*").with(PlaceIndividualServlet.class);
+    // serve("/api/trips/*/placeVisits").with(PlaceParentServlet.class);
+    // serve("/api/trips/*").with(TripIndividualServlet.class);
+    serve("/api/trips").with(TripParentServlet.class);
   }
 }

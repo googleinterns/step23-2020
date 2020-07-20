@@ -23,22 +23,16 @@ class _TripWidgetState extends State<TripViewWidget> {
       margin: const EdgeInsets.all(15.0),
       padding: const EdgeInsets.all(10.0),
       width: MediaQuery.of(context).size.width * .80,
-      child: ExpansionTile(
-        title: Text("Trip Name"),
-        trailing: Text("M T D"),
+      height: MediaQuery.of(context).size.width * .80,
+      child: Column(
         children: [
-          Column(
-            children: [
-              PlaceBlockWidget("Place 1"),
-              PlaceBlockWidget("Place 2"),
-              PlaceBlockWidget("Place 3"),
-              PlaceBlockWidget("Place 4"),
-              PlaceBlockWidget("Place 5"),
-            ],
-          ),
+          Text("Name of the Trip"),
+          PlaceBlockWidget("Place 1"),
+          PlaceBlockWidget("Place 2"),
+          PlaceBlockWidget("Place 3"),
+          PlaceBlockWidget("Place 4"),
+          PlaceBlockWidget("Place 5"),
         ],
-        backgroundColor: Theme.of(context).accentColor,
-        initiallyExpanded: false,
       ),
     );
   }

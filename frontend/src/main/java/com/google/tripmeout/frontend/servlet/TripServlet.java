@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.TripModel;
-import com.google.tripmeout.frontend.error.TripMeOutException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
 import com.google.tripmeout.frontend.storage.TripStorage;
 import java.io.IOException;
@@ -53,7 +52,7 @@ public final class TripServlet extends HttpServlet {
       final String tripId = TripName.fromRequestUri(request.getRequestURI()).id();
       storage.removeTrip(tripId);
       response.setStatus(HttpServletResponse.SC_OK);
-    } catch (TripMeOutException e) {
+    } catch (TripNotFoundException e) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     } catch(IllegalArgumentException e){
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

@@ -51,22 +51,19 @@ public class TripParentServlet extends HttpServlet {
       Optional<TripModel> requestTrip =
           ServletUtil.extractFromRequestBody(request, gson, TripModel.class);
 
-      if (requestTrip.isPresent()) {
-        try {
-          TripModel resolvedTrip = resolveDefaults(requestTrip.get());
-          storage.addTrip(resolvedTrip);
-          response.setContentType("application/json");
-          PrintWriter writer = response.getWriter();
-          writer.println(gson.toJson((resolvedTrip)));
-          writer.flush();
-          writer.close();
-        } catch (TripAlreadyExistsException e) {
-          response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
-
-      } else {
+      try {
+        TripModel resolvedTrip = resolveDefaults(requestTrip.get());
+        storage.addTrip(resolvedTrip);
+        response.setContentType("application/json");
+        PrintWriter writer = response.getWriter();
+        writer.println(gson.toJson((resolvedTrip)));
+        writer.flush();
+        writer.close();
+      } catch (TripAlreadyExistsException e) {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       }
+    } catch (JsonParseException e) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (IOException e) {
       logger.atWarning().withCause(e).log("Error serving post request");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

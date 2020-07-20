@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.storage.InMemoryPlaceVisitStorage;
 import com.google.tripmeout.frontend.storage.InMemoryTripModelStorage;
 
-public class StorageBindingModule extends AbstractModule {
+public class InMemoryStorageBindingModule extends AbstractModule {
   @Override
   public void configure() {
     bind(PlaceVisitStorage.class).to(InMemoryPlaceVisitStorage.class).in(Singleton.class);

@@ -3,7 +3,7 @@ package com.google.tripmeout.frontend.servlet;
 import com.google.inject.servlet.ServletModule;
 
 /**
- * A {@link ServletModule} configured to serve SPS application paths.
+ * A {@link ServletModule} configured to serve application paths.
  * @see https://github.com/google/guice/wiki/ServletModule
  */
 public class ServletsModule extends ServletModule {

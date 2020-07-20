@@ -12,7 +12,7 @@ class TripListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: defaultAppBar(context),
-      body: TripListWidget(this.tripService),
+      body: ServiceLoadedTripListWidget(this.tripService),
     );
   }
 }

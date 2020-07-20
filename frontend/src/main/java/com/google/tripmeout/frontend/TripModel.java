@@ -11,7 +11,7 @@ public abstract class TripModel {
 
   @Nullable public abstract String id();
   public abstract String name();
-  public abstract String userId();
+  @Nullable public abstract String userId();
   @Nullable public abstract Double locationLat();
   @Nullable public abstract Double locationLong();
 

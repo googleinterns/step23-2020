@@ -10,10 +10,12 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.gson.JsonParseException;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 import com.google.tripmeout.frontend.servlets.ServletUtil;
+import com.google.tripmeout.frontend.error.WrongFormatUriException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -89,8 +91,9 @@ public class ServletUtilTest {
   public void extractFromRequestBody_missingName_returnsOptionalTrip() throws IOException {
     when(request.getReader())
         .thenReturn(new BufferedReader(
-            new StringReader("{id: trip1, userId: a, locationLat: 33.2, locationLong: -22.77}")));
-    assertThat(ServletUtil.extractFromRequestBody(request, gson, TripModel.class)).isEmpty();
+            new StringReader("{name: trip1, id: a, locationLat: 33.2, locationLong: -22.77}")));
+    assertThrows(JsonParseException.class,
+        () -> ServletUtil.extractFromRequestBody(request, gson, TripModel.class));
   }
 
   @Test
@@ -117,12 +120,12 @@ public class ServletUtilTest {
   public void matchUriOrThrowError_noMatchesTripNamePattern_throwsError() {
     when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(IllegalArgumentException.class,
+    assertThrows(WrongFormatUriException.class,
         () -> ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN));
   }
 
   @Test
-  public void matchUriOrThrowError_matchesTripNamePattern_matcherHasCorrectGroup() {
+  public void matchUriOrThrowError_matchesTripNamePattern_matcherHasCorrectGroup() throws WrongFormatUriException {
     when(request.getRequestURI()).thenReturn("/trips/abc123");
 
     Matcher matcher = ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN);
@@ -135,12 +138,12 @@ public class ServletUtilTest {
   public void matchUriOrThrowError_noMatchesTripAndPlaceNamePattern_throwsError() {
     when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(IllegalArgumentException.class,
+    assertThrows(WrongFormatUriException.class,
         () -> ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN));
   }
 
   @Test
-  public void matchUriOrThrowError_matchesTripAndPlaceNamePattern_matcherHasCorrectGroups() {
+  public void matchUriOrThrowError_matchesTripAndPlaceNamePattern_matcherHasCorrectGroups() throws WrongFormatUriException {
     when(request.getRequestURI()).thenReturn("/trips/abc123/places/123");
 
     Matcher matcher = ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN);

@@ -40,7 +40,7 @@ public class TripServletTest {
   }
 
   @Test
-  public void returnsErrorCodeForBadIdForDoGet()
+  public void doGet_badId_returnsErrorCode()
       throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
     InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
     storage.addTrip(PARIS);
@@ -54,7 +54,7 @@ public class TripServletTest {
   }
 
   @Test
-  public void returnsErrorCodeForBadUriForDoGet()
+  public void doGet_badURI_returnsErrorCode()
       throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
     InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
     storage.addTrip(PARIS);
@@ -64,11 +64,11 @@ public class TripServletTest {
     when(request.getRequestURI()).thenReturn("/bad_trips_uri/CDG");
 
     servlet.doGet(request, response);
-    assertThat(response.getStatus()).isEqualTo(500);
+    assertThat(response.getStatus()).isEqualTo(400);
   }
 
   @Test
-  public void returnsTripWithGivenIdForDoGet()
+  public void doGet_goodId_returnsTrip()
       throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
     InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
     storage.addTrip(PARIS);
@@ -84,7 +84,7 @@ public class TripServletTest {
   }
 
   @Test
-  public void returnsSuccessCodeWhenTripIsDeletedForDoDelete()
+  public void doDelete_goodId_returnsSuccessCode()
       throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
     InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
     storage.addTrip(PARIS);
@@ -98,7 +98,7 @@ public class TripServletTest {
   }
 
   @Test
-  public void returnsErrorCodeWhenTripNotFoundForDoDelete()
+  public void doDelete_badId_returnsNotFoundError()
       throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
     InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
     storage.addTrip(PARIS);
@@ -112,7 +112,7 @@ public class TripServletTest {
   }
 
   @Test
-  public void returnsErrorCodeForBadUriForDoDelete()
+  public void doDelete_badURI_returnsBadRequestError()
       throws ServletException, IOException, TripNotFoundException, TripAlreadyExistsException {
     InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
     storage.addTrip(PARIS);
@@ -122,6 +122,6 @@ public class TripServletTest {
     when(request.getRequestURI()).thenReturn("/bad_trips_uri/CDG");
 
     servlet.doDelete(request, response);
-    assertThat(response.getStatus()).isEqualTo(500);
+    assertThat(response.getStatus()).isEqualTo(400);
   }
 }

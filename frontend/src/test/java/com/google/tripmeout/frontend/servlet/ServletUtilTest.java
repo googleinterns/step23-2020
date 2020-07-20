@@ -8,14 +8,14 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.gson.JsonParseException;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.TripModel;
+import com.google.tripmeout.frontend.error.WrongFormatUriException;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 import com.google.tripmeout.frontend.servlets.ServletUtil;
-import com.google.tripmeout.frontend.error.WrongFormatUriException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -125,7 +125,8 @@ public class ServletUtilTest {
   }
 
   @Test
-  public void matchUriOrThrowError_matchesTripNamePattern_matcherHasCorrectGroup() throws WrongFormatUriException {
+  public void matchUriOrThrowError_matchesTripNamePattern_matcherHasCorrectGroup()
+      throws WrongFormatUriException {
     when(request.getRequestURI()).thenReturn("/trips/abc123");
 
     Matcher matcher = ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN);
@@ -143,7 +144,8 @@ public class ServletUtilTest {
   }
 
   @Test
-  public void matchUriOrThrowError_matchesTripAndPlaceNamePattern_matcherHasCorrectGroups() throws WrongFormatUriException {
+  public void matchUriOrThrowError_matchesTripAndPlaceNamePattern_matcherHasCorrectGroups()
+      throws WrongFormatUriException {
     when(request.getRequestURI()).thenReturn("/trips/abc123/places/123");
 
     Matcher matcher = ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN);

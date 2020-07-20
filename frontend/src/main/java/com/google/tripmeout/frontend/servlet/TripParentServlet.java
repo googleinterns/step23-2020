@@ -3,6 +3,7 @@ package com.google.tripmeout.frontend.servlet;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
 import com.google.tripmeout.frontend.servlets.ServletUtil;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Singleton
 public class TripParentServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 

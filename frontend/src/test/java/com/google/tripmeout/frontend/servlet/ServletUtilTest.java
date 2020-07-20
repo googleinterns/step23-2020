@@ -13,7 +13,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.TripModel;
-import com.google.tripmeout.frontend.error.WrongFormatUriException;
+import com.google.tripmeout.frontend.error.BadFormatUriException;
+import com.google.tripmeout.frontend.error.EmptyRequestBodyException;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 import com.google.tripmeout.frontend.servlets.ServletUtil;
 import java.io.BufferedReader;
@@ -47,18 +48,19 @@ public class ServletUtilTest {
   }
 
   @Test
-  public void extractFromRequestBody_supplyListClass_returnsOptionalList() throws IOException {
+  public void extractFromRequestBody_supplyListClass_returnsOptionalList()
+      throws IOException, EmptyRequestBodyException {
     when(request.getReader())
         .thenReturn(new BufferedReader(new StringReader("['hello', 'my', 'name', 'is']")));
 
-    Optional<List<String>> extractedList = ServletUtil.extractFromRequestBody(
+    List<String> extractedList = ServletUtil.extractFromRequestBody(
         request, gson, new TypeToken<List<String>>() {}.getType());
-    assertThat(extractedList).isPresent();
-    assertThat(extractedList.get()).containsExactly("hello", "my", "name", "is");
+    assertThat(extractedList).containsExactly("hello", "my", "name", "is");
   }
 
   @Test
-  public void extractFromRequestBody_supplyTripObject_returnsOptionalTrip() throws IOException {
+  public void extractFromRequestBody_supplyTripObject_returnsOptionalTrip()
+      throws IOException, EmptyRequestBodyException {
     when(request.getReader())
         .thenReturn(new BufferedReader(new StringReader(
             "{id: abc123, name: trip1, userId: a, locationLat: 33.2, locationLong: -22.77}")));
@@ -72,23 +74,24 @@ public class ServletUtilTest {
                              .build();
 
     assertThat(ServletUtil.extractFromRequestBody(request, gson, TripModel.class))
-        .hasValue(testTrip);
+        .isEqualTo(testTrip);
   }
 
   @Test
   public void extractFromRequestBody_supplyTripObjectNotAllFields_returnsOptionalTrip()
-      throws IOException {
+      throws IOException, EmptyRequestBodyException {
     when(request.getReader())
         .thenReturn(new BufferedReader(new StringReader("{name: abc123, userId: a}")));
 
     TripModel testTrip = TripModel.builder().setName("abc123").setUserId("a").build();
 
     assertThat(ServletUtil.extractFromRequestBody(request, gson, TripModel.class))
-        .hasValue(testTrip);
+        .isEqualTo(testTrip);
   }
 
   @Test
-  public void extractFromRequestBody_missingName_returnsOptionalTrip() throws IOException {
+  public void extractFromRequestBody_missingUserId_throwsError()
+      throws IOException, EmptyRequestBodyException {
     when(request.getReader())
         .thenReturn(new BufferedReader(
             new StringReader("{name: trip1, id: a, locationLat: 33.2, locationLong: -22.77}")));
@@ -98,7 +101,7 @@ public class ServletUtilTest {
 
   @Test
   public void extractFromRequestBody_supplyPlaceVisitObject_returnsOptionalPlaceVisitModel()
-      throws IOException {
+      throws IOException, EmptyRequestBodyException {
     when(request.getReader())
         .thenReturn(new BufferedReader(new StringReader(
             "{tripId: abc123, placeId: 123, name: trip1, userMark: YES, latitude: 33.2, longitude: -22.77}")));
@@ -113,20 +116,28 @@ public class ServletUtilTest {
                                      .build();
 
     assertThat(ServletUtil.extractFromRequestBody(request, gson, PlaceVisitModel.class))
-        .hasValue(testPlace1);
+        .isEqualTo(testPlace1);
+  }
+
+  @Test
+  public void extractFromRequestBody_emptyRequest_throwsError() throws IOException {
+    when(request.getReader()).thenReturn(new BufferedReader(new StringReader("")));
+
+    assertThrows(EmptyRequestBodyException.class,
+        () -> ServletUtil.extractFromRequestBody(request, gson, PlaceVisitModel.class));
   }
 
   @Test
   public void matchUriOrThrowError_noMatchesTripNamePattern_throwsError() {
     when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(WrongFormatUriException.class,
+    assertThrows(BadFormatUriException.class,
         () -> ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN));
   }
 
   @Test
   public void matchUriOrThrowError_matchesTripNamePattern_matcherHasCorrectGroup()
-      throws WrongFormatUriException {
+      throws BadFormatUriException {
     when(request.getRequestURI()).thenReturn("/trips/abc123");
 
     Matcher matcher = ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN);
@@ -139,13 +150,13 @@ public class ServletUtilTest {
   public void matchUriOrThrowError_noMatchesTripAndPlaceNamePattern_throwsError() {
     when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(WrongFormatUriException.class,
+    assertThrows(BadFormatUriException.class,
         () -> ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN));
   }
 
   @Test
   public void matchUriOrThrowError_matchesTripAndPlaceNamePattern_matcherHasCorrectGroups()
-      throws WrongFormatUriException {
+      throws BadFormatUriException {
     when(request.getRequestURI()).thenReturn("/trips/abc123/places/123");
 
     Matcher matcher = ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN);

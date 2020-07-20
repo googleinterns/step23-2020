@@ -39,7 +39,7 @@ class TripMeOut extends StatelessWidget {
             settings: settings,
           );
         }
-        if (settings.name == '/createTrip') {
+        if (settings.name == '/trips/new') {
           return MaterialPageRoute(
             builder: (context) => CreateTripPage(),
             settings: settings,

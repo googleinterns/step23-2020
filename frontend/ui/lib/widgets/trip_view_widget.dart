@@ -22,8 +22,6 @@ class _TripWidgetState extends State<TripViewWidget> {
           borderRadius: BorderRadius.all(Radius.circular(5))),
       margin: const EdgeInsets.all(15.0),
       padding: const EdgeInsets.all(10.0),
-      width: MediaQuery.of(context).size.width * .80,
-      height: MediaQuery.of(context).size.width * .80,
       child: Column(
         children: [
           Text("Name of the Trip"),

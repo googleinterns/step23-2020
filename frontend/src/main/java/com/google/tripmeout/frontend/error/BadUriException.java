@@ -4,12 +4,12 @@ import com.google.tripmeout.frontend.error.TripMeOutException;
 import java.lang.Throwable;
 import javax.servlet.http.HttpServletResponse;
 
-public class BadFormatUriException extends TripMeOutException {
-  public BadFormatUriException(String errorMsg) {
+public class BadUriException extends TripMeOutException {
+  public BadUriException(String errorMsg) {
     super(errorMsg);
   }
 
-  public BadFormatUriException(String errorMsg, Throwable cause) {
+  public BadUriException(String errorMsg, Throwable cause) {
     super(errorMsg, cause);
   }
 

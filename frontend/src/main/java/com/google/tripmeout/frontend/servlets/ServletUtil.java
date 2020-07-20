@@ -2,7 +2,7 @@ package com.google.tripmeout.frontend.servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.google.tripmeout.frontend.error.BadFormatUriException;
+import com.google.tripmeout.frontend.error.BadUriException;
 import com.google.tripmeout.frontend.error.EmptyRequestBodyException;
 import java.io.IOException;
 import java.io.Reader;
@@ -37,13 +37,13 @@ public final class ServletUtil {
   }
 
   public static Matcher matchUriOrThrowError(HttpServletRequest request, Pattern pattern)
-      throws BadFormatUriException {
+      throws BadUriException {
     String uri = request.getRequestURI();
     Matcher matcher = pattern.matcher(uri);
     if (matcher.matches()) {
       return matcher;
     } else {
-      throw new BadFormatUriException(
+      throw new BadUriException(
           String.format("URI '%s' does not match expected pattern '%s'", uri, pattern.toString()));
     }
   }

@@ -13,7 +13,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.TripModel;
-import com.google.tripmeout.frontend.error.BadFormatUriException;
+import com.google.tripmeout.frontend.error.BadUriException;
 import com.google.tripmeout.frontend.error.EmptyRequestBodyException;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 import com.google.tripmeout.frontend.servlets.ServletUtil;
@@ -131,13 +131,13 @@ public class ServletUtilTest {
   public void matchUriOrThrowError_noMatchesTripNamePattern_throwsError() {
     when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(BadFormatUriException.class,
+    assertThrows(BadUriException.class,
         () -> ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN));
   }
 
   @Test
   public void matchUriOrThrowError_matchesTripNamePattern_matcherHasCorrectGroup()
-      throws BadFormatUriException {
+      throws BadUriException {
     when(request.getRequestURI()).thenReturn("/trips/abc123");
 
     Matcher matcher = ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN);
@@ -150,13 +150,13 @@ public class ServletUtilTest {
   public void matchUriOrThrowError_noMatchesTripAndPlaceNamePattern_throwsError() {
     when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(BadFormatUriException.class,
+    assertThrows(BadUriException.class,
         () -> ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN));
   }
 
   @Test
   public void matchUriOrThrowError_matchesTripAndPlaceNamePattern_matcherHasCorrectGroups()
-      throws BadFormatUriException {
+      throws BadUriException {
     when(request.getRequestURI()).thenReturn("/trips/abc123/places/123");
 
     Matcher matcher = ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN);

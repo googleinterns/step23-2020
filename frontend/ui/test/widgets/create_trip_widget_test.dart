@@ -55,8 +55,7 @@ void main() {
 
     await tester.enterText(
         find.widgetWithText(TextField, 'Enter your Location'), "Italy");
-    await tester.enterText(
-        find.widgetWithText(TextField, 'Radius KM'), "25");
+    await tester.enterText(find.widgetWithText(TextField, 'Radius KM'), "25");
 
     button.onPressed();
 

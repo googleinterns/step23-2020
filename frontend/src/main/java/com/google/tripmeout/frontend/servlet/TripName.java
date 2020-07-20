@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 public abstract class TripName {
   private static Pattern TRIP_NAME_PATTERN = Pattern.compile(".*/trips/([^/]+)$");
 
-  TripName() {}
-
   public abstract String id();
 
   @Override

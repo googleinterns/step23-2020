@@ -15,14 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 public final class TripServlet extends HttpServlet {
   // The Trip get and delete servlet
   private static final long serialVersionUID = 1L;
-  
+
   private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json;";
-  
+
   private final Gson gson;
   private final TripStorage storage;
 
   @Inject
-  public TripServlet( TripStorage storage, Gson gson) {
+  public TripServlet(TripStorage storage, Gson gson) {
     this.storage = storage;
     this.gson = gson;
   }
@@ -38,8 +38,8 @@ public final class TripServlet extends HttpServlet {
       response.getWriter().flush();
     } catch (TripNotFoundException e) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    } catch(IllegalArgumentException e){
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    } catch (IllegalArgumentException e) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
@@ -49,13 +49,13 @@ public final class TripServlet extends HttpServlet {
   public void doDelete(final HttpServletRequest request, final HttpServletResponse response)
       throws IOException {
     try {
-      final String tripId = TripName.fromRequestUri(request.getRequestURI()).id();
-      storage.removeTrip(tripId);
+      final TripName tripName = TripName.fromRequestUri(request.getRequestURI());
+      storage.removeTrip(tripName.id());
       response.setStatus(HttpServletResponse.SC_OK);
     } catch (TripNotFoundException e) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    } catch(IllegalArgumentException e){
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    } catch (IllegalArgumentException e) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }

@@ -18,7 +18,7 @@ import org.junit.runners.JUnit4;
 public class GsonTripModelTypeAdapterTest {
   private Gson gson;
 
-  private TripModel baseTrip = TripModel.builder().setUserId("idk").setName("New Jersey").build();
+  private TripModel baseTrip = TripModel.builder().setName("New Jersey").build();
 
   @Before
   public void setup() {
@@ -34,6 +34,7 @@ public class GsonTripModelTypeAdapterTest {
 
     TripModel expected = baseTrip.toBuilder()
                              .setId("a")
+                             .setUserId("idk")
                              .setLocationLat(12.66)
                              .setLocationLong(34.78)
                              .build();
@@ -52,10 +53,10 @@ public class GsonTripModelTypeAdapterTest {
 
   @Test
   public void deserialize_noId_throwsJsonParseException() throws Exception {
-    TripModel trip =
-        gson.fromJson(TripTestDataAccessUtil.getTripModelWithoutId(), TripModel.class);
+    TripModel trip = gson.fromJson(TripTestDataAccessUtil.getTripModelWithoutId(), TripModel.class);
 
-    TripModel expected = baseTrip.toBuilder().setLocationLat(12.66).setLocationLong(34.78).build();
+    TripModel expected =
+        baseTrip.toBuilder().setUserId("idk").setLocationLat(12.66).setLocationLong(34.78).build();
 
     assertThat(trip).isEqualTo(expected);
   }
@@ -71,11 +72,13 @@ public class GsonTripModelTypeAdapterTest {
 
   @Test
   public void deserialize_noUserId_throwsJsonParseException() throws Exception {
-    assertThrows(JsonParseException.class,
-        ()
-            -> gson.fromJson(
+    TripModel trip =
+        gson.fromJson(TripTestDataAccessUtil.getTripModelWithoutUserId(), TripModel.class);
 
-                TripTestDataAccessUtil.getTripModelWithoutUserId(), TripModel.class));
+    TripModel expected =
+        baseTrip.toBuilder().setId("a").setLocationLat(12.66).setLocationLong(34.78).build();
+
+    assertThat(trip).isEqualTo(expected);
   }
 
   @Test
@@ -83,7 +86,8 @@ public class GsonTripModelTypeAdapterTest {
     TripModel trip =
         gson.fromJson(TripTestDataAccessUtil.getTripModelWithoutLatitude(), TripModel.class);
 
-    TripModel expected = baseTrip.toBuilder().setId("a").setLocationLong(34.78).build();
+    TripModel expected =
+        baseTrip.toBuilder().setId("a").setUserId("idk").setLocationLong(34.78).build();
 
     assertThat(trip).isEqualTo(expected);
   }
@@ -93,7 +97,8 @@ public class GsonTripModelTypeAdapterTest {
     TripModel trip =
         gson.fromJson(TripTestDataAccessUtil.getTripModelWithoutLongitude(), TripModel.class);
 
-    TripModel expected = baseTrip.toBuilder().setId("a").setLocationLat(12.66).build();
+    TripModel expected =
+        baseTrip.toBuilder().setId("a").setUserId("idk").setLocationLat(12.66).build();
 
     assertThat(trip).isEqualTo(expected);
   }

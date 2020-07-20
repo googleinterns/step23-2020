@@ -77,19 +77,19 @@ public class ServletUtilTest {
   public void extractFromRequestBody_supplyTripObjectNotAllFields_returnsOptionalTrip()
       throws IOException {
     when(request.getReader())
-        .thenReturn(new BufferedReader(new StringReader("{id: abc123, userId: a}")));
+        .thenReturn(new BufferedReader(new StringReader("{name: abc123, userId: a}")));
 
-    TripModel testTrip = TripModel.builder().setId("abc123").setUserId("a").build();
+    TripModel testTrip = TripModel.builder().setName("abc123").setUserId("a").build();
 
     assertThat(ServletUtil.extractFromRequestBody(request, gson, TripModel.class))
         .hasValue(testTrip);
   }
 
   @Test
-  public void extractFromRequestBody_missingId_returnsOptionalTrip() throws IOException {
+  public void extractFromRequestBody_missingName_returnsOptionalTrip() throws IOException {
     when(request.getReader())
         .thenReturn(new BufferedReader(
-            new StringReader("{name: trip1, userId: a, locationLat: 33.2, locationLong: -22.77}")));
+            new StringReader("{id: trip1, userId: a, locationLat: 33.2, locationLong: -22.77}")));
     assertThat(ServletUtil.extractFromRequestBody(request, gson, TripModel.class)).isEmpty();
   }
 

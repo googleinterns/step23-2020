@@ -67,7 +67,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             child: MapWidget(),
           ),
           Container(
-            child: Text('$newInformation')),
+              child: Text('$newInformation')),
           Padding(
             padding: const EdgeInsets.all(25.0),
             child: RaisedButton(

@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.TripModel;
-import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
+import com.google.tripmeout.frontend.error.TripMeOutException;
 import com.google.tripmeout.frontend.servlets.ServletUtil;
 import com.google.tripmeout.frontend.storage.TripStorage;
 import java.io.IOException;
@@ -35,41 +35,37 @@ public class TripParentServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String userId = getUserId();
-    response.setContentType("application/json");
-    response.setStatus(HttpServletResponse.SC_OK);
     PrintWriter writer = response.getWriter();
-    writer.print(gson.toJson(storage.getAllUserTrips(userId)));
-    writer.flush();
-    writer.close();
+    try {
+      String userId = getUserId();
+      response.setContentType("application/json");
+      response.setStatus(HttpServletResponse.SC_OK);
+      writer.print(gson.toJson(storage.getAllUserTrips(userId)));
+    } finally {
+      writer.close();
+    }
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     logger.atInfo().log("received doPost");
+    PrintWriter writer = response.getWriter();
     try {
-      Optional<TripModel> requestTrip =
-          ServletUtil.extractFromRequestBody(request, gson, TripModel.class);
-
-      if (requestTrip.isPresent()) {
-        try {
-          TripModel resolvedTrip = resolveDefaults(requestTrip.get());
-          storage.addTrip(resolvedTrip);
-          response.setContentType("application/json");
-          PrintWriter writer = response.getWriter();
-          writer.println(gson.toJson((resolvedTrip)));
-          writer.flush();
-          writer.close();
-        } catch (TripAlreadyExistsException e) {
-          response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
-
-      } else {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      }
+      TripModel requestTrip =
+          ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class);
+      TripModel resolvedTrip = resolveDefaults(requestTrip);
+      storage.addTrip(resolvedTrip);
+      response.setContentType("application/json");
+      writer.println(gson.toJson((resolvedTrip)));
+    } catch (TripMeOutException e) {
+      response.setStatus(e.restStatusCode());
+    } catch (JsonParseException e) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (IOException e) {
       logger.atWarning().withCause(e).log("Error serving post request");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } finally {
+      writer.close();
     }
   }
 

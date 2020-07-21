@@ -15,7 +15,7 @@ import com.google.tripmeout.frontend.storage.InMemoryStorageBindingModule;
 public class FrontendGuiceServletContextListener extends GuiceServletContextListener {
   @Override
   protected Injector getInjector() {
-    return Guice.createInjector(
-        new GsonModelSerializationModule(), new ServletsModule(), new InMemoryStorageBindingModule());
+    return Guice.createInjector(new GsonModelSerializationModule(), new ServletsModule(),
+        new InMemoryStorageBindingModule());
   }
 }

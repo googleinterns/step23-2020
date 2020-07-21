@@ -20,7 +20,7 @@ public class GsonPlaceVisitTypeAdapterTest {
 
   private PlaceVisitModel basePlaceVisit = PlaceVisitModel.builder()
                                                .setTripId("123")
-                                               .setPlaceId("ABC")
+                                               .setPlacesApiPlaceId("ABC")
                                                .setUserMark(PlaceVisitModel.UserMark.YES)
                                                .build();
 
@@ -37,7 +37,7 @@ public class GsonPlaceVisitTypeAdapterTest {
     PlaceVisitModel place =
         gson.fromJson(TestDataAccessUtil.getWellFormedPlaceVisit(), PlaceVisitModel.class);
     PlaceVisitModel expected =
-        basePlaceVisit.toBuilder().setName("New York").setLatitude(50.2).setLongitude(39.1).build();
+        basePlaceVisit.toBuilder().setPlaceName("New York").setLatitude(50.2).setLongitude(39.1).build();
 
     assertThat(place).isEqualTo(expected);
   }
@@ -83,7 +83,7 @@ public class GsonPlaceVisitTypeAdapterTest {
         gson.fromJson(TestDataAccessUtil.getPlaceVisitWithoutLatitude(), PlaceVisitModel.class);
 
     PlaceVisitModel expected =
-        basePlaceVisit.toBuilder().setName("New York").setLongitude(39.1).build();
+        basePlaceVisit.toBuilder().setPlaceName("New York").setLongitude(39.1).build();
 
     assertThat(place).isEqualTo(expected);
   }
@@ -94,7 +94,7 @@ public class GsonPlaceVisitTypeAdapterTest {
         gson.fromJson(TestDataAccessUtil.getPlaceVisitWithoutLongitude(), PlaceVisitModel.class);
 
     PlaceVisitModel expected =
-        basePlaceVisit.toBuilder().setName("New York").setLatitude(50.2).build();
+        basePlaceVisit.toBuilder().setPlaceName("New York").setLatitude(50.2).build();
 
     assertThat(place).isEqualTo(expected);
   }
@@ -102,8 +102,8 @@ public class GsonPlaceVisitTypeAdapterTest {
   @Test
   public void roundTrip_objectsAreEqual() throws Exception {
     PlaceVisitModel place = PlaceVisitModel.builder()
-                                .setPlaceId("abc")
-                                .setName("name")
+                                .setPlacesApiPlaceId("abc")
+                                .setPlaceName("name")
                                 .setTripId("tripId")
                                 .setLongitude(12.3)
                                 .setLatitude(34.9)

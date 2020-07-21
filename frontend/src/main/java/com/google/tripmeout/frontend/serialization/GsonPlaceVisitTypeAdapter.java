@@ -11,9 +11,9 @@ import com.google.tripmeout.frontend.PlaceVisitModel.UserMark;
 import java.io.IOException;
 
 public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
-  private static final String PLACE_ID_JSON_FIELD_NAME = "placeId";
+  private static final String PLACE_ID_JSON_FIELD_NAME = "placesApiPlaceId";
   private static final String TRIP_ID_JSON_FIELD_NAME = "tripId";
-  private static final String NAME_JSON_FIELD_NAME = "name";
+  private static final String NAME_JSON_FIELD_NAME = "placeName";
   private static final String USER_MARK_JSON_FIELD_NAME = "userMark";
   private static final String LATITUDE_JSON_FIELD_NAME = "latitude";
   private static final String LONGITUDE_JSON_FIELD_NAME = "longitude";
@@ -30,10 +30,10 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
       String name = reader.nextName();
       switch (name) {
         case PLACE_ID_JSON_FIELD_NAME:
-          placeBuilder.setPlaceId(reader.nextString());
+          placeBuilder.setPlacesApiPlaceId(reader.nextString());
           break;
         case NAME_JSON_FIELD_NAME:
-          placeBuilder.setName(reader.nextString());
+          placeBuilder.setPlaceName(reader.nextString());
           break;
         case TRIP_ID_JSON_FIELD_NAME:
           placeBuilder.setTripId(reader.nextString());
@@ -50,7 +50,7 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
           break;
         default:
           throw new JsonParseException(
-              String.format("Unknown field name %s for type Trip Model", name));
+              String.format("Unknown field name %s for type PlaceVisitModel", name));
       }
     }
     reader.endObject();
@@ -64,8 +64,8 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
       return;
     }
     writer.beginObject();
-    writeUnlessNullOrEmpty(writer, PLACE_ID_JSON_FIELD_NAME, place.placeId());
-    writeUnlessNullOrEmpty(writer, NAME_JSON_FIELD_NAME, place.name());
+    writeUnlessNullOrEmpty(writer, PLACE_ID_JSON_FIELD_NAME, place.placesApiPlaceId());
+    writeUnlessNullOrEmpty(writer, NAME_JSON_FIELD_NAME, place.placeName());
     writeUnlessNullOrEmpty(writer, TRIP_ID_JSON_FIELD_NAME, place.tripId());
     writer.name(USER_MARK_JSON_FIELD_NAME);
     writer.value(place.userMark().toString());

@@ -1,6 +1,6 @@
 {
-    "placeId":"ABC",
-    "name":"New York",
+    "placesApiPlaceId":"ABC",
+    "placeName":"New York",
     "tripId":"123",
     "userMark":"YES",
     "longitude":39.1

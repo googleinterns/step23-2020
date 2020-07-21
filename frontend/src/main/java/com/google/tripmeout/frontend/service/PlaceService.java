@@ -1,5 +1,7 @@
 package com.google.tripmeout.frontend.service;
 
+import com.google.tripmeout.frontend.PlaceVisitModel;
+
 public interface PlaceService {
   /**
    * returns a PlaceVisitModel object with all of its fields filled out

@@ -5,8 +5,8 @@ import com.google.maps.PlaceDetailsRequest;
 import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 
-public PlacesApiPlaceService implements PlaceService {
-  private final CONTEXT = new GeoApiContext.Builder().apiKey("AIza...").build();
+public class PlacesApiPlaceService implements PlaceService {
+  private final GepApiContext CONTEXT = new GeoApiContext.Builder().apiKey("AIza...").build();
 
   @Override
   public PlaceVisitModel getDetailedPlaceVisit(String tripId, String placeId) {

@@ -11,7 +11,7 @@ import java.lang.InterruptedException;
 
 public class PlacesApiPlaceService implements PlaceService {
   private final GeoApiContext CONTEXT =
-      new GeoApiContext.Builder().apiKey("AIzaSyBbXCXC2uWv3baNmirLtqUYbFsFwCXqLV8").build();
+      new GeoApiContext.Builder().apiKey("APIKEY").build();
 
   @Override
   public PlaceVisitModel getDetailedPlaceVisit(String tripId, String placeId)

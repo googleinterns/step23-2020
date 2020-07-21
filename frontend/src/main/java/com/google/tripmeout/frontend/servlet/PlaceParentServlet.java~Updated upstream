@@ -1,4 +1,4 @@
-package com.google.tripmeout.frontend.servlet;
+package com.google.tripmeout.frontend.servlets;
 
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
@@ -8,8 +8,6 @@ import com.google.maps.errors.InvalidRequestException;
 import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
-import com.google.tripmeout.frontend.error.TripMeOutException;
-import com.google.gson.JsonParseException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -37,14 +35,20 @@ public class PlaceParentServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      PlaceVisitModel place = ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
+      Optional<PlaceVisitModel> place =
+          ServletUtil.extractFromRequestBody(request, gson, PlaceVisitModel.class);
 
       String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
       logger.atInfo().log("finished matching");
 
+      if (!place.isPresent()) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return;
+      }
+
       PlaceDetailsRequest placeRequest =
           new PlaceDetailsRequest(CONTEXT)
-              .placeId(place.placeId())
+              .placeId(place.get().placeId())
               .fields(PlaceDetailsRequest.FieldMask.GEOMETRY_LOCATION,
                   PlaceDetailsRequest.FieldMask.NAME);
 
@@ -53,7 +57,7 @@ public class PlaceParentServlet extends HttpServlet {
 
       PlaceVisitModel newPlace = PlaceVisitModel.builder()
                                      .setTripId(tripId)
-                                     .setPlaceId(place.placeId())
+                                     .setPlaceId(place.get().placeId())
                                      .setUserMark(PlaceVisitModel.UserMark.YES)
                                      .setName(details.name)
                                      .setLatitude(details.geometry.location.lat)
@@ -61,6 +65,8 @@ public class PlaceParentServlet extends HttpServlet {
                                      .build();
 
       placeStorage.updateUserMarkOrAddPlaceVisit(newPlace, PlaceVisitModel.UserMark.YES);
+      PlaceVisitModel newOrUpdatedPlace =
+          placeStorage.getPlaceVisit(tripId, place.get().placeId()).get();
 
       response.setStatus(HttpServletResponse.SC_OK);
 
@@ -69,7 +75,11 @@ public class PlaceParentServlet extends HttpServlet {
     } catch (JsonParseException e) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (InvalidRequestException e) {
+<<<<<<< Updated upstream:frontend/src/main/java/com/google/tripmeout/frontend/servlet/PlaceParentServlet.java
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+=======
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+>>>>>>> Stashed changes:frontend/src/main/java/com/google/tripmeout/frontend/servlets/PlaceParentServlet.java
     } catch (Exception e) {
       logger.atWarning().log(e.getMessage());
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -78,15 +88,23 @@ public class PlaceParentServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    PrintWriter writer = response.getWriter();
+    PrintWriter writer = response.getWriter()
     try {
       String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
       List<PlaceVisitModel> nearbyPlaces = placeStorage.getTripPlaceVisits(tripId);
-      response.setContentType("application/json");
-      writer.println(gson.toJson(nearbyPlaces));
       response.setStatus(HttpServletResponse.SC_OK);
+      response.setContentType("application/json");;
+      writer.println(gson.toJson(nearbyPlaces));
+<<<<<<< Updated upstream:frontend/src/main/java/com/google/tripmeout/frontend/servlet/PlaceParentServlet.java
     } catch (TripMeOutException e) {
       response.setStatus(e.restStatusCode());
+=======
+      writer.flush();
+      writer.close();
+
+    } catch (IllegalArgumentException e) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+>>>>>>> Stashed changes:frontend/src/main/java/com/google/tripmeout/frontend/servlets/PlaceParentServlet.java
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } finally {

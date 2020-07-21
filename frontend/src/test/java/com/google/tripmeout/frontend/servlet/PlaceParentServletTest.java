@@ -84,7 +84,7 @@ public class PlaceParentServletTest {
   }
 
   @Test
-  public void doPost_badUri_setsBadRequestStatus() throws IOException {
+  public void doPost_badUri_setsInternalServerError() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
@@ -95,7 +95,7 @@ public class PlaceParentServletTest {
 
     servlet.doPost(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
   }
 
   @Test
@@ -111,7 +111,7 @@ public class PlaceParentServletTest {
     Optional<PlaceVisitModel> place = placeStorage.getPlaceVisit("abc123", "hello");
 
     assertThat(place).isEmpty();
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
   }
 
   @Test
@@ -173,7 +173,7 @@ public class PlaceParentServletTest {
   }
 
   @Test
-  public void doGet_badUri_setsBadRequestStatus() throws IOException {
+  public void doGet_badUri_setsInternalServerError() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
@@ -181,7 +181,7 @@ public class PlaceParentServletTest {
 
     servlet.doGet(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
   }
 
   @Test

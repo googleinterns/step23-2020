@@ -48,7 +48,8 @@ public class TripParentServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     logger.atInfo().log("received doPost");
     try {
-      TripModel requestTrip = ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class);
+      TripModel requestTrip =
+          ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class);
       TripModel resolvedTrip = resolveDefaults(requestTrip);
       storage.addTrip(resolvedTrip);
       response.setContentType("application/json");

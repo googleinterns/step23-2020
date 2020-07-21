@@ -131,8 +131,8 @@ public class ServletUtilTest {
   public void matchUriOrThrowError_noMatchesTripNamePattern_throwsError() {
     when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(BadUriException.class,
-        () -> ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN));
+    assertThrows(
+        BadUriException.class, () -> ServletUtil.matchUriOrThrowError(request, TRIP_URI_PATTERN));
   }
 
   @Test
@@ -150,8 +150,8 @@ public class ServletUtilTest {
   public void matchUriOrThrowError_noMatchesTripAndPlaceNamePattern_throwsError() {
     when(request.getRequestURI()).thenReturn("/trip/abc123");
 
-    assertThrows(BadUriException.class,
-        () -> ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN));
+    assertThrows(
+        BadUriException.class, () -> ServletUtil.matchUriOrThrowError(request, PLACE_URI_PATTERN));
   }
 
   @Test

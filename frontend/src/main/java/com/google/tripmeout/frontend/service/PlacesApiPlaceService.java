@@ -14,26 +14,9 @@ public class PlacesApiPlaceService implements PlaceService {
       new GeoApiContext.Builder().apiKey("APIKEY").build();
 
   @Override
-  public PlaceVisitModel getDetailedPlaceVisit(String tripId, String placeId)
+  public boolean validatePlaceId(String placesApiPlaceId)
       throws ApiException, InterruptedException, IOException {
-    PlaceDetailsRequest request = new PlaceDetailsRequest(CONTEXT).placeId(placeId).fields(
-        PlaceDetailsRequest.FieldMask.NAME, PlaceDetailsRequest.FieldMask.GEOMETRY_LOCATION);
-
-    PlaceDetails details = request.await();
-
-    return PlaceVisitModel.builder()
-        .setTripId(tripId)
-        .setPlaceId(placeId)
-        .setName(details.name)
-        .setLatitude(details.geometry.location.lat)
-        .setLongitude(details.geometry.location.lng)
-        .build();
-  }
-
-  @Override
-  public boolean validatePlaceId(String placeId)
-      throws ApiException, InterruptedException, IOException {
-    PlaceDetailsRequest request = new PlaceDetailsRequest(CONTEXT).placeId(placeId);
+    PlaceDetailsRequest request = new PlaceDetailsRequest(CONTEXT).placeId(placesApiPlaceId);
     try {
       request.await();
       return true;

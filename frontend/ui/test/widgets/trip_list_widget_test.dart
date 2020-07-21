@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
+import 'package:tripmeout/widgets/map_widget.dart';
 import 'package:tripmeout/widgets/trip_list_widget.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/services/trip_service.dart';
@@ -81,7 +82,7 @@ void main() {
     expect(find.text('Radius KM'), findsNothing);
     expect(find.byType(MapWidget), findsNothing);
     expect(find.text('Grabbed info placed here.'), findsNothing);
-    xpect(find.byType(RaisedButton), findsNothing);
+    expect(find.byType(RaisedButton), findsNothing);
 
     RaisedButton button =
         find.byType(CircularProgressIndicator).evaluate().first.widget;
@@ -93,14 +94,14 @@ void main() {
     // Should be off of the trip list page
     expect(find.byIcon(Icons.add), findsNothing);
     expect(find.text('name1'), findsNothing);
-    expect(find.text('name2777'), findsNothing);
+    expect(find.text('name2'), findsNothing);
 
     //Should now be on create trip page
     expect(find.text('Enter your Location'), findsOneWidget);
     expect(find.text('Radius KM'), findsOneWidget);
     expect(find.byType(MapWidget), findsOneWidget);
     expect(find.text('Grabbed info placed here.'), findsOneWidget);
-    xpect(find.byType(RaisedButton), findsOneWidget);
+    expect(find.byType(RaisedButton), findsOneWidget);
   });
 }
 

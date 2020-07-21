@@ -90,11 +90,11 @@ public class ServletUtilTest {
   }
 
   @Test
-  public void extractFromRequestBody_missingUserId_throwsError()
+  public void extractFromRequestBody_missingName_throwsError()
       throws IOException, EmptyRequestBodyException {
     when(request.getReader())
         .thenReturn(new BufferedReader(
-            new StringReader("{name: trip1, id: a, locationLat: 33.2, locationLong: -22.77}")));
+            new StringReader("{id: a, locationLat: 33.2, locationLong: -22.77}")));
     assertThrows(JsonParseException.class,
         () -> ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class));
   }

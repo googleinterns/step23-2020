@@ -10,6 +10,7 @@ class Router {
   static final RegExp tripViewRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)$');
 
   final TripService tripService;
+
   Router(this.tripService);
 
   Route<dynamic> generateRoute(RouteSettings settings) {

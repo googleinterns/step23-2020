@@ -8,17 +8,22 @@ import 'package:tripmeout/services/in_memory_trip_service.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/model/location.dart';
 import 'package:tripmeout/themes/default_theme.dart';
-import 'package:tripmeout/router/router.dart';
 
 void main() {
-  runApp(TripMeOut());
+  TripService tripService = InMemoryTripService();
+  Router router = Router(tripService);
+  runApp(TripMeOut(tripService, router));
 }
 
 class TripMeOut extends StatelessWidget {
+  TripService tripService;
+  Router router;
+
+  TripMeOut(this.tripService, this.router);
   @override
   Widget build(BuildContext context) {
     //TODO: remove this...
-    TripService tripService = InMemoryTripService();
+
     tripService.createTrip(Trip(
       id: 'fake-trip-id',
       name: 'My Fake Trip',
@@ -27,7 +32,7 @@ class TripMeOut extends StatelessWidget {
         latitude: 0.0,
       ),
     ));
-    Router router = Router(tripService);
+
     return MaterialApp(
       title: 'Trip Me Out',
       theme: defaultTheme,

@@ -69,18 +69,13 @@ public class PlaceParentServlet extends HttpServlet {
           placeStorage.getPlaceVisit(tripId, place.get().placeId()).get();
 
       response.setStatus(HttpServletResponse.SC_OK);
-      response.setContentType("application/json");
-      PrintWriter writer = response.getWriter();
-      writer.println(gson.toJson(newOrUpdatedPlace));
-      writer.flush();
-      writer.close();
 
-    } catch (IllegalArgumentException e) {
+    } catch (TripMeOutException e) {
+      response.setStatus(e.restStatusCode());
+    } catch (JsonParseException e) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
     } catch (InvalidRequestException e) {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (Exception e) {
       logger.atWarning().log(e.getMessage());
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -89,22 +84,19 @@ public class PlaceParentServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    PrintWriter writer = response.getWriter()
     try {
       String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
       List<PlaceVisitModel> nearbyPlaces = placeStorage.getTripPlaceVisits(tripId);
-
       response.setStatus(HttpServletResponse.SC_OK);
-      response.setContentType("application/json");
-      PrintWriter writer = response.getWriter();
+      response.setContentType("application/json");;
       writer.println(gson.toJson(nearbyPlaces));
-      writer.flush();
-      writer.close();
-
-    } catch (IllegalArgumentException e) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
+    } catch (TripMeOutException e) {
+      response.setStatus(e.restStatusCode());
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } finally {
+      writer.close();
     }
   }
 }

@@ -16,14 +16,17 @@ format:
 	$(DART_CLI) format $(FLUTTER_APP_ROOT)
 
 clean:
-	$(FLUTTER_CLI) clean --packages $(FLUTTER_APP_ROOT)
+	pushd $(FLUTTER_APP_ROOT) && $(FLUTTER_CLI) clean && popd
 	$(MAVEN_CLI) clean --file $(MAVEN_FRONTEND_ROOT)/pom.xml
 
-build-and-copy-flutter:
+flutter-pub-get:
+	pushd $(FLUTTER_APP_ROOT) && $(FLUTTER_CLI) pub get && popd
+
+build-and-copy-flutter: flutter-pub-get
 	pushd $(FLUTTER_APP_ROOT) && $(FLUTTER_CLI) build web && popd
 	cp -r $(FLUTTER_APP_ROOT)/build/web/* $(MAVEN_FRONTEND_ROOT)/src/main/webapp/
 
-test-flutter:
+test-flutter: flutter-pub-get
 	pushd $(FLUTTER_APP_ROOT) && $(FLUTTER_CLI) test && popd
 
 test-frontend-server:

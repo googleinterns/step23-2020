@@ -27,18 +27,9 @@ class TripListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      RaisedButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/trips/new');
-        },
-        child: Icon(Icons.add),
-      ),
-      Expanded(
-          child: ListView(
-        children: trips.map(toListTile).toList(),
-      )),
-    ]);
+    return ListView(
+      children: trips.map(toListTile).toList(),
+    );
   }
 
   Widget toListTile(Trip trip) {

@@ -2,14 +2,18 @@ package com.google.tripmeout.frontend.service;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlaceDetailsRequest;
+import com.google.maps.errors.ApiException;
 import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
+import java.io.IOException;
+import java.lang.InterruptedException;
 
 public class PlacesApiPlaceService implements PlaceService {
-  private final GepApiContext CONTEXT = new GeoApiContext.Builder().apiKey("AIza...").build();
+  private final GeoApiContext CONTEXT = new GeoApiContext.Builder().apiKey("AIza...").build();
 
   @Override
-  public PlaceVisitModel getDetailedPlaceVisit(String tripId, String placeId) {
+  public PlaceVisitModel getDetailedPlaceVisit(String tripId, String placeId)
+      throws ApiException, InterruptedException, IOException {
     PlaceDetailsRequest request = new PlaceDetailsRequest(CONTEXT).placeId(placeId).fields(
         PlaceDetailsRequest.FieldMask.NAME, PlaceDetailsRequest.FieldMask.GEOMETRY_LOCATION);
 
@@ -19,8 +23,8 @@ public class PlacesApiPlaceService implements PlaceService {
         .setTripId(tripId)
         .setPlaceId(placeId)
         .setName(details.name)
-        .setLatitude(details.geometry.location.latitude)
-        .setLongitude(details.geometry.location.longitude)
+        .setLatitude(details.geometry.location.lat)
+        .setLongitude(details.geometry.location.lng)
         .build();
   }
 }

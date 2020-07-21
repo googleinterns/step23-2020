@@ -10,7 +10,8 @@ import java.io.IOException;
 import java.lang.InterruptedException;
 
 public class PlacesApiPlaceService implements PlaceService {
-  private final GeoApiContext CONTEXT = new GeoApiContext.Builder().apiKey("AIza...").build();
+  private final GeoApiContext CONTEXT =
+      new GeoApiContext.Builder().apiKey("AIzaSyBbXCXC2uWv3baNmirLtqUYbFsFwCXqLV8").build();
 
   @Override
   public PlaceVisitModel getDetailedPlaceVisit(String tripId, String placeId)

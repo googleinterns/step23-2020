@@ -1,4 +1,5 @@
-package com.google.sps;
+package com.google.tripmeout.frontend.storage;
+
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 

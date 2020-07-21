@@ -35,28 +35,28 @@ public class TripParentServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String userId = getUserId();
-    response.setContentType("application/json");
-    response.setStatus(HttpServletResponse.SC_OK);
     PrintWriter writer = response.getWriter();
-    writer.print(gson.toJson(storage.getAllUserTrips(userId)));
-    writer.flush();
-    writer.close();
+    try {
+      String userId = getUserId();
+      response.setContentType("application/json");
+      response.setStatus(HttpServletResponse.SC_OK);
+      writer.print(gson.toJson(storage.getAllUserTrips(userId)));
+    } finally {
+      writer.close();
+    }
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     logger.atInfo().log("received doPost");
+    PrintWriter writer = response.getWriter();
     try {
       TripModel requestTrip =
           ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class);
       TripModel resolvedTrip = resolveDefaults(requestTrip);
       storage.addTrip(resolvedTrip);
       response.setContentType("application/json");
-      PrintWriter writer = response.getWriter();
       writer.println(gson.toJson((resolvedTrip)));
-      writer.flush();
-      writer.close();
     } catch (TripMeOutException e) {
       response.setStatus(e.restStatusCode());
     } catch (JsonParseException e) {
@@ -64,6 +64,8 @@ public class TripParentServlet extends HttpServlet {
     } catch (IOException e) {
       logger.atWarning().withCause(e).log("Error serving post request");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } finally {
+      writer.close();
     }
   }
 

@@ -21,9 +21,8 @@ public final class ServletUtil {
     T object = gson.fromJson(reader, clazz);
     if (object != null) {
       return object;
-    } else {
-      throw new EmptyRequestBodyException("Received empty request");
     }
+    throw new EmptyRequestBodyException("Received empty request");
   }
 
   public static <T> T extractFromRequestBody(Reader reader, Gson gson, Type t)
@@ -31,9 +30,8 @@ public final class ServletUtil {
     T object = gson.fromJson(reader, t);
     if (object != null) {
       return object;
-    } else {
-      throw new EmptyRequestBodyException("Received empty request");
     }
+    throw new EmptyRequestBodyException("Received empty request");
   }
 
   public static Matcher matchUriOrThrowError(HttpServletRequest request, Pattern pattern)
@@ -42,10 +40,9 @@ public final class ServletUtil {
     Matcher matcher = pattern.matcher(uri);
     if (matcher.matches()) {
       return matcher;
-    } else {
-      throw new BadUriException(
-          String.format("URI '%s' does not match expected pattern '%s'", uri, pattern.toString()));
     }
+    throw new BadUriException(
+        String.format("URI '%s' does not match expected pattern '%s'", uri, pattern.toString()));
   }
 
   // Don't allow instantiation of the static util class.

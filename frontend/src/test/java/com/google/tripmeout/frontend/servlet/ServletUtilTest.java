@@ -54,7 +54,7 @@ public class ServletUtilTest {
         .thenReturn(new BufferedReader(new StringReader("['hello', 'my', 'name', 'is']")));
 
     List<String> extractedList = ServletUtil.extractFromRequestBody(
-        request, gson, new TypeToken<List<String>>() {}.getType());
+        request.getReader(), gson, new TypeToken<List<String>>() {}.getType());
     assertThat(extractedList).containsExactly("hello", "my", "name", "is");
   }
 
@@ -73,7 +73,7 @@ public class ServletUtilTest {
                              .setLocationLong(-22.77)
                              .build();
 
-    assertThat(ServletUtil.extractFromRequestBody(request, gson, TripModel.class))
+    assertThat(ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class))
         .isEqualTo(testTrip);
   }
 
@@ -85,7 +85,7 @@ public class ServletUtilTest {
 
     TripModel testTrip = TripModel.builder().setName("abc123").setUserId("a").build();
 
-    assertThat(ServletUtil.extractFromRequestBody(request, gson, TripModel.class))
+    assertThat(ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class))
         .isEqualTo(testTrip);
   }
 
@@ -96,7 +96,7 @@ public class ServletUtilTest {
         .thenReturn(new BufferedReader(
             new StringReader("{name: trip1, id: a, locationLat: 33.2, locationLong: -22.77}")));
     assertThrows(JsonParseException.class,
-        () -> ServletUtil.extractFromRequestBody(request, gson, TripModel.class));
+        () -> ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class));
   }
 
   @Test
@@ -115,7 +115,7 @@ public class ServletUtilTest {
                                      .setLongitude(-22.77)
                                      .build();
 
-    assertThat(ServletUtil.extractFromRequestBody(request, gson, PlaceVisitModel.class))
+    assertThat(ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class))
         .isEqualTo(testPlace1);
   }
 
@@ -124,7 +124,7 @@ public class ServletUtilTest {
     when(request.getReader()).thenReturn(new BufferedReader(new StringReader("")));
 
     assertThrows(EmptyRequestBodyException.class,
-        () -> ServletUtil.extractFromRequestBody(request, gson, PlaceVisitModel.class));
+        () -> ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class));
   }
 
   @Test

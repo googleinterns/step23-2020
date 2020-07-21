@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletRequest;
  * Static utilities that provide functionality that may be shared between servlets.
  */
 public final class ServletUtil {
-  public static <T> T extractFromRequestBody(HttpServletRequest request, Gson gson, Class<T> clazz)
+  public static <T> T extractFromRequestBody(Reader reader, Gson gson, Class<T> clazz)
       throws IOException, JsonParseException, EmptyRequestBodyException {
-    T object = gson.fromJson(request.getReader(), clazz);
+    T object = gson.fromJson(reader, clazz);
     if (object != null) {
       return object;
     } else {
@@ -26,9 +26,9 @@ public final class ServletUtil {
     }
   }
 
-  public static <T> T extractFromRequestBody(HttpServletRequest request, Gson gson, Type t)
+  public static <T> T extractFromRequestBody(Reader reader, Gson gson, Type t)
       throws IOException, JsonParseException, EmptyRequestBodyException {
-    T object = gson.fromJson(request.getReader(), t);
+    T object = gson.fromJson(reader, t);
     if (object != null) {
       return object;
     } else {

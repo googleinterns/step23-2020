@@ -289,40 +289,6 @@ public final class InMemoryPlaceVisitStorageTest {
   }
 
   /**
-   * test that updateUserMark changes the userMark field when PlaceVisitModel object
-   * with given tripId and placesUuid is in storage
-   */
-  @Test
-  public void updateUserMark_placeInStorage_returnsPlaceVisitWithUpdatedStatus()
-      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
-    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    storage.addPlaceVisit(LONDON);
-    storage.addPlaceVisit(PARIS);
-    storage.addPlaceVisit(ROME);
-    storage.addPlaceVisit(BEIJING);
-
-    PlaceVisitModel changedParis =
-        storage.updateUserMark(PARIS.tripId(), PARIS.uuid(), PlaceVisitModel.UserMark.NO);
-    PlaceVisitModel expectedParis =
-        PARIS.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
-
-    assertThat(changedParis).isEqualTo(expectedParis);
-  }
-
-  @Test
-  public void updateUserMark_placeNotInStorage_throwsError()
-      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
-    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    storage.addPlaceVisit(LONDON);
-    storage.addPlaceVisit(PARIS);
-    storage.addPlaceVisit(ROME);
-    storage.addPlaceVisit(BEIJING);
-
-    Assert.assertThrows(PlaceVisitNotFoundException.class,
-        () -> storage.updateUserMark(SEOUL.tripId(), SEOUL.uuid(), PlaceVisitModel.UserMark.NO));
-  }
-
-  /**
    * test that only the PlaceVisitModel objects with the given tripId and
    * userMark of "must-see" or "if-time" are returned in list when there is only
    * one unique tripId in storage

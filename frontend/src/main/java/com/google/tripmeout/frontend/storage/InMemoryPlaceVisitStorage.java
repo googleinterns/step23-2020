@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   // <tripId, uuid, PlaceVisitModel>
@@ -63,29 +62,6 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeUuid) {
     return Optional.ofNullable(placesByTripIdByPlaceId.get(tripId))
         .map(placesMap -> placesMap.get(placeUuid));
-  }
-
-  @Override
-  public PlaceVisitModel updateUserMark(String tripId, String placeUuid,
-      PlaceVisitModel.UserMark newStatus) throws PlaceVisitNotFoundException {
-    AtomicReference<PlaceVisitModel> updatedPlaceVisit = new AtomicReference();
-
-    placesByTripIdByPlaceId.computeIfPresent(tripId, (tripKey, placesMap) -> {
-      PlaceVisitModel placeVisit = placesMap.get(placeUuid);
-      if (placeVisit != null) {
-        PlaceVisitModel newPlaceVisit = placeVisit.toBuilder().setUserMark(newStatus).build();
-        placesMap.put(placeUuid, newPlaceVisit);
-        updatedPlaceVisit.set(newPlaceVisit);
-      }
-      return placesMap;
-    });
-
-    if (updatedPlaceVisit.get() == null) {
-      throw new PlaceVisitNotFoundException(
-          "PlaceVisit with id: '" + placeUuid + "' not found for trip '" + tripId + "'");
-    }
-
-    return updatedPlaceVisit.get();
   }
 
   @Override

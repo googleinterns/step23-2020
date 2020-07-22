@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 // A Widget for making a linkable button
-class LinkButton extends StatelessWidget {
-  final String link;
+class RoutingButton extends StatelessWidget {
+  final String route;
   final Icon iconType;
 
-  LinkButton(this.link, this.iconType);
+  RoutingButton(this.route, this.iconType);
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
       onPressed: () {
-        Navigator.pushNamed(context, link);
+        Navigator.pushNamed(context, route);
       },
       child: iconType,
     );

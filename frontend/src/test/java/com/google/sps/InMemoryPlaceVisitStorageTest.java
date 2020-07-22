@@ -131,12 +131,10 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
 
-    Optional<PlaceVisitModel> tokyo =
-        storage.getPlaceVisit(TOKYO.tripId(), TOKYO.id());
+    Optional<PlaceVisitModel> tokyo = storage.getPlaceVisit(TOKYO.tripId(), TOKYO.id());
     assertThat(tokyo).hasValue(TOKYO);
 
-    Optional<PlaceVisitModel> tokyoB =
-        storage.getPlaceVisit(TOKYO_B.tripId(), TOKYO_B.id());
+    Optional<PlaceVisitModel> tokyoB = storage.getPlaceVisit(TOKYO_B.tripId(), TOKYO_B.id());
     assertThat(tokyoB).hasValue(TOKYO_B);
   }
 
@@ -210,8 +208,7 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(BEIJING);
 
     boolean response = storage.updateUserMarkOrAddPlaceVisit(PARIS, PlaceVisitModel.UserMark.NO);
-    PlaceVisitModel changedParis =
-        storage.getPlaceVisit(PARIS.tripId(), PARIS.id()).get();
+    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.id()).get();
     assertThat(response).isTrue();
     assertThat(changedParis.userMark()).isEqualTo(PlaceVisitModel.UserMark.NO);
   }
@@ -232,8 +229,7 @@ public final class InMemoryPlaceVisitStorageTest {
     PlaceVisitModel updatedSeoul =
         SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
     assertThat(response).isFalse();
-    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.id()))
-        .hasValue(updatedSeoul);
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.id())).hasValue(updatedSeoul);
   }
 
   /**
@@ -248,8 +244,7 @@ public final class InMemoryPlaceVisitStorageTest {
     PlaceVisitModel updatedSeoul =
         SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
     assertThat(response).isFalse();
-    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.id()))
-        .hasValue(updatedSeoul);
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.id())).hasValue(updatedSeoul);
   }
 
   /**

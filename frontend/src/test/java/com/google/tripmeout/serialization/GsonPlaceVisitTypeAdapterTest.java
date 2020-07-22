@@ -65,10 +65,7 @@ public class GsonPlaceVisitTypeAdapterTest {
     PlaceVisitModel place =
         gson.fromJson(TestDataAccessUtil.getPlaceVisitWithoutName(), PlaceVisitModel.class);
 
-    PlaceVisitModel expected = basePlaceVisit.toBuilder()
-                                   .setId("abc123")
-                                   .setTripId("123")
-                                   .build();
+    PlaceVisitModel expected = basePlaceVisit.toBuilder().setId("abc123").setTripId("123").build();
 
     assertThat(place).isEqualTo(expected);
   }
@@ -78,10 +75,8 @@ public class GsonPlaceVisitTypeAdapterTest {
     PlaceVisitModel place =
         gson.fromJson(TestDataAccessUtil.getPlaceVisitWithoutTripId(), PlaceVisitModel.class);
 
-    PlaceVisitModel expected = basePlaceVisit.toBuilder()
-                                   .setId("abc123")
-                                   .setPlaceName("New York")
-                                   .build();
+    PlaceVisitModel expected =
+        basePlaceVisit.toBuilder().setId("abc123").setPlaceName("New York").build();
 
     assertThat(place).isEqualTo(expected);
   }

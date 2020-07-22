@@ -45,21 +45,24 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   @Override
-  public void removePlaceVisit(String tripId, String placeUuid) throws PlaceVisitNotFoundException {
+  public void removePlaceVisit(String tripId, String placeVisitId)
+      throws PlaceVisitNotFoundException {
     Map<String, PlaceVisitModel> placesMap = placesByTripIdByPlaceId.get(tripId);
     if (placesMap == null) {
-      throw new PlaceVisitNotFoundException(String.format(("PlaceVisit with id '%s' not found for trip '%s'"), placeUuid, tripId));
+      throw new PlaceVisitNotFoundException(
+          String.format(("PlaceVisit with id '%s' not found for trip '%s'"), placeVisitId, tripId));
     }
 
-    if (placesMap.remove(placeUuid) == null) {
-      throw new PlaceVisitNotFoundException(String.format(("PlaceVisit with id '%s' not found for trip '%s'"), placeUuid, tripId));
+    if (placesMap.remove(placeVisitId) == null) {
+      throw new PlaceVisitNotFoundException(
+          String.format(("PlaceVisit with id '%s' not found for trip '%s'"), placeVisitId, tripId));
     }
   }
 
   @Override
-  public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeUuid) {
+  public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeVisitId) {
     return Optional.ofNullable(placesByTripIdByPlaceId.get(tripId))
-        .map(placesMap -> placesMap.get(placeUuid));
+        .map(placesMap -> placesMap.get(placeVisitId));
   }
 
   @Override

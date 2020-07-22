@@ -17,30 +17,30 @@ public interface PlaceVisitStorage {
    * @param placeVisit the PlaceVisitModel object to add to storage
    *
    * @throws a PlaceVisitAlreadyExists exception if there is a PlaceVisitModel
-   *     in storage with the same tripId and placeUuid as placeVisit
+   *     in storage with the same tripId and placeId as placeVisit
    */
   void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException;
 
   /**
-   * removes from storage the PlaceVisitModel whose tripId and placeUuid match the
-   * given tripId and placeUuid, respectively
+   * removes from storage the PlaceVisitModel whose tripId and place visit id match the
+   * given tripId and place id, respectively
    *
    * @param tripId the id to match PlaceVisitModel object's tripId field on
-   * @param placeUuid the id to match PlaceVisitModel object's uuid field on
+   * @param placeVisitId the id to match PlaceVisitModel object's id field on
    *
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel
-   *     object in storage with the given tripId and placeUuid
+   *     object in storage with the given tripId and place visit id
    */
-  void removePlaceVisit(String tripId, String placeUuid) throws PlaceVisitNotFoundException;
+  void removePlaceVisit(String tripId, String placeVisitId) throws PlaceVisitNotFoundException;
 
   /**
-   * returns the PlaceVisitModel whose tripId and placeUuid match the given tripId
-   * and placeUuid, respectively
+   * returns the PlaceVisitModel whose tripId and place visit id match the given tripId
+   * and place visit id, respectively
    *
    * @param tripId the id to match PlaceVisitModel object's tripId field on
-   * @param placeUuid the id to match PlaceVisitModel object's uuid field on
+   * @param placeVisitId the id to match PlaceVisitModel object's id field on
    */
-  Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeUuid);
+  Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeVisitId);
 
   /**
    * updates the userMark parameter of the PlaceVisitModel object whose tripId

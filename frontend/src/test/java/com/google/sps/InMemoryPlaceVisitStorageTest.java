@@ -19,6 +19,7 @@ import org.junit.runners.JUnit4;
 public final class InMemoryPlaceVisitStorageTest {
   // PlaceVisitModel objects to use in testing
   private static final PlaceVisitModel LONDON = PlaceVisitModel.builder()
+                                                    .setUuid("LCY, London")
                                                     .setPlacesApiPlaceId("LCY")
                                                     .setPlaceName("London, UK")
                                                     .setTripId("a")
@@ -28,6 +29,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                     .build();
 
   private static final PlaceVisitModel ROME = PlaceVisitModel.builder()
+                                                  .setUuid("FCO, Rome")
                                                   .setPlacesApiPlaceId("FCO")
                                                   .setPlaceName("Rome, Italy")
                                                   .setTripId("a")
@@ -37,6 +39,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                   .build();
 
   private static final PlaceVisitModel PARIS = PlaceVisitModel.builder()
+                                                   .setUuid("CDG, Paris")
                                                    .setPlacesApiPlaceId("CDG")
                                                    .setPlaceName("Paris, France")
                                                    .setTripId("a")
@@ -46,6 +49,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                    .build();
 
   private static final PlaceVisitModel TOKYO = PlaceVisitModel.builder()
+                                                   .setUuid("HND, Tokyo")
                                                    .setPlacesApiPlaceId("HND")
                                                    .setPlaceName("Tokyo, Japan")
                                                    .setTripId("a")
@@ -55,6 +59,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                    .build();
 
   private static final PlaceVisitModel BEIJING = PlaceVisitModel.builder()
+                                                     .setUuid("PEK, Beijing")
                                                      .setPlacesApiPlaceId("PEK")
                                                      .setPlaceName("Beijing, China")
                                                      .setTripId("b")
@@ -64,6 +69,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                      .build();
 
   private static final PlaceVisitModel SEOUL = PlaceVisitModel.builder()
+                                                   .setUuid("ICN, Seoul")
                                                    .setPlacesApiPlaceId("ICN")
                                                    .setPlaceName("Seoul, South Korea")
                                                    .setTripId("b")
@@ -73,6 +79,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                    .build();
 
   private static final PlaceVisitModel TOKYO_B = PlaceVisitModel.builder()
+                                                     .setUuid("HND, Tokyo")
                                                      .setPlacesApiPlaceId("HND")
                                                      .setPlaceName("Tokyo, Japan")
                                                      .setTripId("b")
@@ -82,6 +89,7 @@ public final class InMemoryPlaceVisitStorageTest {
                                                      .build();
 
   private static final PlaceVisitModel SEOUL_B = PlaceVisitModel.builder()
+                                                     .setUuid("ICN, Seoul")
                                                      .setPlacesApiPlaceId("ICN")
                                                      .setPlaceName("some city in Korea")
                                                      .setTripId("b")
@@ -92,7 +100,7 @@ public final class InMemoryPlaceVisitStorageTest {
 
   /**
    * test that a PlaceVisitAlreadyExistsException is thrown when a place is
-   * added but another place with the same PlacesApiPlaceId and tripId has already
+   * added but another place with the same uuid and tripId has already
    * been added to the storage
    */
   @Test
@@ -111,13 +119,13 @@ public final class InMemoryPlaceVisitStorageTest {
   @Test
   public void getPlaceVisit_emptyStorage_returnsEmptyOptional() {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    assertThat(storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placesApiPlaceId())).isEmpty();
+    assertThat(storage.getPlaceVisit(TOKYO.tripId(), TOKYO.uuid())).isEmpty();
   }
 
   /**
    * test that a PlaceNotFoundException is thrown when trying to get a place
    * from storage when there is no place in storage with the given tripId and
-   * PlacesApiPlaceId
+   * uuid
    */
   @Test
   public void getPlaceVisit_placeNotInStorage_returnsEmptyOptional()
@@ -125,7 +133,7 @@ public final class InMemoryPlaceVisitStorageTest {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
-    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placesApiPlaceId())).isEmpty();
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.uuid())).isEmpty();
   }
 
   /**
@@ -140,11 +148,11 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(TOKYO_B);
 
     Optional<PlaceVisitModel> tokyo =
-        storage.getPlaceVisit(TOKYO.tripId(), TOKYO.placesApiPlaceId());
+        storage.getPlaceVisit(TOKYO.tripId(), TOKYO.uuid());
     assertThat(tokyo).hasValue(TOKYO);
 
     Optional<PlaceVisitModel> tokyoB =
-        storage.getPlaceVisit(TOKYO_B.tripId(), TOKYO_B.placesApiPlaceId());
+        storage.getPlaceVisit(TOKYO_B.tripId(), TOKYO_B.uuid());
     assertThat(tokyoB).hasValue(TOKYO_B);
   }
 
@@ -156,13 +164,13 @@ public final class InMemoryPlaceVisitStorageTest {
   public void removePlaceVisit_emptyStorage_throwsException() throws PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     Assert.assertThrows(PlaceVisitNotFoundException.class,
-        () -> storage.removePlaceVisit(TOKYO.tripId(), TOKYO.placesApiPlaceId()));
+        () -> storage.removePlaceVisit(TOKYO.tripId(), TOKYO.uuid()));
   }
 
   /**
    * test that a PlaceNotFoundException is thrown when trying to remove a place
    * from storage when there is no place in storage with the given tripId and
-   * placesApiPlaceId
+   * uuid
    */
   @Test
   public void removePlaceVisit_placeNotInStorage_throwsException()
@@ -171,12 +179,12 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(TOKYO);
     storage.addPlaceVisit(TOKYO_B);
     Assert.assertThrows(PlaceVisitNotFoundException.class,
-        () -> storage.removePlaceVisit(SEOUL.tripId(), SEOUL.placesApiPlaceId()));
+        () -> storage.removePlaceVisit(SEOUL.tripId(), SEOUL.uuid()));
   }
 
   /**
    * test that no exception is thrown when removing a place from storage when
-   * there is a place in storage with the given tripId and placesApiPlaceId
+   * there is a place in storage with the given tripId and uuid
    */
   @Test
   public void removePlace_placeInStorage_noException()
@@ -184,13 +192,13 @@ public final class InMemoryPlaceVisitStorageTest {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
-    storage.removePlaceVisit(ROME.tripId(), ROME.placesApiPlaceId());
+    storage.removePlaceVisit(ROME.tripId(), ROME.uuid());
   }
 
   /**
    * test that place is actually removed when removing a place from storage when
-   * there is a place in storage with the given tripId and placesApiPlaceId by checking
-   * that calling getPlaceVisit on the removed PlaceVisit tripId and placesApiPlaceId
+   * there is a place in storage with the given tripId and uuid by checking
+   * that calling getPlaceVisit on the removed PlaceVisit tripId and uuid
    * results in PlaceVisitNotFoundException being thrown
    */
   @Test
@@ -199,13 +207,14 @@ public final class InMemoryPlaceVisitStorageTest {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
-    storage.removePlaceVisit(ROME.tripId(), ROME.placesApiPlaceId());
-    assertThat(storage.getPlaceVisit(ROME.tripId(), ROME.placesApiPlaceId())).isEmpty();
+    storage.removePlaceVisit(ROME.tripId(), ROME.uuid());
+    assertThat(storage.getPlaceVisit(ROME.tripId(), ROME.uuid())).isEmpty();
   }
 
   /**
-   * test that changePlaceVisitStatus returns true and changes userMark field
-   * when PlaceVisitModel object with the given tripId and placesApiPlaceId is in storage
+   * test that updateUserMarkOrAddPlaceVisit returns true and changes userMark field
+   * and returns true when PlaceVisitModel object with the given tripId and
+   * uuid is in storage
    */
   @Test
   public void updateUserMarkOrAddPlaceVisit_placeInStorage_returnsTrueAndStatusChanged()
@@ -218,14 +227,14 @@ public final class InMemoryPlaceVisitStorageTest {
 
     boolean response = storage.updateUserMarkOrAddPlaceVisit(PARIS, PlaceVisitModel.UserMark.NO);
     PlaceVisitModel changedParis =
-        storage.getPlaceVisit(PARIS.tripId(), PARIS.placesApiPlaceId()).get();
+        storage.getPlaceVisit(PARIS.tripId(), PARIS.uuid()).get();
     assertThat(response).isTrue();
     assertThat(changedParis.userMark()).isEqualTo(PlaceVisitModel.UserMark.NO);
   }
 
   /**
-   * test that changePlaceVisitStatus returns false when PlaceVisitModel object
-   * with the given tripId and placesApiPlaceId is not in storage
+   * test that updateUserMarkOrAddPlaceVisit returns false when PlaceVisitModel object
+   * with the given tripId and uuid is not in storage
    */
   @Test
   public void updateUserMarkOrAddPlaceVisit_placeNotInStorage_returnsFalseAndPlaceAdded()
@@ -239,12 +248,12 @@ public final class InMemoryPlaceVisitStorageTest {
     PlaceVisitModel updatedSeoul =
         SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
     assertThat(response).isFalse();
-    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placesApiPlaceId()))
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.uuid()))
         .hasValue(updatedSeoul);
   }
 
   /**
-   * test that changePlaceVisitStatus returns false when PlaceVisitModel object
+   * test that updateUserMarkOrAddPlaceVisit returns false when PlaceVisitModel object
    * and no PlaceVistModel with same tripId in storage
    */
   @Test
@@ -255,14 +264,14 @@ public final class InMemoryPlaceVisitStorageTest {
     PlaceVisitModel updatedSeoul =
         SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
     assertThat(response).isFalse();
-    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.placesApiPlaceId()))
+    assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.uuid()))
         .hasValue(updatedSeoul);
   }
 
   /**
-   * test that changePlaceVisitStatus returns true and userMark field stays same
+   * test that updateUserMarkOrAddPlaceVisit returns true and userMark field stays same
    * when changing status to same status as original PlaceVisitModel
-   * when PlaceVisitModel object with the given tripId and placesApiPlaceId is in storage
+   * when PlaceVisitModel object with the given tripId and placesUuid is in storage
    */
   @Test
   public void updateUserMarkOrAddPlaceVisit_placeInStorage_returnsTrueAndStatusSame()
@@ -274,10 +283,43 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(BEIJING);
 
     boolean response = storage.updateUserMarkOrAddPlaceVisit(PARIS, PlaceVisitModel.UserMark.MAYBE);
-    PlaceVisitModel changedParis =
-        storage.getPlaceVisit(PARIS.tripId(), PARIS.placesApiPlaceId()).get();
+    PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.uuid()).get();
     assertThat(response).isTrue();
     assertThat(changedParis.userMark()).isEqualTo(PlaceVisitModel.UserMark.MAYBE);
+  }
+
+  /**
+   * test that updateUserMark changes the userMark field when PlaceVisitModel object
+   * with given tripId and placesUuid is in storage
+   */
+  @Test
+  public void updateUserMark_placeInStorage_returnsPlaceVisitWithUpdatedStatus()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
+    storage.addPlaceVisit(LONDON);
+    storage.addPlaceVisit(PARIS);
+    storage.addPlaceVisit(ROME);
+    storage.addPlaceVisit(BEIJING);
+
+    PlaceVisitModel changedParis =
+        storage.updateUserMark(PARIS.tripId(), PARIS.uuid(), PlaceVisitModel.UserMark.NO);
+    PlaceVisitModel expectedParis =
+        PARIS.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
+
+    assertThat(changedParis).isEqualTo(expectedParis);
+  }
+
+  @Test
+  public void updateUserMark_placeNotInStorage_throwsError()
+      throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
+    InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
+    storage.addPlaceVisit(LONDON);
+    storage.addPlaceVisit(PARIS);
+    storage.addPlaceVisit(ROME);
+    storage.addPlaceVisit(BEIJING);
+
+    Assert.assertThrows(PlaceVisitNotFoundException.class,
+        () -> storage.updateUserMark(SEOUL.tripId(), SEOUL.uuid(), PlaceVisitModel.UserMark.NO));
   }
 
   /**

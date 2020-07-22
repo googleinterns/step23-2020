@@ -11,10 +11,12 @@ public abstract class PlaceVisitModel {
     return new AutoValue_PlaceVisitModel.Builder().setUserMark(UserMark.UNKNOWN);
   }
 
+  @Nullable public abstract String uuid();
   public abstract String placesApiPlaceId();
-  @Nullable public abstract String placeName();
-  public abstract String tripId();
+  @Nullable public abstract String tripId();
   public abstract UserMark userMark();
+  // TO-DO: decide if we still need/want these fields
+  @Nullable public abstract String placeName();
   @Nullable public abstract Double latitude();
   @Nullable public abstract Double longitude();
 
@@ -22,6 +24,7 @@ public abstract class PlaceVisitModel {
 
   @AutoValue.Builder
   public static abstract class Builder {
+    public abstract Builder setUuid(String id);
     public abstract Builder setPlacesApiPlaceId(String placeId);
     public abstract Builder setPlaceName(String placeName);
     public abstract Builder setTripId(String tripId);

@@ -12,6 +12,7 @@ import java.io.IOException;
 
 public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
   private static final String PLACE_ID_JSON_FIELD_NAME = "placesApiPlaceId";
+  private static final String UUID_JSON_FIELD_NAME = "uuid";
   private static final String TRIP_ID_JSON_FIELD_NAME = "tripId";
   private static final String NAME_JSON_FIELD_NAME = "placeName";
   private static final String USER_MARK_JSON_FIELD_NAME = "userMark";
@@ -29,6 +30,9 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
     while (reader.hasNext()) {
       String name = reader.nextName();
       switch (name) {
+        case UUID_JSON_FIELD_NAME:
+          placeBuilder.setUuid(reader.nextString());
+          break;
         case PLACE_ID_JSON_FIELD_NAME:
           placeBuilder.setPlacesApiPlaceId(reader.nextString());
           break;
@@ -64,6 +68,7 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
       return;
     }
     writer.beginObject();
+    writeUnlessNullOrEmpty(writer, UUID_JSON_FIELD_NAME, place.uuid());
     writeUnlessNullOrEmpty(writer, PLACE_ID_JSON_FIELD_NAME, place.placesApiPlaceId());
     writeUnlessNullOrEmpty(writer, NAME_JSON_FIELD_NAME, place.placeName());
     writeUnlessNullOrEmpty(writer, TRIP_ID_JSON_FIELD_NAME, place.tripId());

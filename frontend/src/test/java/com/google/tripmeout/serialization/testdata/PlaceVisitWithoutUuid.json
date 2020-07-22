@@ -1,6 +1,6 @@
 {
-    "uuid": "abc123",
     "placesApiPlaceId":"ABC",
+    "placeName":"New York",
     "tripId":"123",
     "userMark":"YES",
     "latitude":50.2,

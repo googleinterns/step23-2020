@@ -1,4 +1,5 @@
 { 
+    "uuid": "abc123",
     "placeName":"New York",
     "tripId":"123",
     "userMark":"YES",

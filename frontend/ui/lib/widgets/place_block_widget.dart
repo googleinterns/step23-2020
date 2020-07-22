@@ -13,35 +13,42 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
   final String placeName;
   _PlaceBlockWidgetState(this.placeName);
 
-  List<bool> _selections = List.generate(3, (_) => false);
+  List<bool> _selections = List.generate(2, (_) => false);
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
         title: Text(placeName),
-        trailing: ToggleButtons(
-          children: <Widget>[
-            Text('M'),
-            Text('T'),
-            Text('D')
-          ],
-          onPressed: (int index) {
-            setState(() {
-              for (int buttonIndex = 0;
-                  buttonIndex < _selections.length;
-                  buttonIndex++) {
-                if (buttonIndex == index) {
-                  _selections[buttonIndex] = true;
-                } else {
-                  _selections[buttonIndex] = false;
-                }
-              }
-            });
-          },
-          isSelected: _selections,
-          color: Colors.black,
-          selectedColor: Theme.of(context).accentColor,
-        ),
+        trailing: Container(
+            width: 250.0,
+            child: Row(children: [
+              ToggleButtons(
+                children: [
+                  Text('M'),
+                  Text('T'),
+                ],
+                onPressed: (int index) {
+                  setState(() {
+                    for (int buttonIndex = 0;
+                        buttonIndex < _selections.length;
+                        buttonIndex++) {
+                      if (buttonIndex == index) {
+                        _selections[buttonIndex] = true;
+                      } else {
+                        _selections[buttonIndex] = false;
+                      }
+                    }
+                  });
+                },
+                isSelected: _selections,
+                color: Colors.black,
+                selectedColor: Theme.of(context).accentColor,
+              ),
+              RaisedButton(
+                onPressed: () => {},
+                child: Text('Delete'),
+              ),
+            ])),
         children: [
           Column(children: [
             Text('Description'),

@@ -43,6 +43,18 @@ void main() {
     expect(find.text("Bar"), findsOneWidget);
     expect(find.text("Baz"), findsOneWidget);
   });
+
+  testWidgets('Showing the each place has an M T and Delete',
+      (WidgetTester tester) async {
+    var placeBlockWidget = PlaceBlockWidget("Hello World");
+    await tester.pumpWidget(wrapForDirectionality(placeBlockWidget));
+    await tester.pumpAndSettle();
+
+    expect(find.text("Hello World"), findsOneWidget);
+    expect(find.widgetWithText(ToggleButtons, 'M'), findsOneWidget);
+    expect(find.widgetWithText(ToggleButtons, 'T'), findsOneWidget);
+    expect(find.widgetWithText(RaisedButton, 'Delete'), findsOneWidget);
+  });
 }
 
 Widget wrapForDirectionality(Widget wrapped) {

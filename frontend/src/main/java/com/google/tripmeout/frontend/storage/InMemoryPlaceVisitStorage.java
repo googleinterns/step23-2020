@@ -21,15 +21,15 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
       placesByTripIdByPlaceId.compute(placeVisit.tripId(), (tripKey, placesMap) -> {
         if (placesMap == null) {
           Map<String, PlaceVisitModel> newPlaceMap = new ConcurrentHashMap<>();
-          newPlaceMap.put(placeVisit.placeId(), placeVisit);
+          newPlaceMap.put(placeVisit.placesApiPlaceId(), placeVisit);
           return newPlaceMap;
         }
-        if (placesMap.get(placeVisit.placeId()) != null) {
+        if (placesMap.get(placeVisit.placesApiPlaceId()) != null) {
           // cannot throw checked exception in here so wrap in RuntimeException
           throw new RuntimeException(new PlaceVisitAlreadyExistsException("PlaceVisit "
-              + placeVisit.name() + " already exists for trip " + placeVisit.tripId()));
+              + placeVisit.placeName() + " already exists for trip " + placeVisit.tripId()));
         }
-        placesMap.put(placeVisit.placeId(), placeVisit);
+        placesMap.put(placeVisit.placesApiPlaceId(), placeVisit);
         return placesMap;
       });
     } catch (RuntimeException e) {
@@ -71,7 +71,7 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
     Map<String, PlaceVisitModel> placesMap = placesByTripIdByPlaceId.computeIfAbsent(
         placeVisit.tripId(), (tripKey) -> new ConcurrentHashMap<>());
 
-    placesMap.compute(placeVisit.placeId(), (placeKey, place) -> {
+    placesMap.compute(placeVisit.placesApiPlaceId(), (placeKey, place) -> {
       if (place != null) {
         PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
         alreadyInStorage.set(true);

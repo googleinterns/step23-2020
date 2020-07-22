@@ -1,6 +1,6 @@
 {
-    "placeId":"ABC",
-    "name":"New York",
+    "placesApiPlaceId":"ABC",
+    "placeName":"New York",
     "userMark":"YES",
     "latitude":50.2,
     "longitude":39.1

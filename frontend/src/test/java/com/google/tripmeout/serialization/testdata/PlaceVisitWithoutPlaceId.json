@@ -1,8 +1,6 @@
 { 
-    "uuid": "abc123",
+    "id": "abc123",
     "placeName":"New York",
     "tripId":"123",
-    "userMark":"YES",
-    "latitude":50.2,
-    "longitude":39.1 
+    "userMark":"YES"
 }

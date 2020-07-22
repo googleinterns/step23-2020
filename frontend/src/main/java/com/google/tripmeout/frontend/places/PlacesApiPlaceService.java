@@ -1,18 +1,15 @@
-package com.google.tripmeout.frontend.service;
+package com.google.tripmeout.frontend.places;
 
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlaceDetailsRequest;
-import com.google.maps.errors.ApiException;
 import com.google.maps.errors.InvalidRequestException;
 import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
-import java.io.IOException;
-import java.lang.InterruptedException;
+import java.lang.Exception;
 
-@Singleton
 public class PlacesApiPlaceService implements PlaceService {
   private GeoApiContext context;
 
@@ -22,14 +19,8 @@ public class PlacesApiPlaceService implements PlaceService {
   }
 
   @Override
-  public boolean validatePlaceId(String placesApiPlaceId)
-      throws ApiException, InterruptedException, IOException {
+  public void validatePlaceId(String placesApiPlaceId) throws Exception {
     PlaceDetailsRequest request = new PlaceDetailsRequest(context).placeId(placesApiPlaceId);
-    try {
-      request.await();
-      return true;
-    } catch (InvalidRequestException e) {
-      return false;
-    }
+    request.await();
   }
 }

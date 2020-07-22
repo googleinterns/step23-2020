@@ -39,6 +39,8 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
             });
           },
           isSelected: _selections,
+          color: Colors.black,
+          selectedColor: Theme.of(context).accentColor,
         ),
         children: [
           Column(children: [

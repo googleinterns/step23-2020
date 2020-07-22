@@ -1,4 +1,4 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:tripmeout/services/in_memory_trip_service.dart';
 import 'package:tripmeout/model/trip.dart';
 

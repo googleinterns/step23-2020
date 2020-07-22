@@ -36,8 +36,11 @@ public class GsonPlaceVisitTypeAdapterTest {
   public void deserialize_wellFormed() throws Exception {
     PlaceVisitModel place =
         gson.fromJson(TestDataAccessUtil.getWellFormedPlaceVisit(), PlaceVisitModel.class);
-    PlaceVisitModel expected =
-        basePlaceVisit.toBuilder().setPlaceName("New York").setLatitude(50.2).setLongitude(39.1).build();
+    PlaceVisitModel expected = basePlaceVisit.toBuilder()
+                                   .setPlaceName("New York")
+                                   .setLatitude(50.2)
+                                   .setLongitude(39.1)
+                                   .build();
 
     assertThat(place).isEqualTo(expected);
   }

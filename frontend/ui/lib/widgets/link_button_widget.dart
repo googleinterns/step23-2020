@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A Widget for making a linkable button
+// A Widget for making a linkable button
 class LinkButton extends StatelessWidget {
   final String link;
   final Icon iconType;

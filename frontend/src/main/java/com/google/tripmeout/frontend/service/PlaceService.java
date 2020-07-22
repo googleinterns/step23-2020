@@ -11,5 +11,6 @@ public interface PlaceService {
    *
    * @param placeId the id of the place to vaildate
    */
-  boolean validatePlaceId(String placesApiPlaceId) throws ApiException, InterruptedException, IOException;
+  boolean validatePlaceId(String placesApiPlaceId)
+      throws ApiException, InterruptedException, IOException;
 }

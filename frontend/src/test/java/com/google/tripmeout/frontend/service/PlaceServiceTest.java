@@ -4,6 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.maps.GeoApiContext;
 import com.google.maps.errors.ApiException;
 import com.google.maps.errors.InvalidRequestException;
 import com.google.tripmeout.frontend.PlaceVisitModel;
@@ -12,39 +15,17 @@ import com.google.tripmeout.frontend.service.PlacesApiPlaceService;
 import java.io.IOException;
 import java.lang.InterruptedException;
 import java.util.List;
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 //@RunWith(JUnit4.class)
 public class PlaceServiceTest {
-  private final PlaceService placeService = new PlacesApiPlaceService();
+  Injector injector = Guice.createInjector(new PlaceServiceModule());
+  private GeoApiContext context = injector.getInstance(GeoApiContext.class);
 
-  @Ignore
-  public void getDetailedPlaceVisit_invalidPlaceId_throwsError()
-      throws ApiException, InterruptedException, IOException {
-    assertThrows(InvalidRequestException.class,
-        () -> placeService.getDetailedPlaceVisit("tripid", "placeid"));
-  }
-
-  @Ignore
-  public void getDetailedPlaceVisit_validPlaceId_returnPlaceVisitModel()
-      throws ApiException, InterruptedException, IOException {
-    PlaceVisitModel expected = PlaceVisitModel.builder()
-                                   .setTripId("tripid")
-                                   .setPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
-                                   .setName("Sydney Opera House")
-                                   .build();
-
-    assertThat(placeService.getDetailedPlaceVisit("tripid", "ChIJ3S-JXmauEmsRUcIaWtf4MzE").tripId())
-        .isEqualTo("tripid");
-    assertThat(
-        placeService.getDetailedPlaceVisit("tripid", "ChIJ3S-JXmauEmsRUcIaWtf4MzE").placeId())
-        .isEqualTo("ChIJ3S-JXmauEmsRUcIaWtf4MzE");
-    assertThat(placeService.getDetailedPlaceVisit("tripid", "ChIJ3S-JXmauEmsRUcIaWtf4MzE").name())
-        .isEqualTo("Sydney Opera House");
-  }
+  private final PlaceService placeService = new PlacesApiPlaceService(context);
 
   @Ignore
   public void validatePlaceId_invalidPlaceId_returnsFalse()

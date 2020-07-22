@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:tripmeout/widgets/trip_view_widget.dart';
+import 'package:tripmeout/widgets/place_block_widget.dart';
 
 void main() {
   testWidgets('Showing the text on page correctly shows up',
@@ -45,13 +46,13 @@ void main() {
 
   testWidgets('Testing to see if the M T D toggle buttons work.',
       (WidgetTester tester) async {
-    var tripViewWidget = TripViewWidget();
-    await tester.pumpWidget(wrapForDirectionality(tripViewWidget));
+    var placeBlockWidget = PlaceBlockWidget('any place');
+    await tester.pumpWidget(wrapForDirectionality(placeBlockWidget));
     await tester.pumpAndSettle();
 
-    expect(find.text("M"), findsOneWidget);
-    expect(find.text("T"), findsOneWidget);
-    expect(find.text("D"), findsOneWidget);
+    expect(find.widgetWithText(ToggleButtons, 'M'), findsOneWidget);
+    expect(find.widgetWithText(ToggleButtons, 'T'), findsOneWidget);
+    expect(find.widgetWithText(ToggleButtons, 'D'), findsOneWidget);
 
     ToggleButtons toggle1 = tester.firstWidget(
       find.widgetWithText(ToggleButtons, 'M'),
@@ -66,23 +67,33 @@ void main() {
     await tester.tap(find.widgetWithText(ToggleButtons, "M"));
     await tester.pumpAndSettle();
 
-    expect(toggle1.isSelected, true);
+    toggle1 = tester.firstWidget(
+      find.widgetWithText(ToggleButtons, 'M'),
+    );
+    toggle2 = tester.firstWidget(
+      find.widgetWithText(ToggleButtons, 'T'),
+    );
+    toggle3 = tester.firstWidget(
+      find.widgetWithText(ToggleButtons, 'D'),
+    );
+
     expect(toggle1.isSelected, false);
-    expect(toggle1.isSelected, false);
+    expect(toggle2.color, true);
+    expect(toggle3.color, false);
 
     await tester.tap(find.widgetWithText(ToggleButtons, "T"));
     await tester.pumpAndSettle();
 
-    expect(toggle1.isSelected, false);
-    expect(toggle1.isSelected, true);
-    expect(toggle1.isSelected, false);
+    expect(toggle1.isSelected[0], false);
+    expect(toggle2.isSelected[1], true);
+    expect(toggle3.isSelected[2], false);
 
     await tester.tap(find.widgetWithText(ToggleButtons, "D"));
     await tester.pumpAndSettle();
 
-    expect(toggle1.isSelected, false);
-    expect(toggle1.isSelected, false);
-    expect(toggle1.isSelected, true);
+    expect(toggle1.isSelected[0], false);
+    expect(toggle2.isSelected[1], true);
+    expect(toggle3.isSelected[2], false);
   });
 }
 

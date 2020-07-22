@@ -23,7 +23,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
           children: <Widget>[
             Text('M'),
             Text('T'),
-            Text('D'),
+            Text('D')
           ],
           onPressed: (int index) {
             setState(() {

@@ -1,10 +1,9 @@
 package com.google.tripmeout.frontend.servlets;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Streams;
-import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.google.tripmeout.frontend.error.BadUriException;
+import com.google.tripmeout.frontend.error.EmptyRequestBodyException;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -17,39 +16,33 @@ import javax.servlet.http.HttpServletRequest;
  * Static utilities that provide functionality that may be shared between servlets.
  */
 public final class ServletUtil {
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-
-  public static <T> Optional<T> extractFromRequestBody(
-      HttpServletRequest request, Gson gson, Class<T> clazz) throws IOException {
-    try (Reader reader = request.getReader()) {
-      return Optional.ofNullable(gson.fromJson(reader, clazz));
-    } catch (JsonParseException e) {
-      logger.atWarning().withCause(e).log(
-          "received exception while attempting to parse json from reader!");
-      return Optional.empty();
+  public static <T> T extractFromRequestBody(Reader reader, Gson gson, Class<T> clazz)
+      throws IOException, JsonParseException, EmptyRequestBodyException {
+    T object = gson.fromJson(reader, clazz);
+    if (object != null) {
+      return object;
     }
+    throw new EmptyRequestBodyException("Received empty request");
   }
 
-  public static <T> Optional<T> extractFromRequestBody(
-      HttpServletRequest request, Gson gson, Type t) throws IOException {
-    try (Reader reader = request.getReader()) {
-      return Optional.ofNullable(gson.fromJson(reader, t));
-    } catch (JsonParseException e) {
-      logger.atWarning().withCause(e).log(
-          "received exception while attempting to parse json from reader!");
-      return Optional.empty();
+  public static <T> T extractFromRequestBody(Reader reader, Gson gson, Type t)
+      throws IOException, JsonParseException, EmptyRequestBodyException {
+    T object = gson.fromJson(reader, t);
+    if (object != null) {
+      return object;
     }
+    throw new EmptyRequestBodyException("Received empty request");
   }
 
-  public static Matcher matchUriOrThrowError(HttpServletRequest request, Pattern pattern) {
+  public static Matcher matchUriOrThrowError(HttpServletRequest request, Pattern pattern)
+      throws BadUriException {
     String uri = request.getRequestURI();
     Matcher matcher = pattern.matcher(uri);
     if (matcher.matches()) {
       return matcher;
-    } else {
-      throw new IllegalArgumentException(
-          String.format("URI '%s' does not match expected pattern '%s'", uri, pattern.toString()));
     }
+    throw new BadUriException(
+        String.format("URI '%s' does not match expected pattern '%s'", uri, pattern.toString()));
   }
 
   // Don't allow instantiation of the static util class.

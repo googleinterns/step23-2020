@@ -53,7 +53,7 @@ void main() {
     expect(find.text("Hello World"), findsOneWidget);
     expect(find.widgetWithText(ToggleButtons, 'M'), findsOneWidget);
     expect(find.widgetWithText(ToggleButtons, 'T'), findsOneWidget);
-    expect(find.widgetWithText(RaisedButton, 'Delete'), findsOneWidget);
+    expect(find.byType(IconButton), findsOneWidget);
   });
 }
 

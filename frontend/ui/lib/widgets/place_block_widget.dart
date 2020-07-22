@@ -44,9 +44,10 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                 color: Colors.black,
                 selectedColor: Theme.of(context).accentColor,
               ),
-              RaisedButton(
+              IconButton(
                 onPressed: () => {},
-                child: Text('Delete'),
+                icon: Icon(Icons.delete),
+                color: Colors.red,
               ),
             ])),
         children: [

@@ -207,7 +207,8 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
 
-    PlaceVisitModel returned = storage.updateUserMarkOrAddPlaceVisit(PARIS, PlaceVisitModel.UserMark.NO);
+    PlaceVisitModel returned =
+        storage.updateUserMarkOrAddPlaceVisit(PARIS, PlaceVisitModel.UserMark.NO);
     PlaceVisitModel expected = PARIS.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
     assertThat(returned.userMark()).isEqualTo(PlaceVisitModel.UserMark.NO);
     assertThat(returned).isEqualTo(expected);
@@ -225,7 +226,8 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(PARIS);
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
-    PlaceVisitModel returned = storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
+    PlaceVisitModel returned =
+        storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
     PlaceVisitModel updatedSeoul =
         SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
     assertThat(returned).isEqualTo(updatedSeoul);
@@ -239,10 +241,11 @@ public final class InMemoryPlaceVisitStorageTest {
   public void updateUserMarkOrAddPlaceVisit_placeAndTripNotInStorage_returnsFalseAndPlaceAdded()
       throws PlaceVisitAlreadyExistsException, PlaceVisitNotFoundException {
     InMemoryPlaceVisitStorage storage = new InMemoryPlaceVisitStorage();
-    PlaceVisitModel returned = storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
+    PlaceVisitModel returned =
+        storage.updateUserMarkOrAddPlaceVisit(SEOUL, PlaceVisitModel.UserMark.NO);
     PlaceVisitModel updatedSeoul =
         SEOUL.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
-    
+
     assertThat(storage.getPlaceVisit(SEOUL.tripId(), SEOUL.id())).hasValue(updatedSeoul);
     assertThat(returned).isEqualTo(updatedSeoul);
   }
@@ -261,7 +264,8 @@ public final class InMemoryPlaceVisitStorageTest {
     storage.addPlaceVisit(ROME);
     storage.addPlaceVisit(BEIJING);
 
-    PlaceVisitModel returned = storage.updateUserMarkOrAddPlaceVisit(PARIS, PlaceVisitModel.UserMark.MAYBE);
+    PlaceVisitModel returned =
+        storage.updateUserMarkOrAddPlaceVisit(PARIS, PlaceVisitModel.UserMark.MAYBE);
     PlaceVisitModel changedParis = storage.getPlaceVisit(PARIS.tripId(), PARIS.id()).get();
     assertThat(changedParis.userMark()).isEqualTo(PlaceVisitModel.UserMark.MAYBE);
     assertThat(returned).isEqualTo(PARIS);

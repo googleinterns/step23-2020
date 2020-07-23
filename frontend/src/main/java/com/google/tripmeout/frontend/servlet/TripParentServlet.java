@@ -10,8 +10,6 @@ import com.google.tripmeout.frontend.servlets.ServletUtil;
 import com.google.tripmeout.frontend.storage.TripStorage;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.util.Optional;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServlet;

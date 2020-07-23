@@ -1,12 +1,8 @@
 package com.google.tripmeout.frontend.servlets;
 
+import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
-import com.google.maps.GeoApiContext;
-import com.google.maps.PlaceDetailsRequest;
-import com.google.maps.errors.InvalidRequestException;
-import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
-import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
 import com.google.tripmeout.frontend.error.TripMeOutException;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
 import java.io.IOException;
@@ -19,14 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class PlaceIndividualServlet extends HttpServlet {
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private final PlaceVisitStorage placeStorage;
   private final Gson gson;
 
   private static final Pattern URI_NAME_PATTERN =
       Pattern.compile(".*/trips/([^/]+)/placeVisits/([^/]+)");
-
-  private final GeoApiContext CONTEXT =
-      new GeoApiContext.Builder().apiKey("AIzaSyBbXCXC2uWv3baNmirLtqUYbFsFwCXqLV8").build();
 
   public PlaceIndividualServlet(PlaceVisitStorage placeStorage, Gson gson) {
     this.placeStorage = placeStorage;
@@ -38,29 +32,31 @@ public class PlaceIndividualServlet extends HttpServlet {
     PrintWriter writer = response.getWriter();
     try {
       Matcher matcher = ServletUtil.matchUriOrThrowError(request, URI_NAME_PATTERN);
+      logger.atInfo().log("matching done");
 
       String tripId = matcher.group(1);
       String id = matcher.group(2);
 
-      PlaceVisitModel place = ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
+      PlaceVisitModel place =
+          ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
 
       PlaceVisitModel.UserMark status = place.userMark();
 
       PlaceVisitModel newPlace = PlaceVisitModel.builder()
                                      .setTripId(tripId)
                                      .setId(id)
+                                     .setPlacesApiPlaceId(place.placesApiPlaceId())
                                      .build();
 
-      placeStorage.updateUserMarkOrAddPlaceVisit(newPlace, status);
+      PlaceVisitModel updatedPlace = placeStorage.updateUserMarkOrAddPlaceVisit(newPlace, status);
+      response.setContentType("application/json");
+      writer.println(gson.toJson(updatedPlace));
       response.setStatus(HttpServletResponse.SC_OK);
 
-    } catch (IllegalArgumentException e) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-    } catch (InvalidRequestException e) {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
+    } catch (TripMeOutException e) {
+      response.setStatus(e.restStatusCode());
     } catch (Exception e) {
+      logger.atInfo().log(e.getMessage());
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } finally {
       writer.close();
@@ -78,12 +74,8 @@ public class PlaceIndividualServlet extends HttpServlet {
       placeStorage.removePlaceVisit(tripId, placeId);
       response.setStatus(HttpServletResponse.SC_OK);
 
-    } catch (IllegalArgumentException e) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-    } catch (PlaceVisitNotFoundException e) {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
+    } catch (TripMeOutException e) {
+      response.setStatus(e.restStatusCode());
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
@@ -99,25 +91,16 @@ public class PlaceIndividualServlet extends HttpServlet {
 
       Optional<PlaceVisitModel> optionalPlace = placeStorage.getPlaceVisit(tripId, placeId);
 
-      String userMark;
-
-      if (optionalPlace.isPresent()) {
-        userMark = optionalPlace.get().userMark().toString();
-      } else {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      if (!optionalPlace.isPresent()) {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         return;
       }
-
-      response.setStatus(HttpServletResponse.SC_OK);
       response.setContentType("application/json");
       writer.println(gson.toJson(optionalPlace.get()));
+      response.setStatus(HttpServletResponse.SC_OK);
 
-    } catch (IllegalArgumentException e) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-    } catch (InvalidRequestException e) {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
+    } catch (TripMeOutException e) {
+      response.setStatus(e.restStatusCode());
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } finally {

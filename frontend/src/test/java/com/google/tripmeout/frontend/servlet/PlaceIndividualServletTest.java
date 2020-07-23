@@ -8,7 +8,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.error.TripMeOutException;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
@@ -30,11 +29,10 @@ public class PlaceIndividualServletTest {
   private Gson gson;
 
   private static final PlaceVisitModel UK = PlaceVisitModel.builder()
-                                                .setName("UK Trip")
+                                                .setPlaceName("UK Trip")
                                                 .setTripId("abc123")
-                                                .setPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
-                                                .setLatitude(111.111)
-                                                .setLongitude(45.4)
+                                                .setId("abc")
+                                                .setPlacesApiPlaceId("123")
                                                 .setUserMark(PlaceVisitModel.UserMark.NO)
                                                 .build();
 
@@ -54,21 +52,29 @@ public class PlaceIndividualServletTest {
 
     servlet.doPut(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
   }
 
   @Test
-  public void doPut_invalidPlaceId_setNotFoundStatus() throws IOException {
+  public void doPut_invalidPlaceId_addsPlaceVisitToStorage() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/1234");
-    Reader stringReader = new StringReader("{tripId: abc123, placeId: 1234, userMark: YES}");
+    Reader stringReader = new StringReader("{placesApiPlaceId: 123, userMark: YES}");
     when(request.getReader()).thenReturn(new BufferedReader(stringReader));
 
     servlet.doPut(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
+    PlaceVisitModel expected = PlaceVisitModel.builder()
+                                   .setTripId("abc123")
+                                   .setId("1234")
+                                   .setPlacesApiPlaceId("123")
+                                   .setUserMark(PlaceVisitModel.UserMark.YES)
+                                   .build();
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+    assertThat(placeStorage.getPlaceVisit("abc123", "1234")).hasValue(expected);
   }
 
   @Test
@@ -76,19 +82,21 @@ public class PlaceIndividualServletTest {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     placeStorage.addPlaceVisit(UK);
+
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
-    when(request.getRequestURI())
-        .thenReturn("/trips/abc123/placeVisits/ChIJ3S-JXmauEmsRUcIaWtf4MzE");
-    Reader stringReader =
-        new StringReader("{tripId:abc123, placeId: ChIJ3S-JXmauEmsRUcIaWtf4MzE, userMark: YES}");
+
+    when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/abc");
+
+    Reader stringReader = new StringReader("{placesApiPlaceId: 123, userMark: YES}");
+
     when(request.getReader()).thenReturn(new BufferedReader(stringReader));
 
     servlet.doPut(request, response);
 
     PlaceVisitModel updatedPlace = UK.toBuilder().setUserMark(PlaceVisitModel.UserMark.YES).build();
 
-    assertThat(placeStorage.getPlaceVisit("abc123", "ChIJ3S-JXmauEmsRUcIaWtf4MzE"))
-        .hasValue(updatedPlace);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+    assertThat(placeStorage.getPlaceVisit("abc123", "abc")).hasValue(updatedPlace);
   }
 
   @Test
@@ -96,12 +104,11 @@ public class PlaceIndividualServletTest {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
-    when(request.getRequestURI())
-        .thenReturn("/trips/abc123/placesVisit/ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+    when(request.getRequestURI()).thenReturn("/trips/abc123/placesVisit/abc");
 
     servlet.doDelete(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
   }
 
   @Test
@@ -109,8 +116,7 @@ public class PlaceIndividualServletTest {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
-    when(request.getRequestURI())
-        .thenReturn("/trips/abc123/placeVisits/ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+    when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/1234");
 
     servlet.doDelete(request, response);
 
@@ -125,12 +131,12 @@ public class PlaceIndividualServletTest {
     placeStorage.addPlaceVisit(UK);
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
 
-    when(request.getRequestURI())
-        .thenReturn("/trips/abc123/placeVisits/ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+    when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/abc");
 
     servlet.doDelete(request, response);
 
-    assertThat(placeStorage.getPlaceVisit("abc123", "ChIJ3S-JXmauEmsRUcIaWtf4MzE")).isEmpty();
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+    assertThat(placeStorage.getPlaceVisit("abc123", "abc")).isEmpty();
   }
 
   @Test
@@ -138,12 +144,11 @@ public class PlaceIndividualServletTest {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
-    when(request.getRequestURI())
-        .thenReturn("/trips/abc123/placesVisit/ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+    when(request.getRequestURI()).thenReturn("/trips/abc123/placesVisit/abc");
 
     servlet.doGet(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
   }
 
   @Test
@@ -159,27 +164,6 @@ public class PlaceIndividualServletTest {
   }
 
   @Test
-  public void doGet_validRequestNotInStorage_getPlaceDetails() throws IOException {
-    FakeHttpServletResponse response = new FakeHttpServletResponse();
-    PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
-
-    when(request.getRequestURI())
-        .thenReturn("/trips/abc123/placeVisits/ChIJ3S-JXmauEmsRUcIaWtf4MzE");
-
-    servlet.doGet(request, response);
-
-    PlaceDetails details = gson.fromJson(response.getResponseString(), PlaceDetails.class);
-
-    assertThat(response.getStatus()).isEqualTo(200);
-    assertThat(response.getResponseString()).isNotEmpty();
-
-    assertThat(details.name).isEqualTo("Sydney Opera House");
-    assertThat(details.htmlAttributions[0]).isEqualTo(PlaceVisitModel.UserMark.UNKNOWN.toString());
-  }
-
-  @Test
   public void doGet_validRequestInStorage_getPlaceDetails() throws IOException, TripMeOutException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
@@ -187,17 +171,15 @@ public class PlaceIndividualServletTest {
 
     PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
 
-    when(request.getRequestURI())
-        .thenReturn("/trips/abc123/placeVisits/ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+    when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/abc");
 
     servlet.doGet(request, response);
 
-    PlaceDetails details = gson.fromJson(response.getResponseString(), PlaceDetails.class);
+    PlaceVisitModel place = gson.fromJson(response.getResponseString(), PlaceVisitModel.class);
 
-    assertThat(response.getStatus()).isEqualTo(200);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
     assertThat(response.getResponseString()).isNotEmpty();
 
-    assertThat(details.name).isEqualTo("Sydney Opera House");
-    assertThat(details.htmlAttributions[0]).isEqualTo(PlaceVisitModel.UserMark.NO.toString());
+    assertThat(place).isEqualTo(UK);
   }
 }

@@ -1,23 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tripmeout/widgets/map_widget.dart';
+import 'package:tripmeout/services/trip_service.dart';
+import 'package:tripmeout/model/trip.dart';
+import 'package:tripmeout/model/location.dart';
+import 'package:tripmeout/router/router.dart';
 
 //TODO: Add loading screen after to the Create Trip Widget
 //TODO: Get rid of the newInformation text on the page.
 
 class CreateTripWidget extends StatefulWidget {
+  final TripService tripService;
+
+  CreateTripWidget(this.tripService);
+
   @override
-  _CreateTripWidgetState createState() => _CreateTripWidgetState();
+  _CreateTripWidgetState createState() => _CreateTripWidgetState(tripService);
 }
 
 class _CreateTripWidgetState extends State<CreateTripWidget> {
+  final TripService tripService;
+
+  _CreateTripWidgetState(this.tripService);
+
   String place = "No Input";
   int radius = 0;
   String newInformation = 'Grabbed info placed here.';
-  void changeText() {
-    setState(() {
-      newInformation = "$place ${radius}km";
-    });
+  void submitTrip() {
+    Trip theTrip = new Trip(
+        name: "$place", location: Location(latitude: 10.0, longitude: 10.0));
+    tripService.createTrip(theTrip);
+    Navigator.pushNamed(context, "trips/123");
   }
 
   @override
@@ -69,7 +82,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
           Padding(
             padding: const EdgeInsets.all(25.0),
             child: RaisedButton(
-              onPressed: () => changeText(),
+              onPressed: () => submitTrip(),
               child: Text('Submit'),
             ),
           ),

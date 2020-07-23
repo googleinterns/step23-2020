@@ -1,12 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:mockito/mockito.dart';
 import 'package:tripmeout/widgets/create_trip_widget.dart';
 import 'package:tripmeout/widgets/map_widget.dart';
+import 'package:tripmeout/services/trip_service.dart';
+import 'package:tripmeout/services/in_memory_trip_service.dart';
+import 'package:tripmeout/model/trip.dart';
+import 'package:tripmeout/model/location.dart';
+
+class MockTripService extends Mock implements TripService {}
 
 void main() {
   testWidgets('Showing the text on page correctly shows up',
       (WidgetTester tester) async {
-    var createTripsWidget = CreateTripWidget();
+    var tripService = MockTripService();
+    var createTripsWidget = CreateTripWidget(tripService);
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
     //TODO: Add test for loading screen after it's added to the Create Trip Widget
 
@@ -21,7 +29,8 @@ void main() {
   });
 
   testWidgets('Testing the raised button', (WidgetTester tester) async {
-    var createTripsWidget = CreateTripWidget();
+    var tripService = MockTripService();
+    var createTripsWidget = CreateTripWidget(tripService);
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
     await tester.pumpAndSettle();
 
@@ -42,7 +51,8 @@ void main() {
 
   testWidgets('Testing the text inputs', (WidgetTester tester) async {
     //TODO: Remove this test after inserted text on screen is deleted
-    var createTripsWidget = CreateTripWidget();
+    var tripService = MockTripService();
+    var createTripsWidget = CreateTripWidget(tripService);
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
     await tester.pumpAndSettle();
 
@@ -68,7 +78,8 @@ void main() {
   testWidgets('Testing the to assure no words are allowed in radius input',
       (WidgetTester tester) async {
     //TODO: Remove this test after inserted text on screen is deleted
-    var createTripsWidget = CreateTripWidget();
+    var tripService = MockTripService();
+    var createTripsWidget = CreateTripWidget(tripService);
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
     await tester.pumpAndSettle();
 
@@ -90,6 +101,32 @@ void main() {
     await tester.pump();
     expect(find.text('AnyPlace 0km'), findsOneWidget);
     expect(find.text('Grabbed info placed here.'), findsNothing);
+  });
+
+  testWidgets('Testing the creating a trip button',
+      (WidgetTester tester) async {
+    var tripService = MockTripService();
+
+    when(tripService.createTrip(any))
+        .thenAnswer((t) => Future.value(t.positionalArguments[0]));
+
+    var createTripsWidget = CreateTripWidget(tripService);
+    await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
+    await tester.pumpAndSettle();
+
+    RaisedButton button =
+        find.widgetWithText(RaisedButton, 'Submit').evaluate().first.widget;
+
+    await tester.enterText(
+        find.widgetWithText(TextField, 'Enter your Location'), "Italy");
+    await tester.enterText(find.widgetWithText(TextField, 'Radius KM'), "25");
+
+    button.onPressed();
+    await tester.pump();
+
+    Trip createdTrip =
+        verify(tripService.createTrip(captureAny)).captured.single;
+    expect(createdTrip.name, equals('Italy'));
   });
 }
 

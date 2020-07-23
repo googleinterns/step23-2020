@@ -15,7 +15,8 @@ class CreateTripWidget extends StatefulWidget {
   CreateTripWidget(this.tripService);
 
   @override
-  _CreateTripWidgetState createState() => _CreateTripWidgetState(tripService);
+  _CreateTripWidgetState createState() =>
+      _CreateTripWidgetState(this.tripService);
 }
 
 class _CreateTripWidgetState extends State<CreateTripWidget> {
@@ -27,10 +28,14 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
   int radius = 0;
   String newInformation = 'Grabbed info placed here.';
   void submitTrip() {
-    Trip theTrip = new Trip(
-        name: "$place", location: Location(latitude: 10.0, longitude: 10.0));
-    tripService.createTrip(theTrip);
-    Navigator.pushNamed(context, "trips/123");
+    setState(() {
+      tripService.createTrip(Trip(
+          name: "$place",
+          id: radius.toString(),
+          location: Location(latitude: 10.0, longitude: 10.0)));
+
+      newInformation = "$place ${radius}km";
+    });
   }
 
   @override
@@ -82,7 +87,9 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
           Padding(
             padding: const EdgeInsets.all(25.0),
             child: RaisedButton(
-              onPressed: () => submitTrip(),
+              onPressed: () => {
+                submitTrip(),
+              },
               child: Text('Submit'),
             ),
           ),

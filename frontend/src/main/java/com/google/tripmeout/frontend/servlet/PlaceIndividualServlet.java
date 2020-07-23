@@ -19,7 +19,7 @@ public class PlaceIndividualServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final Pattern URI_NAME_PATTERN =
       Pattern.compile(".*/trips/([^/]+)/placeVisits/([^/]+)");
-      
+
   private final PlaceVisitStorage placeStorage;
   private final Gson gson;
   private final PlaceService placeService;

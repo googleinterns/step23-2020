@@ -7,7 +7,6 @@ import com.google.tripmeout.frontend.error.EmptyRequestBodyException;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;

@@ -1,7 +1,6 @@
 package com.google.tripmeout.frontend.servlet;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -16,13 +15,10 @@ import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.BadUriException;
 import com.google.tripmeout.frontend.error.EmptyRequestBodyException;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
-import com.google.tripmeout.frontend.servlets.ServletUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;

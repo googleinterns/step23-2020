@@ -9,7 +9,6 @@ import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
 import com.google.tripmeout.frontend.serialization.GsonTripModelTypeAdapter;
-import com.google.tripmeout.frontend.servlet.TripServlet;
 import com.google.tripmeout.frontend.storage.InMemoryTripModelStorage;
 import java.io.IOException;
 import javax.servlet.ServletException;

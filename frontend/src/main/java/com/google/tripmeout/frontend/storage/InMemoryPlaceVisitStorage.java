@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   // <tripId, id, PlaceVisitModel>
@@ -66,9 +66,9 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   @Override
-  public boolean updateUserMarkOrAddPlaceVisit(
+  public PlaceVisitModel updateUserMarkOrAddPlaceVisit(
       PlaceVisitModel placeVisit, PlaceVisitModel.UserMark newStatus) {
-    AtomicBoolean alreadyInStorage = new AtomicBoolean(false);
+    AtomicReference<PlaceVisitModel> alreadyInStorage = new AtomicReference<>();
 
     Map<String, PlaceVisitModel> placesMap = placesByTripIdByPlaceId.computeIfAbsent(
         placeVisit.tripId(), (tripKey) -> new ConcurrentHashMap<>());
@@ -76,10 +76,12 @@ public class InMemoryPlaceVisitStorage implements PlaceVisitStorage {
     placesMap.compute(placeVisit.id(), (placeKey, place) -> {
       if (place != null) {
         PlaceVisitModel updatedPlace = place.toBuilder().setUserMark(newStatus).build();
-        alreadyInStorage.set(true);
+        alreadyInStorage.set(updatedPlace);
         return updatedPlace;
       } else {
-        return placeVisit.toBuilder().setUserMark(newStatus).build();
+        PlaceVisitModel updatedPlace = placeVisit.toBuilder().setUserMark(newStatus).build();
+        alreadyInStorage.set(updatedPlace);
+        return updatedPlace;
       }
     });
 

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,11 +45,18 @@ public class PlaceParentServlet extends HttpServlet {
       String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
       logger.atInfo().log("finished matching");
 
-      PlaceVisitModel newPlace = PlaceVisitModel.builder()
+
+      PlaceVisitModel.Builder newPlaceBuilder = PlaceVisitModel.builder()
+                                     .setId(UUID.randomUUID().toString())
                                      .setTripId(tripId)
                                      .setPlacesApiPlaceId(place.placesApiPlaceId())
-                                     .setUserMark(PlaceVisitModel.UserMark.YES)
-                                     .build();
+                                     .setUserMark(PlaceVisitModel.UserMark.YES);
+
+      if (place.placeName() != null) {
+          newPlaceBuilder = newPlaceBuilder.setPlaceName(place.placeName());
+      }
+
+      PlaceVisitModel newPlace = newPlaceBuilder.build();
 
       placeStorage.updateUserMarkOrAddPlaceVisit(newPlace, PlaceVisitModel.UserMark.YES);
 

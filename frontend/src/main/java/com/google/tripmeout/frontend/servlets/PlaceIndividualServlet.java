@@ -4,6 +4,7 @@ import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.error.TripMeOutException;
+import com.google.tripmeout.frontend.places.PlaceService;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,13 +19,16 @@ public class PlaceIndividualServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private final PlaceVisitStorage placeStorage;
   private final Gson gson;
+  private final PlaceService placeService;
 
   private static final Pattern URI_NAME_PATTERN =
       Pattern.compile(".*/trips/([^/]+)/placeVisits/([^/]+)");
 
-  public PlaceIndividualServlet(PlaceVisitStorage placeStorage, Gson gson) {
+  public PlaceIndividualServlet(
+      PlaceVisitStorage placeStorage, Gson gson, PlaceService placeService) {
     this.placeStorage = placeStorage;
     this.gson = gson;
+    this.placeService = placeService;
   }
 
   @Override
@@ -39,6 +43,8 @@ public class PlaceIndividualServlet extends HttpServlet {
 
       PlaceVisitModel place =
           ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
+
+      placeService.validatePlaceId(place.placesApiPlaceId());
 
       PlaceVisitModel.UserMark status = place.userMark();
 

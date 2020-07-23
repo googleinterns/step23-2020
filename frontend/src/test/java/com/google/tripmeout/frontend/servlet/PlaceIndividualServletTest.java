@@ -2,6 +2,7 @@ package com.google.tripmeout.frontend.servlet;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -9,7 +10,10 @@ import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.tripmeout.frontend.PlaceVisitModel;
+import com.google.tripmeout.frontend.error.InvalidPlaceIdException;
+import com.google.tripmeout.frontend.error.PlacesApiRequestException;
 import com.google.tripmeout.frontend.error.TripMeOutException;
+import com.google.tripmeout.frontend.places.PlaceService;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 import com.google.tripmeout.frontend.servlets.PlaceIndividualServlet;
 import com.google.tripmeout.frontend.storage.InMemoryPlaceVisitStorage;
@@ -26,6 +30,7 @@ import org.mockito.Mock;
 
 public class PlaceIndividualServletTest {
   @Mock HttpServletRequest request;
+  @Mock PlaceService placeService;
   private Gson gson;
 
   private static final PlaceVisitModel UK = PlaceVisitModel.builder()
@@ -47,7 +52,7 @@ public class PlaceIndividualServletTest {
   public void doPut_badUri_setsBadRequestStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placesssss/1234");
 
     servlet.doPut(request, response);
@@ -56,10 +61,28 @@ public class PlaceIndividualServletTest {
   }
 
   @Test
-  public void doPut_invalidPlaceId_addsPlaceVisitToStorage() throws IOException {
+  public void doPut_invalidPlacesApiPlaceId_setsBadRequestStatus()
+      throws IOException, InvalidPlaceIdException, PlacesApiRequestException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
+
+    doThrow(InvalidPlaceIdException.class).when(placeService).validatePlaceId("123");
+    when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/1234");
+    Reader stringReader = new StringReader("{placesApiPlaceId: 123, userMark: YES}");
+    when(request.getReader()).thenReturn(new BufferedReader(stringReader));
+
+    servlet.doPut(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+  }
+
+  @Test
+  public void doPut_newPlaceVisitId_addsPlaceVisitToStorage()
+      throws IOException, InvalidPlaceIdException, PlacesApiRequestException {
+    FakeHttpServletResponse response = new FakeHttpServletResponse();
+    PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/1234");
     Reader stringReader = new StringReader("{placesApiPlaceId: 123, userMark: YES}");
     when(request.getReader()).thenReturn(new BufferedReader(stringReader));
@@ -83,7 +106,7 @@ public class PlaceIndividualServletTest {
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     placeStorage.addPlaceVisit(UK);
 
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
 
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/abc");
 
@@ -103,7 +126,7 @@ public class PlaceIndividualServletTest {
   public void doDelete_badUri_setsBadRequestStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placesVisit/abc");
 
     servlet.doDelete(request, response);
@@ -115,7 +138,7 @@ public class PlaceIndividualServletTest {
   public void doDelete_notInStorage_setsNotFoundStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/1234");
 
     servlet.doDelete(request, response);
@@ -129,7 +152,7 @@ public class PlaceIndividualServletTest {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     placeStorage.addPlaceVisit(UK);
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
 
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/abc");
 
@@ -143,7 +166,7 @@ public class PlaceIndividualServletTest {
   public void doGet_badUri_setsBadRequestStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placesVisit/abc");
 
     servlet.doGet(request, response);
@@ -155,7 +178,7 @@ public class PlaceIndividualServletTest {
   public void doGet_invalidPlaceId_setsNotFoundStatus() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/hello");
 
     servlet.doGet(request, response);
@@ -169,7 +192,7 @@ public class PlaceIndividualServletTest {
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     placeStorage.addPlaceVisit(UK);
 
-    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson);
+    PlaceIndividualServlet servlet = new PlaceIndividualServlet(placeStorage, gson, placeService);
 
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits/abc");
 

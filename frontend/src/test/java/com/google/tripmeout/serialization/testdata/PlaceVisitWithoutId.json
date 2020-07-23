@@ -1,6 +1,6 @@
 {
-    "id": "abc123",
     "placesApiPlaceId":"ABC",
     "placeName":"New York",
-    "tripId":"123"
+    "tripId":"123",
+    "userMark":"YES"
 }  

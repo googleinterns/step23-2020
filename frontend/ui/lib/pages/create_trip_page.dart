@@ -8,7 +8,7 @@ class CreateTripPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: defaultAppBar(context),
-      body: Center(child: MapsApiPlacesTextFieldWidget()),
+      body: Center(child: MapsApiPlacesTextFieldWidget(['(cities)'])),
     );
   }
 }

@@ -6,18 +6,19 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter/src/widgets/basic.dart' as basic;
 
 class MapsApiPlacesTextFieldWidget extends StatefulWidget {
+  final List<String> allowedTypes;
+  MapsApiPlacesTextFieldWidget(this.allowedTypes);
+
   @override
-  _MapsApiPlacesTextFieldState createState() => _MapsApiPlacesTextFieldState();
+  _MapsApiPlacesTextFieldState createState() => _MapsApiPlacesTextFieldState(allowedTypes);
 }
 
 class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   final AutocompleteService autocompleteService = AutocompleteService();
+  final List<String> allowedTypes;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  _MapsApiPlacesTextFieldState(this.allowedTypes);
 
   String newInformation = "";
 
@@ -45,7 +46,7 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
               ),
               controller: this._typeAheadController
             ),
-            suggestionsCallback: getAutocomplete,
+            suggestionsCallback: (pattern) => getAutocomplete(pattern, allowedTypes),
             itemBuilder: (context, suggestion) {
               return ListTile(
                 title: Text(suggestion.description),
@@ -62,17 +63,12 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
     );
   }
 
-  Future<List<String>> getAutocompletes(String input) {
-    Completer<List<String>> completer = Completer();
-    completer.complete(["error", "hi"]);
-    return completer.future;
-  }
 
-  Future<List<AutocompletePrediction>> getAutocomplete(String input) {
+  Future<List<AutocompletePrediction>> getAutocomplete(String input, List<String> allowedTypes) {
     if (input == null || input == "") {
       return Future.sync(() => []);
     }
-    final allowedTypes = ['(cities)'];
+
     Completer<List<AutocompletePrediction>> completer = Completer();
     final AutocompletionRequest request = AutocompletionRequest()
       ..input = input

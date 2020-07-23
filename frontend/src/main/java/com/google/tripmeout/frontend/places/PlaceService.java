@@ -1,6 +1,8 @@
 package com.google.tripmeout.frontend.places;
 
-import java.lang.Exception;
+import com.google.tripmeout.frontend.error.InvalidPlaceIdException;
+import com.google.tripmeout.frontend.error.PlacesApiRequestException;
+import java.io.IOException;
 
 public interface PlaceService {
   /**
@@ -8,5 +10,6 @@ public interface PlaceService {
    *
    * @param placeId the id of the place to vaildate
    */
-  void validatePlaceId(String placesApiPlaceId) throws Exception;
+  void validatePlaceId(String placesApiPlaceId)
+      throws IOException, InvalidPlaceIdException, PlacesApiRequestException;
 }

@@ -1,4 +1,4 @@
-package com.google.tripmeout.frontend.servlets;
+package com.google.tripmeout.frontend.servlet;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;

@@ -15,7 +15,7 @@ import com.google.tripmeout.frontend.error.PlacesApiRequestException;
 import com.google.tripmeout.frontend.error.TripMeOutException;
 import com.google.tripmeout.frontend.places.PlaceService;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
-import com.google.tripmeout.frontend.servlets.PlaceIndividualServlet;
+import com.google.tripmeout.frontend.servlet.PlaceIndividualServlet;
 import com.google.tripmeout.frontend.storage.InMemoryPlaceVisitStorage;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
 import java.io.BufferedReader;

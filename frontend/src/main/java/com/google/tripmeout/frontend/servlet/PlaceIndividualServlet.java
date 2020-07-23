@@ -1,4 +1,4 @@
-package com.google.tripmeout.frontend.servlets;
+package com.google.tripmeout.frontend.servlet;
 
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
@@ -17,12 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class PlaceIndividualServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final Pattern URI_NAME_PATTERN =
+      Pattern.compile(".*/trips/([^/]+)/placeVisits/([^/]+)");
+      
   private final PlaceVisitStorage placeStorage;
   private final Gson gson;
   private final PlaceService placeService;
-
-  private static final Pattern URI_NAME_PATTERN =
-      Pattern.compile(".*/trips/([^/]+)/placeVisits/([^/]+)");
 
   public PlaceIndividualServlet(
       PlaceVisitStorage placeStorage, Gson gson, PlaceService placeService) {

@@ -6,7 +6,7 @@ import com.google.gson.JsonParseException;
 import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripMeOutException;
-import com.google.tripmeout.frontend.servlets.ServletUtil;
+import com.google.tripmeout.frontend.servlet.ServletUtil;
 import com.google.tripmeout.frontend.storage.TripStorage;
 import java.io.IOException;
 import java.io.PrintWriter;

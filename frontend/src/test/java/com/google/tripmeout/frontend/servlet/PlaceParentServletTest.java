@@ -41,38 +41,34 @@ public class PlaceParentServletTest {
       new GeoApiContext.Builder().apiKey("AIzaSyBbXCXC2uWv3baNmirLtqUYbFsFwCXqLV8").build();
 
   private static final PlaceVisitModel UK = PlaceVisitModel.builder()
-                                                .setName("UK Trip")
+  .setId("123")
+                                                .setPlaceName("UK Trip")
                                                 .setTripId("abc123")
-                                                .setPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
-                                                .setLatitude(111.111)
-                                                .setLongitude(45.4)
+                                                .setPlacesApiPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
                                                 .setUserMark(PlaceVisitModel.UserMark.NO)
                                                 .build();
 
   private static final PlaceVisitModel NY = PlaceVisitModel.builder()
-                                                .setName("NY Trip")
+  .setId("456")
+                                                .setPlaceName("NY Trip")
                                                 .setTripId("abc123")
-                                                .setPlaceId("NY, USA")
-                                                .setLatitude(111.111)
-                                                .setLongitude(45.4)
+                                                .setPlacesApiPlaceId("NY, USA")
                                                 .setUserMark(PlaceVisitModel.UserMark.MAYBE)
                                                 .build();
 
   private static final PlaceVisitModel CA = PlaceVisitModel.builder()
-                                                .setName("CA Trip")
+  .setId("789")
+                                                .setPlaceName("CA Trip")
                                                 .setTripId("abc123")
-                                                .setPlaceId("CA, USA")
-                                                .setLatitude(111.111)
-                                                .setLongitude(45.4)
+                                                .setPlacesApiPlaceId("CA, USA")
                                                 .setUserMark(PlaceVisitModel.UserMark.YES)
                                                 .build();
 
   private static final PlaceVisitModel UK_B = PlaceVisitModel.builder()
-                                                  .setName("UK Trip")
+  .setId("123")
+                                                  .setPlaceName("UK Trip")
                                                   .setTripId("123abc")
-                                                  .setPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
-                                                  .setLatitude(111.111)
-                                                  .setLongitude(45.4)
+                                                  .setPlacesApiPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
                                                   .setUserMark(PlaceVisitModel.UserMark.MAYBE)
                                                   .build();
 
@@ -117,22 +113,6 @@ public class PlaceParentServletTest {
   @Test
   public void doPost_goodRequest_storesPlaceVisitModel()
       throws IOException, ApiException, InterruptedException {
-    PlaceDetailsRequest placeRequest = new PlaceDetailsRequest(CONTEXT)
-                                           .placeId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
-                                           .fields(PlaceDetailsRequest.FieldMask.GEOMETRY_LOCATION,
-                                               PlaceDetailsRequest.FieldMask.NAME);
-
-    PlaceDetails details;
-    details = placeRequest.await();
-
-    PlaceVisitModel expected = PlaceVisitModel.builder()
-                                   .setTripId("abc123")
-                                   .setPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
-                                   .setUserMark(PlaceVisitModel.UserMark.YES)
-                                   .setName(details.name)
-                                   .setLatitude(details.geometry.location.lat)
-                                   .setLongitude(details.geometry.location.lng)
-                                   .build();
 
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();

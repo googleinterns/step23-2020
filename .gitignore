@@ -15,7 +15,7 @@ frontend/src/main/webapp/*
 !frontend/src/main/webapp/WEB-INF/*
 
 # Ignore secrets and everywhere they are...
-secrets
+test-secrets
 frontend/ui/web/index.html
 
 # Miscellaneous

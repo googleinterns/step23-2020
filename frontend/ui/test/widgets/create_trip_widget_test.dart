@@ -103,7 +103,7 @@ void main() {
     expect(find.text('Grabbed info placed here.'), findsNothing);
   });
 
-  testWidgets('Testing the creating a trip button',
+  testWidgets('Testing the submit button which creates a trip',
       (WidgetTester tester) async {
     var tripService = MockTripService();
 

@@ -2,19 +2,25 @@ package com.google.tripmeout.frontend.servlet;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlaceDetailsRequest;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
+import com.google.tripmeout.frontend.error.InvalidPlaceIdException;
+import com.google.tripmeout.frontend.error.PlacesApiRequestException;
 import com.google.tripmeout.frontend.error.TripMeOutException;
+import com.google.tripmeout.frontend.places.PlaceService;
+import com.google.tripmeout.frontend.places.PlacesApiPlaceServiceBindingModule;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 import com.google.tripmeout.frontend.servlet.PlaceParentServlet;
 import com.google.tripmeout.frontend.storage.InMemoryPlaceVisitStorage;
@@ -34,14 +40,14 @@ import org.mockito.Mock;
 
 public class PlaceParentServletTest {
   @Mock HttpServletRequest request;
-  @Mock PlaceDetailsRequest detailsRequest;
+  @Mock PlaceService placeService;
   private Gson gson;
 
   private final GeoApiContext CONTEXT =
       new GeoApiContext.Builder().apiKey("AIzaSyBbXCXC2uWv3baNmirLtqUYbFsFwCXqLV8").build();
 
   private static final PlaceVisitModel UK = PlaceVisitModel.builder()
-  .setId("123")
+                                                .setId("123")
                                                 .setPlaceName("UK Trip")
                                                 .setTripId("abc123")
                                                 .setPlacesApiPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
@@ -49,7 +55,7 @@ public class PlaceParentServletTest {
                                                 .build();
 
   private static final PlaceVisitModel NY = PlaceVisitModel.builder()
-  .setId("456")
+                                                .setId("456")
                                                 .setPlaceName("NY Trip")
                                                 .setTripId("abc123")
                                                 .setPlacesApiPlaceId("NY, USA")
@@ -57,37 +63,36 @@ public class PlaceParentServletTest {
                                                 .build();
 
   private static final PlaceVisitModel CA = PlaceVisitModel.builder()
-  .setId("789")
+                                                .setId("789")
                                                 .setPlaceName("CA Trip")
                                                 .setTripId("abc123")
                                                 .setPlacesApiPlaceId("CA, USA")
                                                 .setUserMark(PlaceVisitModel.UserMark.YES)
                                                 .build();
 
-  private static final PlaceVisitModel UK_B = PlaceVisitModel.builder()
-  .setId("123")
-                                                  .setPlaceName("UK Trip")
-                                                  .setTripId("123abc")
-                                                  .setPlacesApiPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
-                                                  .setUserMark(PlaceVisitModel.UserMark.MAYBE)
-                                                  .build();
+  private static final PlaceVisitModel UK_B =
+      PlaceVisitModel.builder()
+          .setId("123")
+          .setPlaceName("UK Trip")
+          .setTripId("123abc")
+          .setPlacesApiPlaceId("ChIJ3S-JXmauEmsRUcIaWtf4MzE")
+          .setUserMark(PlaceVisitModel.UserMark.MAYBE)
+          .build();
 
   @Before
   public void setUp() {
     initMocks(this);
     Injector injector = Guice.createInjector(new GsonModelSerializationModule());
-    this.gson = injector.getInstance(Gson.class);
+    gson = injector.getInstance(Gson.class);
   }
 
   @Test
   public void doPost_badUri_setsInternalServerError() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
+    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips-number/abc123/placeVisits");
-    when(request.getReader())
-        .thenReturn(new BufferedReader(
-            new StringReader("{tripId: abc123, placeId: ChIJ3S-JXmauEmsRUcIaWtf4MzE}")));
+    when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(UK))));
 
     servlet.doPost(request, response);
 
@@ -95,68 +100,66 @@ public class PlaceParentServletTest {
   }
 
   @Test
-  public void doPost_badPlaceId_setsNotFoundStatus() throws IOException {
+  public void doPost_badPlaceId_setsNotFoundStatus()
+      throws IOException, InvalidPlaceIdException, PlacesApiRequestException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
+    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
+
+    doThrow(InvalidPlaceIdException.class).when(placeService).validatePlaceId("NY, USA");
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
-    when(request.getReader())
-        .thenReturn(new BufferedReader(new StringReader("{tripId: abc123, placeId: hello}")));
+    when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(NY))));
 
     servlet.doPost(request, response);
-    Optional<PlaceVisitModel> place = placeStorage.getPlaceVisit("abc123", "hello");
 
-    assertThat(place).isEmpty();
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
   }
 
   @Test
-  public void doPost_goodRequest_storesPlaceVisitModel()
+  public void doPost_goodRequest_returnsUpdatedPlaceVisitModel()
       throws IOException, ApiException, InterruptedException {
-
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
+    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
-    when(request.getReader())
-        .thenReturn(new BufferedReader(
-            new StringReader("{tripId: abc123, placeId: ChIJ3S-JXmauEmsRUcIaWtf4MzE}")));
+    when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(UK))));
 
     servlet.doPost(request, response);
-    Optional<PlaceVisitModel> place =
-        placeStorage.getPlaceVisit("abc123", "ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+    PlaceVisitModel place = gson.fromJson(response.getResponseString(), PlaceVisitModel.class);
 
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    assertThat(place).hasValue(expected);
+    assertThat(place.placeName()).isEqualTo("UK Trip");
+    assertThat(place.tripId()).isEqualTo("abc123");
+    assertThat(place.placesApiPlaceId()).isEqualTo("ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+    assertThat(place.userMark()).isEqualTo(PlaceVisitModel.UserMark.YES);
   }
 
   @Test
   public void doPost_requestAlreadyInStorage_updatesPlaceVisitModelUserMark()
       throws IOException, TripMeOutException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
-    PlaceVisitModel updatedUK = UK.toBuilder().setUserMark(PlaceVisitModel.UserMark.YES).build();
 
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     placeStorage.addPlaceVisit(UK);
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
+    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
-    when(request.getReader())
-        .thenReturn(new BufferedReader(
-            new StringReader("{tripId: abc123, placeId: ChIJ3S-JXmauEmsRUcIaWtf4MzE}")));
+    when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(UK))));
 
     servlet.doPost(request, response);
-    Optional<PlaceVisitModel> place =
-        placeStorage.getPlaceVisit("abc123", "ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+    PlaceVisitModel place = gson.fromJson(response.getResponseString(), PlaceVisitModel.class);
 
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    assertThat(place.get()).isEqualTo(updatedUK);
+    assertThat(place.placeName()).isEqualTo("UK Trip");
+    assertThat(place.tripId()).isEqualTo("abc123");
+    assertThat(place.placesApiPlaceId()).isEqualTo("ChIJ3S-JXmauEmsRUcIaWtf4MzE");
+    assertThat(place.userMark()).isEqualTo(PlaceVisitModel.UserMark.YES);
   }
 
   @Test
   public void doGet_badUri_setsInternalServerError() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
+    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips-number/1234/placeVisits");
 
     servlet.doGet(request, response);
@@ -168,7 +171,7 @@ public class PlaceParentServletTest {
   public void doGet_emptyStorage_getsEmptyList() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
+    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
 
     servlet.doGet(request, response);
@@ -189,7 +192,7 @@ public class PlaceParentServletTest {
     placeStorage.addPlaceVisit(CA);
     placeStorage.addPlaceVisit(UK_B);
 
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson);
+    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
     servlet.doGet(request, response);
 

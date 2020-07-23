@@ -3,19 +3,13 @@ package com.google.tripmeout.frontend.servlet;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.google.maps.GeoApiContext;
-import com.google.maps.PlaceDetailsRequest;
-import com.google.maps.errors.InvalidRequestException;
-import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.error.TripMeOutException;
+import com.google.tripmeout.frontend.places.PlaceService;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
-import com.google.tripmeout.frontend.error.TripMeOutException;
-import com.google.gson.JsonParseException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServlet;
@@ -28,49 +22,50 @@ public class PlaceParentServlet extends HttpServlet {
 
   private final PlaceVisitStorage placeStorage;
   private final Gson gson;
-  //private final PlaceService placeService;
+  private final PlaceService placeService;
 
-  public PlaceParentServlet(PlaceVisitStorage placeStorage, Gson gson) {
+  public PlaceParentServlet(PlaceVisitStorage placeStorage, Gson gson, PlaceService placeService) {
     this.placeStorage = placeStorage;
     this.gson = gson;
-    //this.placeService = placeService;
+    this.placeService = placeService;
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    PrintWriter writer = response.getWriter();
     try {
-      PlaceVisitModel place = ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
-      //validatePlaceId(place.placesApiPlaceId());
+      PlaceVisitModel place =
+          ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
+
+      placeService.validatePlaceId(place.placesApiPlaceId());
 
       String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
       logger.atInfo().log("finished matching");
 
-
-      PlaceVisitModel.Builder newPlaceBuilder = PlaceVisitModel.builder()
+      PlaceVisitModel newPlace = PlaceVisitModel.builder()
                                      .setId(UUID.randomUUID().toString())
                                      .setTripId(tripId)
+                                     .setPlaceName(place.placeName())
                                      .setPlacesApiPlaceId(place.placesApiPlaceId())
-                                     .setUserMark(PlaceVisitModel.UserMark.YES);
+                                     .setUserMark(PlaceVisitModel.UserMark.YES)
+                                     .build();
 
-      if (place.placeName() != null) {
-          newPlaceBuilder = newPlaceBuilder.setPlaceName(place.placeName());
-      }
+      PlaceVisitModel updatedPlace =
+          placeStorage.updateUserMarkOrAddPlaceVisit(newPlace, PlaceVisitModel.UserMark.YES);
 
-      PlaceVisitModel newPlace = newPlaceBuilder.build();
-
-      placeStorage.updateUserMarkOrAddPlaceVisit(newPlace, PlaceVisitModel.UserMark.YES);
-
+      response.setContentType("applciation/json");
+      writer.println(gson.toJson(updatedPlace));
       response.setStatus(HttpServletResponse.SC_OK);
 
     } catch (TripMeOutException e) {
       response.setStatus(e.restStatusCode());
     } catch (JsonParseException e) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-    } catch (InvalidRequestException e) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (Exception e) {
       logger.atWarning().log(e.getMessage());
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } finally {
+      writer.close();
     }
   }
 

@@ -35,32 +35,20 @@ public class PlaceIndividualServlet extends HttpServlet {
 
   @Override
   public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    PrintWriter writer = response.getWriter();
     try {
-      Matcher matcher = ServletUtil.parseUri(request, URI_NAME_PATTERN);
+      Matcher matcher = ServletUtil.matchUriOrThrowError(request, URI_NAME_PATTERN);
 
       String tripId = matcher.group(1);
-      String placeId = matcher.group(2);
+      String id = matcher.group(2);
 
-      Optional<PlaceVisitModel> place =
-          ServletUtil.extractFromRequestBody(request, gson, PlaceVisitModel.class);
+      PlaceVisitModel place = ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
 
-      if (!place.isPresent()) {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        return;
-      }
-
-      PlaceVisitModel.UserMark status = place.get().userMark();
-
-      PlaceDetailsRequest placeRequest = new PlaceDetailsRequest(CONTEXT).placeId(placeId).fields(
-          PlaceDetailsRequest.FieldMask.NAME, PlaceDetailsRequest.FieldMask.GEOMETRY_LOCATION);
-      PlaceDetails details = placeRequest.await();
+      PlaceVisitModel.UserMark status = place.userMark();
 
       PlaceVisitModel newPlace = PlaceVisitModel.builder()
                                      .setTripId(tripId)
-                                     .setPlaceId(placeId)
-                                     .setName(details.name)
-                                     .setLatitude(details.geometry.location.lat)
-                                     .setLongitude(details.geometry.location.lng)
+                                     .setId(id)
                                      .build();
 
       placeStorage.updateUserMarkOrAddPlaceVisit(newPlace, status);
@@ -74,6 +62,8 @@ public class PlaceIndividualServlet extends HttpServlet {
 
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } finally {
+      writer.close();
     }
   }
 
@@ -81,7 +71,7 @@ public class PlaceIndividualServlet extends HttpServlet {
   public void doDelete(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     try {
-      Matcher matcher = ServletUtil.parseUri(request, URI_NAME_PATTERN);
+      Matcher matcher = ServletUtil.matchUriOrThrowError(request, URI_NAME_PATTERN);
       String tripId = matcher.group(1);
       String placeId = matcher.group(2);
 
@@ -101,8 +91,9 @@ public class PlaceIndividualServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    PrintWriter writer = response.getWriter();
     try {
-      Matcher matcher = ServletUtil.parseUri(request, URI_NAME_PATTERN);
+      Matcher matcher = ServletUtil.matchUriOrThrowError(request, URI_NAME_PATTERN);
       String tripId = matcher.group(1);
       String placeId = matcher.group(2);
 
@@ -113,33 +104,13 @@ public class PlaceIndividualServlet extends HttpServlet {
       if (optionalPlace.isPresent()) {
         userMark = optionalPlace.get().userMark().toString();
       } else {
-        userMark = PlaceVisitModel.UserMark.UNKNOWN.toString();
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return;
       }
-
-      PlaceDetailsRequest place = new PlaceDetailsRequest(CONTEXT).placeId(placeId).fields(
-          PlaceDetailsRequest.FieldMask.NAME, PlaceDetailsRequest.FieldMask.BUSINESS_STATUS,
-          PlaceDetailsRequest.FieldMask.FORMATTED_ADDRESS,
-          PlaceDetailsRequest.FieldMask.FORMATTED_PHONE_NUMBER,
-          PlaceDetailsRequest.FieldMask.GEOMETRY_LOCATION,
-          PlaceDetailsRequest.FieldMask.OPENING_HOURS, PlaceDetailsRequest.FieldMask.PHOTOS,
-          PlaceDetailsRequest.FieldMask.PRICE_LEVEL, PlaceDetailsRequest.FieldMask.RATING,
-          PlaceDetailsRequest.FieldMask.REVIEW, PlaceDetailsRequest.FieldMask.TYPES,
-          PlaceDetailsRequest.FieldMask.WEBSITE);
-      PlaceDetails details = place.await();
-
-      String[] newHtmlAttributions = new String[details.htmlAttributions.length + 1];
-      newHtmlAttributions[0] = userMark;
-      for (int i = 1; i < details.htmlAttributions.length + 1; i++) {
-        newHtmlAttributions[i] = details.htmlAttributions[i - 1];
-      }
-      details.htmlAttributions = newHtmlAttributions;
 
       response.setStatus(HttpServletResponse.SC_OK);
       response.setContentType("application/json");
-      PrintWriter writer = response.getWriter();
-      writer.println(gson.toJson(details));
-      writer.flush();
-      writer.close();
+      writer.println(gson.toJson(optionalPlace.get()));
 
     } catch (IllegalArgumentException e) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -149,6 +120,8 @@ public class PlaceIndividualServlet extends HttpServlet {
 
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } finally {
+      writer.close();
     }
   }
 }

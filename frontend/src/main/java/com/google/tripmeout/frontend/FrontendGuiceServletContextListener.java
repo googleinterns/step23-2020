@@ -3,6 +3,7 @@ package com.google.tripmeout.frontend;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.tripmeout.frontend.places.PlacesApiPlaceServiceBindingModule;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 import com.google.tripmeout.frontend.servlet.ServletsModule;
 import com.google.tripmeout.frontend.storage.InMemoryStorageBindingModule;
@@ -16,6 +17,6 @@ public class FrontendGuiceServletContextListener extends GuiceServletContextList
   @Override
   protected Injector getInjector() {
     return Guice.createInjector(new GsonModelSerializationModule(), new ServletsModule(),
-        new InMemoryStorageBindingModule());
+        new InMemoryStorageBindingModule(), new PlacesApiPlaceServiceBindingModule());
   }
 }

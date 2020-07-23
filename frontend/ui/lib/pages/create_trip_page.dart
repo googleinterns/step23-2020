@@ -1,4 +1,5 @@
 import 'package:tripmeout/widgets/create_trip_widget.dart';
+import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
 import 'package:tripmeout/widgets/default_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ class CreateTripPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: defaultAppBar(context),
-      body: Center(child: CreateTripWidget()),
+      body: Center(child: MapsApiPlacesTextFieldWidget()),
     );
   }
 }

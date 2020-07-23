@@ -12,6 +12,7 @@ class MapsApiPlacesTextFieldWidget extends StatefulWidget {
 
 class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
+  final AutocompleteService autocompleteService = AutocompleteService();
 
   @override
   void initState() {
@@ -32,7 +33,7 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
       children: [
         basic.Padding(
           padding: const EdgeInsets.all(25.0),
-          child: TypeAheadField(
+          child: TypeAheadField<AutocompletePrediction>(
             textFieldConfiguration: TextFieldConfiguration(
               autofocus: true,
               style: DefaultTextStyle.of(context).style.copyWith(
@@ -44,17 +45,15 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
               ),
               controller: this._typeAheadController
             ),
-            suggestionsCallback: (pattern) async {
-              return await getAutocompletes(pattern);
-            },
+            suggestionsCallback: getAutocomplete,
             itemBuilder: (context, suggestion) {
               return ListTile(
-                title: Text(suggestion),
+                title: Text(suggestion.description),
               );
             },
             onSuggestionSelected: (suggestion) {
-              this._typeAheadController.text = suggestion;
-              changeText(suggestion);
+              this._typeAheadController.text = suggestion.description;
+              changeText(suggestion.description);
             },
           ),
         ),
@@ -70,17 +69,22 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
   }
 
   Future<List<AutocompletePrediction>> getAutocomplete(String input) {
-    final allowedTypes = ['(cities)', 'lodging'];
+    if (input == null || input == "") {
+      return Future.sync(() => []);
+    }
+    final allowedTypes = ['(cities)'];
     Completer<List<AutocompletePrediction>> completer = Completer();
     final AutocompletionRequest request = AutocompletionRequest()
       ..input = input
       ..types = allowedTypes;
 
-    AutocompleteService().getPlacePredictions(request, (result, status) {
-      if (status == 200) {
+    autocompleteService.getPlacePredictions(request, (result, status) {
+      if (status == PlacesServiceStatus.OK) {
         completer.complete(result);
+      } else if (status == PlacesServiceStatus.ZERO_RESULTS) {
+        completer.complete([]);
       } else {
-        completer.completeError("Error getting results");
+        completer.completeError(status);
       }
     });
     

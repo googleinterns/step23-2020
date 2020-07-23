@@ -15,7 +15,6 @@ import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.BadUriException;
 import com.google.tripmeout.frontend.error.EmptyRequestBodyException;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
-import com.google.tripmeout.frontend.servlet.ServletUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;

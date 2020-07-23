@@ -1,7 +1,6 @@
 package com.google.tripmeout.frontend.servlet;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -9,20 +8,14 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.maps.GeoApiContext;
-import com.google.maps.PlaceDetailsRequest;
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.PlaceDetails;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.error.InvalidPlaceIdException;
 import com.google.tripmeout.frontend.error.PlacesApiRequestException;
 import com.google.tripmeout.frontend.error.TripMeOutException;
 import com.google.tripmeout.frontend.places.PlaceService;
-import com.google.tripmeout.frontend.places.PlacesApiPlaceServiceBindingModule;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
-import com.google.tripmeout.frontend.servlet.PlaceParentServlet;
 import com.google.tripmeout.frontend.storage.InMemoryPlaceVisitStorage;
 import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
 import java.io.BufferedReader;
@@ -31,7 +24,6 @@ import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
@@ -42,9 +34,6 @@ public class PlaceParentServletTest {
   @Mock HttpServletRequest request;
   @Mock PlaceService placeService;
   private Gson gson;
-
-  private final GeoApiContext CONTEXT =
-      new GeoApiContext.Builder().apiKey("AIzaSyBbXCXC2uWv3baNmirLtqUYbFsFwCXqLV8").build();
 
   private static final PlaceVisitModel UK = PlaceVisitModel.builder()
                                                 .setId("123")

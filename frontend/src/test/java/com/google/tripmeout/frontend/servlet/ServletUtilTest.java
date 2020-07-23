@@ -61,10 +61,6 @@ public class ServletUtilTest {
   @Test
   public void extractFromRequestBody_supplyTripObject_returnsOptionalTrip()
       throws IOException, EmptyRequestBodyException {
-    when(request.getReader())
-        .thenReturn(new BufferedReader(new StringReader(
-            "{id: abc123, name: trip1, userId: a, locationLat: 33.2, locationLong: -22.77}")));
-
     TripModel testTrip = TripModel.builder()
                              .setId("abc123")
                              .setName("trip1")
@@ -73,6 +69,9 @@ public class ServletUtilTest {
                              .setLocationLong(-22.77)
                              .build();
 
+    when(request.getReader())
+        .thenReturn(new BufferedReader(new StringReader(gson.toJson(testTrip))));
+
     assertThat(ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class))
         .isEqualTo(testTrip);
   }
@@ -80,10 +79,10 @@ public class ServletUtilTest {
   @Test
   public void extractFromRequestBody_supplyTripObjectNotAllFields_returnsOptionalTrip()
       throws IOException, EmptyRequestBodyException {
-    when(request.getReader())
-        .thenReturn(new BufferedReader(new StringReader("{name: abc123, userId: a}")));
-
     TripModel testTrip = TripModel.builder().setName("abc123").setUserId("a").build();
+
+    when(request.getReader())
+        .thenReturn(new BufferedReader(new StringReader(gson.toJson(testTrip))));
 
     assertThat(ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class))
         .isEqualTo(testTrip);
@@ -92,9 +91,7 @@ public class ServletUtilTest {
   @Test
   public void extractFromRequestBody_missingName_throwsError()
       throws IOException, EmptyRequestBodyException {
-    when(request.getReader())
-        .thenReturn(new BufferedReader(
-            new StringReader("{id: a, locationLat: 33.2, locationLong: -22.77}")));
+    when(request.getReader()).thenReturn(new BufferedReader(new StringReader("{id: a}")));
     assertThrows(JsonParseException.class,
         () -> ServletUtil.extractFromRequestBody(request.getReader(), gson, TripModel.class));
   }
@@ -104,15 +101,13 @@ public class ServletUtilTest {
       throws IOException, EmptyRequestBodyException {
     when(request.getReader())
         .thenReturn(new BufferedReader(new StringReader(
-            "{tripId: abc123, placesApiPlaceId: 123, placeName: trip1, userMark: YES, latitude: 33.2, longitude: -22.77}")));
+            "{tripId: abc123, placesApiPlaceId: 123, placeName: trip1, userMark: YES}")));
 
     PlaceVisitModel testPlace1 = PlaceVisitModel.builder()
                                      .setTripId("abc123")
                                      .setPlacesApiPlaceId("123")
                                      .setPlaceName("trip1")
                                      .setUserMark(PlaceVisitModel.UserMark.YES)
-                                     .setLatitude(33.2)
-                                     .setLongitude(-22.77)
                                      .build();
 
     assertThat(ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class))

@@ -19,7 +19,6 @@ public class GsonPlaceVisitTypeAdapterTest {
   private Gson gson;
 
   private PlaceVisitModel basePlaceVisit = PlaceVisitModel.builder()
-                                               .setTripId("123")
                                                .setPlacesApiPlaceId("ABC")
                                                .setUserMark(PlaceVisitModel.UserMark.YES)
                                                .build();
@@ -37,9 +36,9 @@ public class GsonPlaceVisitTypeAdapterTest {
     PlaceVisitModel place =
         gson.fromJson(TestDataAccessUtil.getWellFormedPlaceVisit(), PlaceVisitModel.class);
     PlaceVisitModel expected = basePlaceVisit.toBuilder()
+                                   .setId("abc123")
                                    .setPlaceName("New York")
-                                   .setLatitude(50.2)
-                                   .setLongitude(39.1)
+                                   .setTripId("123")
                                    .build();
 
     assertThat(place).isEqualTo(expected);
@@ -54,7 +53,7 @@ public class GsonPlaceVisitTypeAdapterTest {
   }
 
   @Test
-  public void deserialize_noPlaceId_throwsJsonParseException() throws Exception {
+  public void deserialize_noPlacesApiPlaceId_throwsJsonParseException() throws Exception {
     assertThrows(JsonParseException.class,
         ()
             -> gson.fromJson(
@@ -66,38 +65,18 @@ public class GsonPlaceVisitTypeAdapterTest {
     PlaceVisitModel place =
         gson.fromJson(TestDataAccessUtil.getPlaceVisitWithoutName(), PlaceVisitModel.class);
 
-    PlaceVisitModel expected =
-        basePlaceVisit.toBuilder().setLatitude(50.2).setLongitude(39.1).build();
+    PlaceVisitModel expected = basePlaceVisit.toBuilder().setId("abc123").setTripId("123").build();
 
     assertThat(place).isEqualTo(expected);
   }
 
   @Test
-  public void deserialize_noTripId_throwsJsonParseException() throws Exception {
-    assertThrows(JsonParseException.class,
-        ()
-            -> gson.fromJson(
-                TestDataAccessUtil.getPlaceVisitWithoutTripId(), PlaceVisitModel.class));
-  }
-
-  @Test
-  public void deserialize_noLatitude_returnsPlaceVisitWithNullLatitude() throws Exception {
+  public void deserialize_noTripId_returnsPlaceVisitWithNullTripId() throws Exception {
     PlaceVisitModel place =
-        gson.fromJson(TestDataAccessUtil.getPlaceVisitWithoutLatitude(), PlaceVisitModel.class);
+        gson.fromJson(TestDataAccessUtil.getPlaceVisitWithoutTripId(), PlaceVisitModel.class);
 
     PlaceVisitModel expected =
-        basePlaceVisit.toBuilder().setPlaceName("New York").setLongitude(39.1).build();
-
-    assertThat(place).isEqualTo(expected);
-  }
-
-  @Test
-  public void deserialize_noLongitude_returnsPlaceVisitWithNullLongitude() throws Exception {
-    PlaceVisitModel place =
-        gson.fromJson(TestDataAccessUtil.getPlaceVisitWithoutLongitude(), PlaceVisitModel.class);
-
-    PlaceVisitModel expected =
-        basePlaceVisit.toBuilder().setPlaceName("New York").setLatitude(50.2).build();
+        basePlaceVisit.toBuilder().setId("abc123").setPlaceName("New York").build();
 
     assertThat(place).isEqualTo(expected);
   }
@@ -108,8 +87,6 @@ public class GsonPlaceVisitTypeAdapterTest {
                                 .setPlacesApiPlaceId("abc")
                                 .setPlaceName("name")
                                 .setTripId("tripId")
-                                .setLongitude(12.3)
-                                .setLatitude(34.9)
                                 .build();
     assertThat(gson.fromJson(gson.toJson(place), PlaceVisitModel.class)).isEqualTo(place);
   }

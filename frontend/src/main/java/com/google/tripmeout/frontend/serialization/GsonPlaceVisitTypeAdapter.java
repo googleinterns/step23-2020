@@ -12,11 +12,10 @@ import java.io.IOException;
 
 public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
   private static final String PLACE_ID_JSON_FIELD_NAME = "placesApiPlaceId";
+  private static final String UUID_JSON_FIELD_NAME = "id";
   private static final String TRIP_ID_JSON_FIELD_NAME = "tripId";
   private static final String NAME_JSON_FIELD_NAME = "placeName";
   private static final String USER_MARK_JSON_FIELD_NAME = "userMark";
-  private static final String LATITUDE_JSON_FIELD_NAME = "latitude";
-  private static final String LONGITUDE_JSON_FIELD_NAME = "longitude";
 
   @Override
   public PlaceVisitModel read(JsonReader reader) throws IOException {
@@ -29,6 +28,9 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
     while (reader.hasNext()) {
       String name = reader.nextName();
       switch (name) {
+        case UUID_JSON_FIELD_NAME:
+          placeBuilder.setId(reader.nextString());
+          break;
         case PLACE_ID_JSON_FIELD_NAME:
           placeBuilder.setPlacesApiPlaceId(reader.nextString());
           break;
@@ -41,12 +43,6 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
         case USER_MARK_JSON_FIELD_NAME:
           UserMark userMark = UserMark.valueOf(reader.nextString());
           placeBuilder.setUserMark(userMark);
-          break;
-        case LATITUDE_JSON_FIELD_NAME:
-          placeBuilder.setLatitude(reader.nextDouble());
-          break;
-        case LONGITUDE_JSON_FIELD_NAME:
-          placeBuilder.setLongitude(reader.nextDouble());
           break;
         default:
           throw new JsonParseException(
@@ -64,15 +60,12 @@ public class GsonPlaceVisitTypeAdapter extends TypeAdapter<PlaceVisitModel> {
       return;
     }
     writer.beginObject();
+    writeUnlessNullOrEmpty(writer, UUID_JSON_FIELD_NAME, place.id());
     writeUnlessNullOrEmpty(writer, PLACE_ID_JSON_FIELD_NAME, place.placesApiPlaceId());
     writeUnlessNullOrEmpty(writer, NAME_JSON_FIELD_NAME, place.placeName());
     writeUnlessNullOrEmpty(writer, TRIP_ID_JSON_FIELD_NAME, place.tripId());
     writer.name(USER_MARK_JSON_FIELD_NAME);
     writer.value(place.userMark().toString());
-    writer.name(LATITUDE_JSON_FIELD_NAME);
-    writer.value(place.latitude());
-    writer.name(LONGITUDE_JSON_FIELD_NAME);
-    writer.value(place.longitude());
     writer.endObject();
   }
 

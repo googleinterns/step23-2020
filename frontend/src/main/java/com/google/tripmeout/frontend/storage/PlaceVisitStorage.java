@@ -22,25 +22,25 @@ public interface PlaceVisitStorage {
   void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException;
 
   /**
-   * removes from storage the PlaceVisitModel whose tripId and placeId match the
-   * given tripId and placeId, respectively
+   * removes from storage the PlaceVisitModel whose tripId and place visit id match the
+   * given tripId and place id, respectively
    *
-   * @param tripId the id to match PlaceVisitModel object's placeId field on
-   * @param placeId the id to match PlaceVisitModel object's placeId field on
+   * @param tripId the id to match PlaceVisitModel object's tripId field on
+   * @param placeVisitId the id to match PlaceVisitModel object's id field on
    *
    * @throws a PlaceVisitNotFound exception if there is no PlaceVisitModel
-   *     object in storage with the given tripId and placeId
+   *     object in storage with the given tripId and place visit id
    */
-  void removePlaceVisit(String tripId, String placeId) throws PlaceVisitNotFoundException;
+  void removePlaceVisit(String tripId, String placeVisitId) throws PlaceVisitNotFoundException;
 
   /**
-   * returns the PlaceVisitModel whose tripId and placeId match the given tripId
-   * and placeId, respectively
+   * returns the PlaceVisitModel whose tripId and place visit id match the given tripId
+   * and place visit id, respectively
    *
-   * @param tripId the id to match PlaceVisitModel object's placeId field on
-   * @param placeId the id to match PlaceVisitModel object's placeId field on
+   * @param tripId the id to match PlaceVisitModel object's tripId field on
+   * @param placeVisitId the id to match PlaceVisitModel object's id field on
    */
-  Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeId);
+  Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeVisitId);
 
   /**
    * updates the userMark parameter of the PlaceVisitModel object whose tripId
@@ -60,7 +60,7 @@ public interface PlaceVisitStorage {
    * gets a list of all of the PlaceVisitModel objects whose tripId matches the
    * given tripId
    *
-   * @param tripId the id to match PlaceVisitModel object's placeId field on
+   * @param tripId the id to match PlaceVisitModel object's tripId field on
    */
   List<PlaceVisitModel> getTripPlaceVisits(String tripId);
 

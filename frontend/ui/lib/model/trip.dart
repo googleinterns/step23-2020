@@ -1,15 +1,12 @@
 import 'dart:core';
 
 class Trip {
-
   Trip({this.name, this.id, this.placesApiPlaceId});
   final String name;
   final String id;
   final String placesApiPlaceId;
 
-
   factory Trip.from(Trip trip, {name, id, placesApiPlaceId}) {
-
     return trip == null
         ? Trip(name: name, id: id, placesApiPlaceId: placesApiPlaceId)
         : Trip(
@@ -38,20 +35,11 @@ class Trip {
         this.id.hashCode ^
         this.placesApiPlaceId.hashCode;
   }
-  
-
-  
 
   factory Trip.fromJson(Map<String, dynamic> json) {
     return Trip(
-
-      name: json['name'],
-      id: json['id'],
-     placesApiPlaceId: json['placesApiPlaceId']
-    );
-
-
-
-      
+        name: json['name'],
+        id: json['id'],
+        placesApiPlaceId: json['placesApiPlaceId']);
   }
 }

@@ -17,7 +17,8 @@ format:
 
 test-secrets:
 	mkdir test-secrets
-	openssl aes-256-cbc -d -in encrypted/ui-maps-places-test -out test-secrets/ui-maps-places-test
+	openssl aes-256-cbc -d -pbkdf2 -iter 100000 -md sha512 -iv 683df25da352abfd5a5a559505c9034a \
+		-in encrypted/ui-maps-places-test.enc -out test-secrets/ui-maps-places-test
 
 instantiate-html-template-test: test-secrets
 	sed "s/MAPS_PLACES_API_KEY/$$(cat test-secrets/ui-maps-places-test)/g" \

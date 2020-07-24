@@ -41,6 +41,7 @@ class _RetryableAsyncLoadableState<T> extends State<RetryableAsyncLoadable<T>> {
       return Center(child: CircularProgressIndicator());
     }
     if (error != null) {
+      print(error);
       return AlertDialog(
         title: Text(errorMessage),
         content: Text('Would you like to retry?'),

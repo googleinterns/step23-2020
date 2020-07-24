@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/router/router.dart';
+import 'package:tripmeout/services/rest_api_trip_service.dart';
+import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/services/in_memory_trip_service.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/themes/default_theme.dart';
 
 void main() {
-  TripService tripService = InMemoryTripService();
+  TripService tripService = RestApiTripService();
   Router router = Router(tripService);
   runApp(TripMeOut(tripService, router));
 }

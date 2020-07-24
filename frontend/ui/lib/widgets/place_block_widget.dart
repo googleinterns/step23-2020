@@ -24,8 +24,8 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
             child: Row(children: [
               ToggleButtons(
                 children: [
-                  Tooltip(message: "This selection makes the place a MUST GO!", child: Text('M')),
-                  Tooltip(message: "This selection makes the place optional for if TIME PERMITS.", child: Text('T')),
+                  Tooltip(message: "MUST GO", child: Icon(Icons.favorite)),
+                  Tooltip(message: "TIME PERMITS", child: Text('T')),
                 ],
                 onPressed: (int index) {
                   setState(() {

@@ -22,7 +22,7 @@ class Router {
     }
     if (settings.name == createTripRoute) {
       return MaterialPageRoute(
-        builder: (context) => CreateTripPage(),
+        builder: (context) => CreateTripPage(tripService),
         settings: settings,
       );
     }

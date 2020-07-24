@@ -29,16 +29,6 @@ public class InMemoryTripModelStorage implements TripStorage {
   }
 
   @Override
-  public void updateTripLocation(String tripId, double latitude, double longitude)
-      throws TripNotFoundException {
-    TripModel newTripObject = storage.computeIfPresent(tripId,
-        (id, trip) -> trip.toBuilder().setLocationLat(latitude).setLocationLong(longitude).build());
-    if (newTripObject == null) {
-      throw new TripNotFoundException("Trip with id: " + tripId + " not found in storage");
-    }
-  }
-
-  @Override
   public void updateTripName(String tripId, String name) throws TripNotFoundException {
     TripModel newTripObject =
         storage.computeIfPresent(tripId, (id, trip) -> trip.toBuilder().setName(name).build());

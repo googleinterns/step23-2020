@@ -61,8 +61,7 @@ public class ServletUtilTest {
                              .setId("abc123")
                              .setName("trip1")
                              .setUserId("a")
-                             .setLocationLat(33.2)
-                             .setLocationLong(-22.77)
+                             .setPlacesApiPlaceId("places-api-place-id")
                              .build();
 
     when(request.getReader())
@@ -75,7 +74,11 @@ public class ServletUtilTest {
   @Test
   public void extractFromRequestBody_supplyTripObjectNotAllFields_returnsOptionalTrip()
       throws IOException, EmptyRequestBodyException {
-    TripModel testTrip = TripModel.builder().setName("abc123").setUserId("a").build();
+    TripModel testTrip = TripModel.builder()
+                             .setName("abc123")
+                             .setUserId("a")
+                             .setPlacesApiPlaceId("places-api-place-id")
+                             .build();
 
     when(request.getReader())
         .thenReturn(new BufferedReader(new StringReader(gson.toJson(testTrip))));

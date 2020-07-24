@@ -13,8 +13,7 @@ public class GsonTripModelTypeAdapter extends TypeAdapter<TripModel> {
   private static final String ID_JSON_FIELD_NAME = "id";
   private static final String NAME_JSON_FIELD_NAME = "name";
   private static final String USER_ID_JSON_FIELD_NAME = "userId";
-  private static final String LATITUDE_JSON_FIELD_NAME = "locationLat";
-  private static final String LONGITUDE_JSON_FIELD_NAME = "locationLong";
+  private static final String PLACES_API_PLACE_ID_FIELD_NAME = "placesApiPlaceId";
 
   @Override
   public TripModel read(JsonReader reader) throws IOException {
@@ -36,11 +35,8 @@ public class GsonTripModelTypeAdapter extends TypeAdapter<TripModel> {
         case USER_ID_JSON_FIELD_NAME:
           tripBuilder.setUserId(reader.nextString());
           break;
-        case LATITUDE_JSON_FIELD_NAME:
-          tripBuilder.setLocationLat(reader.nextDouble());
-          break;
-        case LONGITUDE_JSON_FIELD_NAME:
-          tripBuilder.setLocationLong(reader.nextDouble());
+        case PLACES_API_PLACE_ID_FIELD_NAME:
+          tripBuilder.setPlacesApiPlaceId(reader.nextString());
           break;
         default:
           throw new JsonParseException(
@@ -61,10 +57,7 @@ public class GsonTripModelTypeAdapter extends TypeAdapter<TripModel> {
     writeUnlessNullOrEmpty(writer, ID_JSON_FIELD_NAME, trip.id());
     writeUnlessNullOrEmpty(writer, NAME_JSON_FIELD_NAME, trip.name());
     writeUnlessNullOrEmpty(writer, USER_ID_JSON_FIELD_NAME, trip.userId());
-    writer.name(LATITUDE_JSON_FIELD_NAME);
-    writer.value(trip.locationLat());
-    writer.name(LONGITUDE_JSON_FIELD_NAME);
-    writer.value(trip.locationLong());
+    writeUnlessNullOrEmpty(writer, PLACES_API_PLACE_ID_FIELD_NAME, trip.placesApiPlaceId());
     writer.endObject();
   }
 

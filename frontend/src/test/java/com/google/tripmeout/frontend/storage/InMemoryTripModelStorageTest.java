@@ -18,40 +18,35 @@ public class InMemoryTripModelStorageTest {
                                                    .setId("a")
                                                    .setName("London Trip")
                                                    .setUserId("person 1")
-                                                   .setLocationLat(32.333)
-                                                   .setLocationLong(52.1)
+                                                   .setPlacesApiPlaceId("place-id")
                                                    .build();
 
   public static final TripModel LONDON_TRIP2 = TripModel.builder()
                                                    .setId("b")
                                                    .setName("London Trip")
                                                    .setUserId("person 2")
-                                                   .setLocationLat(32.333)
-                                                   .setLocationLong(52.1)
+                                                   .setPlacesApiPlaceId("place-id")
                                                    .build();
 
   public static final TripModel LONDON_TRIP1_2022 = TripModel.builder()
                                                         .setId("c")
                                                         .setName("London Trip 2022")
                                                         .setUserId("person 1")
-                                                        .setLocationLat(32.333)
-                                                        .setLocationLong(52.1)
+                                                        .setPlacesApiPlaceId("place-id")
                                                         .build();
 
   public static final TripModel TOKYO_TRIP1 = TripModel.builder()
                                                   .setId("d")
                                                   .setName("Tokyo Trip")
                                                   .setUserId("person 1")
-                                                  .setLocationLat(32.333)
-                                                  .setLocationLong(147.1112)
+                                                  .setPlacesApiPlaceId("place-id")
                                                   .build();
 
   public static final TripModel LONDON_TRIP_DUPLICATE_ID = TripModel.builder()
                                                                .setId("a")
                                                                .setName("London Trip")
                                                                .setUserId("person 2")
-                                                               .setLocationLat(32.333)
-                                                               .setLocationLong(52.1)
+                                                               .setPlacesApiPlaceId("place-id")
                                                                .build();
 
   /**
@@ -128,36 +123,6 @@ public class InMemoryTripModelStorageTest {
   }
 
   /**
-   * test that error is thrown when updating location fields when there does
-   * not exist a TripModel object in storage with the given tripId
-   */
-  @Test
-  public void updateTripLocation_tripNotInStorage_throwsException()
-      throws TripAlreadyExistsException, TripNotFoundException {
-    InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
-    storage.addTrip(LONDON_TRIP1);
-    storage.addTrip(LONDON_TRIP2);
-    Assert.assertThrows(
-        TripNotFoundException.class, () -> storage.updateTripLocation(TOKYO_TRIP1.id(), 22, 19));
-  }
-
-  /**
-   * test that location fields are updated for the TripModel object in storage
-   * with the given tripId after calling updateTripLocation
-   */
-  @Test
-  public void updateTripLocation_tripInStorage_changesLocationLatAndLong()
-      throws TripAlreadyExistsException, TripNotFoundException {
-    InMemoryTripModelStorage storage = new InMemoryTripModelStorage();
-    storage.addTrip(LONDON_TRIP1);
-    storage.addTrip(LONDON_TRIP2);
-    storage.updateTripLocation(LONDON_TRIP1.id(), 22, 19);
-    TripModel newLondonTrip1 = storage.getTrip(LONDON_TRIP1.id());
-    assertThat(newLondonTrip1.locationLat()).isWithin(1e-15).of(22);
-    assertThat(newLondonTrip1.locationLong()).isWithin(1e-15).of(19);
-  }
-
-  /**
    * test that error is thrown when updating name field when there does
    * not exist a TripModel object in storage with the given tripId
    */
@@ -173,7 +138,7 @@ public class InMemoryTripModelStorageTest {
 
   /**
    * test that name field are updated for the TripModel object in storage
-   * with the given tripId after calling updateTripLocation
+   * with the given tripId after calling updateTripName.
    */
   @Test
   public void updateTripName_tripInStorage_changesName()

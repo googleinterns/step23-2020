@@ -10,20 +10,18 @@ public abstract class TripModel {
   }
 
   @Nullable public abstract String id();
-  public abstract String name();
   @Nullable public abstract String userId();
-  @Nullable public abstract Double locationLat();
-  @Nullable public abstract Double locationLong();
+  public abstract String name();
+  public abstract String placesApiPlaceId();
 
   public abstract Builder toBuilder();
 
   @AutoValue.Builder
   public static abstract class Builder {
     public abstract Builder setId(String id);
-    public abstract Builder setName(String name);
     public abstract Builder setUserId(String userId);
-    public abstract Builder setLocationLat(Double latitude);
-    public abstract Builder setLocationLong(Double longitude);
+    public abstract Builder setName(String name);
+    public abstract Builder setPlacesApiPlaceId(String placesApiPlaceId);
     public abstract TripModel build();
   }
 }

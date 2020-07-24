@@ -1,20 +1,19 @@
 import 'dart:core';
-import 'package:tripmeout/model/location.dart';
 
 class Trip {
-  Trip({this.name, this.id, location}) : location = location ?? Location();
+  Trip({this.name, this.id, this.placesApiPlaceId});
 
   final String name;
   final String id;
-  final Location location;
+  final String placesApiPlaceId;
 
-  factory Trip.from(Trip trip, {name, id, location}) {
+  factory Trip.from(Trip trip, {name, id, placesApiPlaceId}) {
     return trip == null
-        ? Trip(name: name, id: id, location: location)
+        ? Trip(name: name, id: id, placesApiPlaceId: placesApiPlaceId)
         : Trip(
             name: name ?? trip.name,
             id: id ?? trip.id,
-            location: location ?? Location.from(trip.location),
+            placesApiPlaceId: placesApiPlaceId ?? trip.placesApiPlaceId,
           );
   }
 
@@ -23,12 +22,17 @@ class Trip {
     if (identical(this, other)) {
       return true;
     }
-    return other is Trip && this.name == other.name && this.id == other.id;
+    return other is Trip &&
+        this.name == other.name &&
+        this.id == other.id &&
+        this.placesApiPlaceId == other.placesApiPlaceId;
   }
 
   @override
   int get hashCode {
     // This is bad, but dart gets upset if you don't have hashCode when you have equals.
-    return this.name.hashCode ^ this.id.hashCode;
+    return this.name.hashCode ^
+        this.id.hashCode ^
+        this.placesApiPlaceId.hashCode;
   }
 }

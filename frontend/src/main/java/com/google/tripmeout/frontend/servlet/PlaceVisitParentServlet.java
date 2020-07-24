@@ -12,11 +12,11 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class PlaceVisitParentServlet extends HttpServlet {

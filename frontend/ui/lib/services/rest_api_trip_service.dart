@@ -36,8 +36,7 @@ class RestApiTripService implements TripService {
       },
       body: jsonEncode(<String, dynamic>{
         'name': trip.name,
-        'locationLat': trip.location.latitude,
-        'locationLong': trip.location.longitude,
+        'placesApiPlaceId': trip.placesApiPlaceId,
       }),
     );
     if (response.statusCode == 200) {

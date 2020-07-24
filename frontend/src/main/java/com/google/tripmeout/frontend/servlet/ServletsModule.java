@@ -11,7 +11,7 @@ public class ServletsModule extends ServletModule {
   protected void configureServlets() {
     // TO-DO: uncomment once servlet is implemented
     serve("/api/trips/*/placeVisits/*").with(PlaceVisitIndividualServlet.class);
-    // serve("/api/trips/*/placeVisits").with(PlaceParentServlet.class);
+    serve("/api/trips/*/placeVisits").with(PlaceVisitParentServlet.class);
     serve("/api/trips/*").with(TripServlet.class);
     serve("/api/trips").with(TripParentServlet.class);
   }

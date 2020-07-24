@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tripmeout/widgets/map_widget.dart';
+import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/model/trip.dart';
 
@@ -50,54 +50,31 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
         children: [
           Padding(
             padding: const EdgeInsets.all(25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 250.0,
-                  child: TextField(
-                    onChanged: (text) {
-                      if (text == '') {
-                        place = text;
-                        setState(() {
-                          _enabled = false;
-                        });
-                      } else {
-                        place = text;
-                        setState(() {
-                          _enabled = true;
-                        });
-                      }
-                    },
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Enter your Location',
-                    ),
-                  ),
+            child: Container(
+              width: 250.0,
+              child: TextField(
+                onChanged: (text) {
+                  if (text == '') {
+                    place = text;
+                    setState(() {
+                      _enabled = false;
+                    });
+                  } else {
+                    place = text;
+                    setState(() {
+                      _enabled = true;
+                    });
+                  }
+                },
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Enter your Location',
                 ),
-                Container(
-                  width: 125.0,
-                  child: TextField(
-                    onChanged: (text) {
-                      radius = int.parse(text);
-                    },
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Radius KM'),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: MapWidget(),
-          ),
+          MapsApiPlacesTextFieldWidget(['(cities)']),
           Container(child: Text('$newInformation')),
           Padding(
             padding: const EdgeInsets.all(25.0),

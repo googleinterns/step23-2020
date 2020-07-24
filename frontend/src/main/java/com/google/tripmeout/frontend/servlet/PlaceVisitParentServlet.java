@@ -33,8 +33,7 @@ public class PlaceVisitParentServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    PrintWriter writer = response.getWriter();
-    try {
+    try (PrintWriter writer = response.getWriter()) {
       PlaceVisitModel place =
           ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
 
@@ -58,15 +57,12 @@ public class PlaceVisitParentServlet extends HttpServlet {
     } catch (Exception e) {
       logger.atWarning().log(e.getMessage());
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    } finally {
-      writer.close();
     }
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    PrintWriter writer = response.getWriter();
-    try {
+    try (PrintWriter writer = response.getWriter()) {
       String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
       List<PlaceVisitModel> nearbyPlaces = placeStorage.getTripPlaceVisits(tripId);
       response.setContentType("application/json");
@@ -76,8 +72,6 @@ public class PlaceVisitParentServlet extends HttpServlet {
       response.setStatus(e.restStatusCode());
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    } finally {
-      writer.close();
     }
   }
 }

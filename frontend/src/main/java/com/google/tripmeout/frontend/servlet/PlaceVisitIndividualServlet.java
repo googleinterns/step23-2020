@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class PlaceIndividualServlet extends HttpServlet {
+public class PlaceVisitIndividualServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final Pattern URI_NAME_PATTERN =
       Pattern.compile(".*/trips/([^/]+)/placeVisits/([^/]+)");
@@ -24,7 +24,7 @@ public class PlaceIndividualServlet extends HttpServlet {
   private final Gson gson;
   private final PlaceService placeService;
 
-  public PlaceIndividualServlet(
+  public PlaceVisitIndividualServlet(
       PlaceVisitStorage placeStorage, Gson gson, PlaceService placeService) {
     this.placeStorage = placeStorage;
     this.gson = gson;
@@ -33,10 +33,8 @@ public class PlaceIndividualServlet extends HttpServlet {
 
   @Override
   public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    PrintWriter writer = response.getWriter();
-    try {
+    try (PrintWriter writer = response.getWriter()) {
       Matcher matcher = ServletUtil.matchUriOrThrowError(request, URI_NAME_PATTERN);
-      logger.atInfo().log("matching done");
 
       String tripId = matcher.group(1);
       String id = matcher.group(2);
@@ -64,8 +62,6 @@ public class PlaceIndividualServlet extends HttpServlet {
     } catch (Exception e) {
       logger.atInfo().log(e.getMessage());
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    } finally {
-      writer.close();
     }
   }
 
@@ -89,8 +85,7 @@ public class PlaceIndividualServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    PrintWriter writer = response.getWriter();
-    try {
+    try (PrintWriter writer = response.getWriter()) {
       Matcher matcher = ServletUtil.matchUriOrThrowError(request, URI_NAME_PATTERN);
       String tripId = matcher.group(1);
       String placeId = matcher.group(2);
@@ -109,8 +104,6 @@ public class PlaceIndividualServlet extends HttpServlet {
       response.setStatus(e.restStatusCode());
     } catch (Exception e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    } finally {
-      writer.close();
     }
   }
 }

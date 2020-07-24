@@ -51,7 +51,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text("Hello World"), findsOneWidget);
-    expect(find.widgetWithText(ToggleButtons, 'M'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsOneWidget);
     expect(find.widgetWithText(ToggleButtons, 'T'), findsOneWidget);
     expect(find.byType(IconButton), findsOneWidget);
   });

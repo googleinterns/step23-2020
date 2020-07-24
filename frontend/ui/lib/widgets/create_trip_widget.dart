@@ -15,22 +15,21 @@ class CreateTripWidget extends StatefulWidget {
   CreateTripWidget(this.tripService);
 
   @override
-  _CreateTripWidgetState createState() =>
-      _CreateTripWidgetState(this.tripService);
+  _CreateTripWidgetState createState() => _CreateTripWidgetState();
 }
 
 class _CreateTripWidgetState extends State<CreateTripWidget> {
-  final TripService tripService;
+  TripService get tripService => widget.tripService;
 
-  _CreateTripWidgetState(this.tripService);
+  bool _enabled = false;
 
-  String place = "No Input";
+  String place;
   int radius = 0;
   String newInformation = 'Grabbed info placed here.';
   void submitTrip() {
     setState(() {
       tripService.createTrip(Trip(
-          name: "$place",
+          name: place,
           id: radius.toString(),
           location: Location(latitude: 10.0, longitude: 10.0)));
 
@@ -40,6 +39,13 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var _onPressed;
+    if (_enabled) {
+      _onPressed = () {
+        submitTrip();
+      };
+    }
+
     return FittedBox(
       child: Column(
         children: [
@@ -52,7 +58,17 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
                   width: 250.0,
                   child: TextField(
                     onChanged: (text) {
-                      place = text;
+                      if (text == '') {
+                        place = text;
+                        setState(() {
+                          _enabled = false;
+                        });
+                      } else {
+                        place = text;
+                        setState(() {
+                          _enabled = true;
+                        });
+                      }
                     },
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
@@ -87,9 +103,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
           Padding(
             padding: const EdgeInsets.all(25.0),
             child: RaisedButton(
-              onPressed: () => {
-                submitTrip(),
-              },
+              onPressed: _onPressed,
               child: Text('Submit'),
             ),
           ),

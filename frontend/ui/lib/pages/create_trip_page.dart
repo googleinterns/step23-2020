@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CreateTripPage extends StatelessWidget {
   final TripService tripService;
 
-  const CreateTripPage({Key key, this.tripService}) : super(key: key);
+  CreateTripPage(this.tripService, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

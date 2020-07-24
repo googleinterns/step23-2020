@@ -27,11 +27,8 @@ public final class TripTestDataAccessUtil {
     return getTestDataFileContents("TripModelWithoutName.json");
   }
 
-  public static String getTripModelWithoutLatitude() throws IOException {
-    return getTestDataFileContents("TripModelWithoutLatitude.json");
-  }
-  public static String getTripModelWithoutLongitude() throws IOException {
-    return getTestDataFileContents("TripModelWithoutLongitude.json");
+  public static String getTripModelWithoutPlacesApiPlaceId() throws IOException {
+    return getTestDataFileContents("TripModelWithoutPlacesApiPlaceId.json");
   }
 
   private static String getTestDataFileContents(String fileName) throws IOException {

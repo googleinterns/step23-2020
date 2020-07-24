@@ -26,5 +26,14 @@ void main() {
     test('id parameter overrides input trip id', () {
       expect(Trip.from(Trip(id: 'id1'), id: 'id2').id, equals('id2'));
     });
+
+    test('placesApiPlaceId parameter overrides input trip placesApiPlaceId',
+        () {
+      expect(
+          Trip.from(Trip(placesApiPlaceId: 'placeId1'),
+                  placesApiPlaceId: 'placeId2')
+              .placesApiPlaceId,
+          equals('placeId2'));
+    });
   });
 }

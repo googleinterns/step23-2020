@@ -4,8 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:tripmeout/services/trip_service.dart';
 
 class RestApiTripService implements TripService {
+  final String endpoint;
+
+  RestApiTripService({this.endpoint = ''});
+
   Future<List<Trip>> listTrips() async {
-    final response = await http.get('/api/trips');
+    final response = await http.get('$endpoint/api/trips');
     if (response.statusCode == 200) {
       var asList =
           (json.decode(response.body) as List).cast<Map<String, dynamic>>();
@@ -16,7 +20,7 @@ class RestApiTripService implements TripService {
   }
 
   Future<Trip> getTrip(String id) async {
-    final response = await http.get('/api/trips/$id');
+    final response = await http.get('$endpoint/api/trips/$id');
     if (response.statusCode == 200) {
       return Trip.fromJson(json.decode(response.body));
     } else {
@@ -26,7 +30,7 @@ class RestApiTripService implements TripService {
 
   Future<Trip> createTrip(Trip trip) async {
     final http.Response response = await http.post(
-      '/api/trips',
+      '$endpoint/api/trips',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

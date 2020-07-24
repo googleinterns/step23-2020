@@ -3,34 +3,25 @@ import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/services/rest_api_trip_service.dart';
 
 void main() {
-  group('Empty RestApiTripService', () {
-    var tripService = RestApiTripService();
-    test('gettrip returns Null', () async {
-      expect(await tripService.getTrip('sometrip'), isNull);
-    });
-    test('listTrips returns empty list', () async {
-      expect(await tripService.listTrips(), isEmpty);
-    });
-  });
   group('Populated RestApiTripService', () {
-    var tripService = RestApiTripService();
-    var trip1 = Trip(id: '123', name: 'trip1');
-    var trip2 = Trip(id: '456', name: 'trip2');
-    // do async setup inside a setUp lambda because group lambdas cant be async
-    setUp(() async {
-      await tripService.createTrip(trip1);
-      await tripService.createTrip(trip2);
-    });
+    var tripService = RestApiTripService(endpoint: 'http://localhost:8080');
     test('getTrip returns trip for existing id', () async {
-      expect(await tripService.getTrip('456'), equals(trip2));
+       var trip = Trip(name: 'trip');
+       var createdTrip = await tripService.createTrip(trip);
+      expect(await tripService.getTrip(createdTrip.id), equals(trip));
     });
 
     test('getTrip returns null for non-created id', () async {
+       var trip = Trip(name: 'trip');
       expect(await tripService.getTrip('789'), isNull);
     });
 
     test('listTrips returns all created trips', () async {
-      expect(await tripService.listTrips(), unorderedEquals([trip1, trip2]));
+      var trip = Trip(name: 'trip');
+       await tripService.createTrip(trip);
+       var trip2 = Trip(name: 'trip2');
+       await tripService.createTrip(trip2);
+      expect(await tripService.listTrips(), unorderedEquals([trip, trip2]));
     });
   });
 }

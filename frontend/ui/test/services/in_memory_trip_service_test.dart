@@ -16,19 +16,19 @@ void main() {
 
   group('Populated InMemoryTripService', () {
     var tripService = InMemoryTripService();
-    var trip1 = Trip(id: 'id1', name: 'name1');
-    var trip2 = Trip(id: 'id2', name: 'name2');
+    var trip1 = Trip(name: 'name1');
+    var trip2 = Trip(name: 'name2');
     // do async setup inside a setUp lambda because group lambdas cant be async
-    setUp(() async {
-      await tripService.createTrip(trip1);
-      await tripService.createTrip(trip2);
+    setUpAll(() async {
+      trip1 = await tripService.createTrip(trip1);
+      trip2 = await tripService.createTrip(trip2);
     });
     test('getTrip returns trip for existing id', () async {
-      expect(await tripService.getTrip('id1'), equals(trip1));
+      expect(await tripService.getTrip(trip1.id), equals(trip1));
     });
 
     test('getTrip returns null for non-created id', () async {
-      expect(await tripService.getTrip('id3'), isNull);
+      expect(await tripService.getTrip('unknown-id'), isNull);
     });
 
     test('listTrips returns all created trips', () async {

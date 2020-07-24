@@ -11,13 +11,15 @@ class MapsApiPlacesTextFieldWidget extends StatefulWidget {
   MapsApiPlacesTextFieldWidget(this.allowedTypes);
 
   @override
-  _MapsApiPlacesTextFieldState createState() => _MapsApiPlacesTextFieldState(allowedTypes);
+  _MapsApiPlacesTextFieldState createState() =>
+      _MapsApiPlacesTextFieldState(allowedTypes);
 }
 
 class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   final AutocompleteService autocompleteService = AutocompleteService();
-  final PlacesService placesService = PlacesService(document.getElementById("maps"));
+  final PlacesService placesService =
+      PlacesService(document.getElementById("maps"));
   final List<String> allowedTypes;
 
   _MapsApiPlacesTextFieldState(this.allowedTypes);
@@ -26,12 +28,11 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
   String placeId = "";
 
   void showImage(String placeId) {
-      setState(() {
-          this.placeId = placeId;
-          this.show = true;
-      });
+    setState(() {
+      this.placeId = placeId;
+      this.show = true;
+    });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +42,14 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
           padding: const EdgeInsets.all(25.0),
           child: TypeAheadField<AutocompletePrediction>(
             textFieldConfiguration: TextFieldConfiguration(
-              autofocus: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Enter your Location',
-              ),
-              controller: this._typeAheadController
-            ),
-            suggestionsCallback: (pattern) => getAutocomplete(pattern, allowedTypes),
+                autofocus: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Enter your Location',
+                ),
+                controller: this._typeAheadController),
+            suggestionsCallback: (pattern) =>
+                getAutocomplete(pattern, allowedTypes),
             itemBuilder: (context, suggestion) {
               return ListTile(
                 title: Text(suggestion.description),
@@ -65,18 +66,17 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
     );
   }
 
-
-  Future<List<AutocompletePrediction>> getAutocomplete(String input, List<String> allowedTypes) {
+  Future<List<AutocompletePrediction>> getAutocomplete(
+      String input, List<String> allowedTypes) {
     if (input == null || input == "") {
       return Future.sync(() => []);
     }
 
     Completer<List<AutocompletePrediction>> completer = Completer();
-    AutocompletionRequest request = AutocompletionRequest()
-      ..input = input;
+    AutocompletionRequest request = AutocompletionRequest()..input = input;
 
     if (allowedTypes.length > 0) {
-        request = request..types = allowedTypes;
+      request = request..types = allowedTypes;
     }
 
     autocompleteService.getPlacePredictions(request, (result, status) {
@@ -88,15 +88,14 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
         completer.completeError(status);
       }
     });
-    
+
     return completer.future;
   }
 
   // TO-DO figure out what's wrong with this request
   Container getPhotos(String placeId) {
     List<String> images = [];
-    final request = PlaceDetailsRequest()
-      ..placeId = placeId;
+    final request = PlaceDetailsRequest()..placeId = placeId;
 
     placesService.getDetails(request, (result, status) {
       if (status == PlacesServiceStatus.OK) {
@@ -105,14 +104,16 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
           ..maxHeight = 50
           ..maxWidth = 50;
         images = result.photos.map((photo) => photo.getUrl(photoOptions));
-      } 
+      }
     });
 
     if (images.length == 0) {
-        return Container(child: Text(newInformation));
+      return Container(child: Text(newInformation));
     } else {
-        return Container(child: Row(children: images.map<Widget>((url) => Image(image: NetworkImage(url)))));
+      return Container(
+          child: Row(
+              children: images
+                  .map<Widget>((url) => Image(image: NetworkImage(url)))));
     }
   }
-
 }

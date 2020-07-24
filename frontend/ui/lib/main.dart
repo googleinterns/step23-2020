@@ -20,8 +20,6 @@ class TripMeOut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: remove this...
-
     return MaterialApp(
       title: 'Trip Me Out',
       theme: defaultTheme,

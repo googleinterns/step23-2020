@@ -15,7 +15,10 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class PlaceVisitParentServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final Pattern TRIP_NAME_PATTERN = Pattern.compile(".*/trips/([^/]+)/placeVisits");
@@ -24,6 +27,7 @@ public class PlaceVisitParentServlet extends HttpServlet {
   private final Gson gson;
   private final PlaceService placeService;
 
+  @Inject
   public PlaceVisitParentServlet(
       PlaceVisitStorage placeStorage, Gson gson, PlaceService placeService) {
     this.placeStorage = placeStorage;

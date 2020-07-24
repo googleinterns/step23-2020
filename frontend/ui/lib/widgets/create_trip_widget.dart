@@ -26,13 +26,12 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
   String place;
   int radius = 0;
   String newInformation = 'Grabbed info placed here.';
-  void submitTrip() {
-    setState(() {
-      tripService.createTrip(Trip(
+  void submitTrip() async {
+    await tripService.createTrip(Trip(
           name: place,
           id: radius.toString(),
           location: Location(latitude: 10.0, longitude: 10.0)));
-
+    setState(() {
       newInformation = "$place ${radius}km";
     });
   }

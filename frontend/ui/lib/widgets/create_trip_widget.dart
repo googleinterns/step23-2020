@@ -25,15 +25,24 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
 
   String place;
   int radius = 0;
-  String newInformation = 'Grabbed info placed here.';
   void submitTrip() async {
-    await tripService.createTrip(Trip(
+    try {
+      await tripService.createTrip(Trip(
           name: place,
           id: radius.toString(),
           location: Location(latitude: 10.0, longitude: 10.0)));
-    setState(() {
-      newInformation = "$place ${radius}km";
-    });
+      setState(() {});
+    } catch (e, s) {
+      print("error creating trip: $e");
+      print(s);
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("Error creating trip"),
+        action: SnackBarAction(
+          label: "Dismiss",
+          onPressed: () {},
+        ),
+      ));
+    }
   }
 
   @override
@@ -98,7 +107,6 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             padding: const EdgeInsets.all(25.0),
             child: MapWidget(),
           ),
-          Container(child: Text('$newInformation')),
           Padding(
             padding: const EdgeInsets.all(25.0),
             child: RaisedButton(

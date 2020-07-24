@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class PlaceParentServlet extends HttpServlet {
+public class PlaceVisitParentServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final Pattern TRIP_NAME_PATTERN = Pattern.compile(".*/trips/([^/]+)/placeVisits");
 
@@ -24,7 +24,8 @@ public class PlaceParentServlet extends HttpServlet {
   private final Gson gson;
   private final PlaceService placeService;
 
-  public PlaceParentServlet(PlaceVisitStorage placeStorage, Gson gson, PlaceService placeService) {
+  public PlaceVisitParentServlet(
+      PlaceVisitStorage placeStorage, Gson gson, PlaceService placeService) {
     this.placeStorage = placeStorage;
     this.gson = gson;
     this.placeService = placeService;
@@ -40,22 +41,15 @@ public class PlaceParentServlet extends HttpServlet {
       placeService.validatePlaceId(place.placesApiPlaceId());
 
       String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
-      logger.atInfo().log("finished matching");
 
-      PlaceVisitModel newPlace = PlaceVisitModel.builder()
-                                     .setId(UUID.randomUUID().toString())
-                                     .setTripId(tripId)
-                                     .setPlaceName(place.placeName())
-                                     .setPlacesApiPlaceId(place.placesApiPlaceId())
-                                     .setUserMark(PlaceVisitModel.UserMark.YES)
-                                     .build();
+      PlaceVisitModel newPlace =
+          place.toBuilder().setId(UUID.randomUUID().toString()).setTripId(tripId).build();
 
-      PlaceVisitModel updatedPlace =
-          placeStorage.updateUserMarkOrAddPlaceVisit(newPlace, PlaceVisitModel.UserMark.YES);
+      placeStorage.addPlaceVisit(newPlace);
 
       response.setContentType("applciation/json");
-      writer.println(gson.toJson(updatedPlace));
-      response.setStatus(HttpServletResponse.SC_OK);
+      writer.println(gson.toJson(newPlace));
+      response.setStatus(HttpServletResponse.SC_CREATED);
 
     } catch (TripMeOutException e) {
       response.setStatus(e.restStatusCode());

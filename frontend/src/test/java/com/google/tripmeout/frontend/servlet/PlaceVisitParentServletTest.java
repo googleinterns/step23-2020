@@ -30,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-public class PlaceParentServletTest {
+public class PlaceVisitParentServletTest {
   @Mock HttpServletRequest request;
   @Mock PlaceService placeService;
   private Gson gson;
@@ -79,7 +79,7 @@ public class PlaceParentServletTest {
   public void doPost_badUri_setsInternalServerError() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
+    PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips-number/abc123/placeVisits");
     when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(UK))));
 
@@ -93,7 +93,7 @@ public class PlaceParentServletTest {
       throws IOException, InvalidPlaceIdException, PlacesApiRequestException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
+    PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
 
     doThrow(InvalidPlaceIdException.class).when(placeService).validatePlaceId("NY, USA");
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
@@ -105,50 +105,51 @@ public class PlaceParentServletTest {
   }
 
   @Test
-  public void doPost_goodRequest_returnsUpdatedPlaceVisitModel()
+  public void doPost_goodRequest_returnsAddedPlaceVisitModel()
       throws IOException, ApiException, InterruptedException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
+    PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
-    when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(UK))));
+    when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(NY))));
 
     servlet.doPost(request, response);
     PlaceVisitModel place = gson.fromJson(response.getResponseString(), PlaceVisitModel.class);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    assertThat(place.placeName()).isEqualTo("UK Trip");
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_CREATED);
+    assertThat(place.placeName()).isEqualTo("NY Trip");
     assertThat(place.tripId()).isEqualTo("abc123");
-    assertThat(place.placesApiPlaceId()).isEqualTo("ChIJ3S-JXmauEmsRUcIaWtf4MzE");
-    assertThat(place.userMark()).isEqualTo(PlaceVisitModel.UserMark.YES);
+    assertThat(place.placesApiPlaceId()).isEqualTo("NY, USA");
+    assertThat(place.userMark()).isEqualTo(PlaceVisitModel.UserMark.MAYBE);
   }
 
   @Test
-  public void doPost_requestAlreadyInStorage_updatesPlaceVisitModelUserMark()
+  public void doPost_requestAlreadyInStorage_returnsAddedPlaceVisitModel()
       throws IOException, TripMeOutException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
 
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     placeStorage.addPlaceVisit(UK);
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
+
+    PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
     when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(UK))));
 
     servlet.doPost(request, response);
     PlaceVisitModel place = gson.fromJson(response.getResponseString(), PlaceVisitModel.class);
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_CREATED);
     assertThat(place.placeName()).isEqualTo("UK Trip");
     assertThat(place.tripId()).isEqualTo("abc123");
     assertThat(place.placesApiPlaceId()).isEqualTo("ChIJ3S-JXmauEmsRUcIaWtf4MzE");
-    assertThat(place.userMark()).isEqualTo(PlaceVisitModel.UserMark.YES);
+    assertThat(place.userMark()).isEqualTo(PlaceVisitModel.UserMark.NO);
   }
 
   @Test
   public void doGet_badUri_setsInternalServerError() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
+    PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips-number/1234/placeVisits");
 
     servlet.doGet(request, response);
@@ -160,7 +161,7 @@ public class PlaceParentServletTest {
   public void doGet_emptyStorage_getsEmptyList() throws IOException {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
+    PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
 
     servlet.doGet(request, response);
@@ -181,7 +182,7 @@ public class PlaceParentServletTest {
     placeStorage.addPlaceVisit(CA);
     placeStorage.addPlaceVisit(UK_B);
 
-    PlaceParentServlet servlet = new PlaceParentServlet(placeStorage, gson, placeService);
+    PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
     when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
     servlet.doGet(request, response);
 

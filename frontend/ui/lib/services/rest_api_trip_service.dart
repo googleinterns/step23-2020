@@ -7,9 +7,8 @@ class RestApiTripService implements TripService {
   Future<List<Trip>> listTrips() async {
     final response = await http.get('/api/trips');
     if (response.statusCode == 200) {
-      print(response.body);
-      print(json.decode(response.body));
-      var asList = (json.decode(response.body) as List).cast<Map<String,dynamic>>();
+      var asList =
+          (json.decode(response.body) as List).cast<Map<String, dynamic>>();
       return asList.map((x) => Trip.fromJson(x)).toList();
     } else {
       throw Exception('Failed to get List of trips');

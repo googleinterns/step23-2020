@@ -42,12 +42,16 @@ class Trip {
 
   
 
-  factory Trip.fromJson(Map<String, dynamic> json){
+  factory Trip.fromJson(Map<String, dynamic> json) {
     return Trip(
+
       name: json['name'],
       id: json['id'],
      placesApiPlaceId: json['placesApiPlaceId']
     );
 
+
+
+      
   }
 }

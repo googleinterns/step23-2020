@@ -1,95 +1,43 @@
 import 'dart:async';
+import 'dart:html';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:tripmeout/services/trip_service.dart';
-import 'package:tripmeout/model/trip.dart';
-import 'package:tripmeout/model/location.dart';
-import 'package:tripmeout/router/router.dart';
 import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter/src/widgets/basic.dart' as basic;
 
-//TODO: Add loading screen after to the Create Trip Widget
-//TODO: Get rid of the newInformation text on the page.
-
-class CreateTripWidget extends StatefulWidget {
-  final TripService tripService;
-
-  CreateTripWidget(this.tripService);
+class MapsApiPlacesTextFieldWidget extends StatefulWidget {
+  final List<String> allowedTypes;
+  MapsApiPlacesTextFieldWidget(this.allowedTypes);
 
   @override
-  _CreateTripWidgetState createState() => _CreateTripWidgetState();
+  _MapsApiPlacesTextFieldState createState() =>
+      _MapsApiPlacesTextFieldState(allowedTypes);
 }
 
-class _CreateTripWidgetState extends State<CreateTripWidget> {
-  TripService get tripService => widget.tripService;
+class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   final AutocompleteService autocompleteService = AutocompleteService();
+  final PlacesService placesService =
+      PlacesService(document.getElementById("maps"));
+  final List<String> allowedTypes;
 
-  bool _enabled = false;
+  _MapsApiPlacesTextFieldState(this.allowedTypes);
+
   bool show = false;
   String placeId = "";
 
-  String place;
-  int radius = 0;
-  String newInformation = 'Grabbed info placed here.';
-  void submitTrip() {
+  void showImage(String placeId) {
     setState(() {
-      tripService.createTrip(Trip(
-        name: place,
-        id: radius.toString(),
-        // Everywhere Seattle now.
-        placesApiPlaceId: 'ChIJVTPokywQkFQRmtVEaUZlJRA',
-      ));
-      newInformation = "$place ${radius}km";
+      this.placeId = placeId;
+      this.show = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var _onPressed;
-    if (_enabled) {
-      _onPressed = () {
-        submitTrip();
-      };
-    }
-
-    void showImage(String placeId) {
-      setState(() {
-        this.placeId = placeId;
-        this.show = true;
-      });
-    }
-
     return Column(
       children: [
-        basic.Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Container(
-            width: 250.0,
-            child: TextField(
-              onChanged: (text) {
-                if (text == '') {
-                  place = text;
-                  setState(() {
-                    _enabled = false;
-                  });
-                } else {
-                  place = text;
-                  setState(() {
-                    _enabled = true;
-                  });
-                }
-              },
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'enter your trip name',
-              ),
-            ),
-          ),
-        ),
         basic.Padding(
           padding: const EdgeInsets.all(25.0),
           child: TypeAheadField<AutocompletePrediction>(
@@ -101,7 +49,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
                 ),
                 controller: this._typeAheadController),
             suggestionsCallback: (pattern) =>
-                getAutocomplete(pattern, ['(cities)']),
+                getAutocomplete(pattern, allowedTypes),
             itemBuilder: (context, suggestion) {
               return ListTile(
                 title: Text(suggestion.description),
@@ -114,13 +62,6 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
           ),
         ),
         //show ? getPhotos(this.placeId) : Container(),
-        basic.Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: RaisedButton(
-            onPressed: _onPressed,
-            child: Text('Submit'),
-          ),
-        ),
       ],
     );
   }
@@ -150,4 +91,30 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
 
     return completer.future;
   }
+
+  /*
+  // TO-DO figure out what's wrong with this request
+  Container getPhotos(String placeId) {
+    List<String> images = [];
+    final request = PlaceDetailsRequest()..placeId = placeId;
+
+    placesService.getDetails(request, (result, status) {
+      if (status == PlacesServiceStatus.OK) {
+        final photoOptions = PhotoOptions()
+          ..maxHeight = 50
+          ..maxWidth = 50;
+        images = result.photos.map((photo) => photo.getUrl(photoOptions));
+      }
+    });
+
+    if (images.length == 0) {
+      return Container(child: Text("no images found"));
+    } else {
+      return Container(
+          child: Row(
+              children: images
+                  .map<Widget>((url) => Image(image: NetworkImage(url)))));
+    }
+  }
+  */
 }

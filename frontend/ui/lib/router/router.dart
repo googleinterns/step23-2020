@@ -11,6 +11,10 @@ class Router {
 
   final TripService tripService;
 
+  static String createTripViewRoute(String tripId) {
+    return "/trips/$tripId";
+  }
+
   Router(this.tripService);
 
   Route<dynamic> generateRoute(RouteSettings settings) {

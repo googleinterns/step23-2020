@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
@@ -16,17 +17,21 @@ class MapsApiPlacesTextFieldWidget extends StatefulWidget {
 class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   final AutocompleteService autocompleteService = AutocompleteService();
+  final PlacesService placesService = PlacesService(document.getElementById("maps"));
   final List<String> allowedTypes;
 
   _MapsApiPlacesTextFieldState(this.allowedTypes);
 
-  String newInformation = "";
+  bool show = false;
+  String placeId = "";
 
-  void changeText(String place) {
-    setState(() {
-      newInformation = place;
-    });
+  void showImage(String placeId) {
+      setState(() {
+          this.placeId = placeId;
+          this.show = true;
+      });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +42,6 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
           child: TypeAheadField<AutocompletePrediction>(
             textFieldConfiguration: TextFieldConfiguration(
               autofocus: true,
-              style: DefaultTextStyle.of(context).style.copyWith(
-                fontStyle: FontStyle.italic
-              ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Enter your Location',
@@ -54,11 +56,11 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
             },
             onSuggestionSelected: (suggestion) {
               this._typeAheadController.text = suggestion.description;
-              changeText(suggestion.description);
+              showImage(suggestion.placeId);
             },
           ),
         ),
-        Container(child: Text(newInformation))
+        //show ? getPhotos(this.placeId) : Container(),
       ],
     );
   }
@@ -70,9 +72,12 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
     }
 
     Completer<List<AutocompletePrediction>> completer = Completer();
-    final AutocompletionRequest request = AutocompletionRequest()
-      ..input = input
-      ..types = allowedTypes;
+    AutocompletionRequest request = AutocompletionRequest()
+      ..input = input;
+
+    if (allowedTypes.length > 0) {
+        request = request..types = allowedTypes;
+    }
 
     autocompleteService.getPlacePredictions(request, (result, status) {
       if (status == PlacesServiceStatus.OK) {
@@ -86,4 +91,28 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
     
     return completer.future;
   }
+
+  // TO-DO figure out what's wrong with this request
+  Container getPhotos(String placeId) {
+    List<String> images = [];
+    final request = PlaceDetailsRequest()
+      ..placeId = placeId;
+
+    placesService.getDetails(request, (result, status) {
+      if (status == PlacesServiceStatus.OK) {
+        changeText("OK");
+        final photoOptions = PhotoOptions()
+          ..maxHeight = 50
+          ..maxWidth = 50;
+        images = result.photos.map((photo) => photo.getUrl(photoOptions));
+      } 
+    });
+
+    if (images.length == 0) {
+        return Container(child: Text(newInformation));
+    } else {
+        return Container(child: Row(children: images.map<Widget>((url) => Image(image: NetworkImage(url)))));
+    }
+  }
+
 }

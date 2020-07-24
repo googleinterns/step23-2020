@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:tripmeout/widgets/map_widget.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/model/trip.dart';
-import 'package:tripmeout/model/location.dart';
-import 'package:tripmeout/router/router.dart';
 
 //TODO: Add loading screen after to the Create Trip Widget
 //TODO: Get rid of the newInformation text on the page.
@@ -25,24 +23,17 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
 
   String place;
   int radius = 0;
-  void submitTrip() async {
-    try {
-      await tripService.createTrip(Trip(
-          name: place,
-          id: radius.toString(),
-          location: Location(latitude: 10.0, longitude: 10.0)));
-      setState(() {});
-    } catch (e, s) {
-      print("error creating trip: $e");
-      print(s);
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("Error creating trip"),
-        action: SnackBarAction(
-          label: "Dismiss",
-          onPressed: () {},
-        ),
+  String newInformation = 'Grabbed info placed here.';
+  void submitTrip() {
+    setState(() {
+      tripService.createTrip(Trip(
+        name: place,
+        id: radius.toString(),
+        // Everywhere Seattle now.
+        placesApiPlaceId: 'ChIJVTPokywQkFQRmtVEaUZlJRA',
       ));
-    }
+      newInformation = "$place ${radius}km";
+    });
   }
 
   @override

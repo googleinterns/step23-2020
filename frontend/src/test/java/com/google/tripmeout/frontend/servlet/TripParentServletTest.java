@@ -54,6 +54,7 @@ public class TripParentServletTest {
     assertThat(response.getContentType()).isEqualTo("application/json");
     assertThat(response.getResponseString()).isEqualTo("[]");
   }
+
   @Test
   public void doGet_someTrips() throws Exception {
     // TODO(issues/66): Use specif userId string
@@ -99,8 +100,7 @@ public class TripParentServletTest {
     tripParentServlet.doPost(request, response);
     TripModel responseTrip = gson.fromJson(response.getResponseString(), TripModel.class);
     assertThat(responseTrip.name()).isEqualTo(trip.name());
-    assertThat(responseTrip.locationLat()).isEqualTo(trip.locationLat());
-    assertThat(responseTrip.locationLong()).isEqualTo(trip.locationLong());
+    assertThat(responseTrip.placesApiPlaceId()).isEqualTo(trip.placesApiPlaceId());
     assertThat(responseTrip.id()).isNotEmpty();
     assertThat(responseTrip.userId()).isEqualTo(TripParentServlet.STUB_USER_ID);
     ArgumentCaptor<TripModel> storageCaptor = ArgumentCaptor.forClass(TripModel.class);
@@ -113,8 +113,7 @@ public class TripParentServletTest {
         .setId("id")
         .setName("name")
         .setUserId(userId)
-        .setLocationLat(50.3)
-        .setLocationLong(44.2)
+        .setPlacesApiPlaceId("place-api-place-id")
         .build();
   }
   private static TripModel createTripForPost() {
@@ -122,8 +121,7 @@ public class TripParentServletTest {
         .setId("id")
         .setName("name")
         .setUserId("")
-        .setLocationLat(50.3)
-        .setLocationLong(44.2)
+        .setPlacesApiPlaceId("place-api-place-id")
         .build();
   }
 }

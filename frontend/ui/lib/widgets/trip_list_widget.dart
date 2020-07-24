@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/model/trip.dart';
+import 'package:tripmeout/router/router.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/retryable_async_loadable.dart';
 
@@ -27,14 +28,15 @@ class TripListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: trips.map(toListTile).toList(),
-    );
-  }
-
-  Widget toListTile(Trip trip) {
-    return ListTile(
-      title: Text(trip.name),
-    );
+    var listItems = trips
+        .map((trip) => ListTile(
+              title: Text(trip.name),
+              onTap: () {
+                Navigator.pushNamed(
+                    context, Router.createTripViewRoute(trip.id));
+              },
+            ))
+        .toList();
+    return ListView(children: listItems);
   }
 }

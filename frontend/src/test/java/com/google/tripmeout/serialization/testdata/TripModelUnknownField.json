@@ -2,7 +2,6 @@
  "id":"a",
  "name":"New Jersey",
  "userId":"idk",
- "locationLat":12.66,
- "locationLong":34.78,
+ "placesApiPlaceId": "places-api-place-id",
  "Unknown":"Something"
 }

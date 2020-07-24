@@ -24,8 +24,7 @@ public class TripServletTest {
                                              .setId("CDG")
                                              .setName("Paris, France")
                                              .setUserId("12345")
-                                             .setLocationLat(48.3288)
-                                             .setLocationLong(34.0)
+                                             .setPlacesApiPlaceId("places-api-place-id")
                                              .build();
 
   @Mock HttpServletRequest request;

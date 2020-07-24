@@ -24,7 +24,7 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
 
   void changeText(String place) {
     setState(() {
-      newInformation = "$place";
+      newInformation = place;
     });
   }
 
@@ -58,7 +58,7 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
             },
           ),
         ),
-        Container(child: Text('$newInformation'))
+        Container(child: Text(newInformation))
       ],
     );
   }

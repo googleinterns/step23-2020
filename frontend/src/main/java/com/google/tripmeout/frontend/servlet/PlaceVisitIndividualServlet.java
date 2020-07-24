@@ -11,10 +11,13 @@ import java.io.PrintWriter;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Singleton
 public class PlaceVisitIndividualServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final Pattern URI_NAME_PATTERN =
@@ -24,6 +27,7 @@ public class PlaceVisitIndividualServlet extends HttpServlet {
   private final Gson gson;
   private final PlaceService placeService;
 
+  @Inject
   public PlaceVisitIndividualServlet(
       PlaceVisitStorage placeStorage, Gson gson, PlaceService placeService) {
     this.placeStorage = placeStorage;

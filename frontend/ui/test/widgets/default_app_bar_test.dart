@@ -7,6 +7,9 @@ void main() {
     await tester.pumpWidget(_InTestableContext(defaultAppBar));
 
     expect(find.text('TripMeOut'), findsOneWidget);
+    expect(find.byIcon(Icons.add), findsOneWidget);
+    expect(find.byIcon(Icons.airplanemode_active), findsOneWidget);
+    expect(find.byIcon(Icons.assignment), findsOneWidget);
   });
 }
 

@@ -29,7 +29,9 @@ class _TripWidgetState extends State<TripViewWidget> {
         placeHolder = _tripForPage.name;
       });
     }, onError: (error) {
-      placeHolder = "hello world";
+      setState(() {
+        placeHolder = "Failed loading Trip Name";
+        });
       print(error);
     });
     super.initState();

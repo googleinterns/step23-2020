@@ -3,39 +3,40 @@ import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/place_block_widget.dart';
 
-class TripViewWidget extends StatefulWidget {
+class TripViewWidgetFromService extends StatelessWidget {
   final TripService tripService;
   final String tripId;
 
-  TripViewWidget(this.tripService, this.tripId);
-  _TripWidgetState createState() => _TripWidgetState(this.tripId);
-}
-
-class _TripWidgetState extends State<TripViewWidget> {
-  TripService get tripService => widget.tripService;
-
-  final String tripId;
-
-  _TripWidgetState(this.tripId);
-
-  Trip _tripForPage;
-  String placeHolder;
+  TripViewWidgetFromService(this.tripService, this.tripId);
 
   @override
-  void initState() {
-    getTripFuture(tripId).then((trip) {
-      setState(() {
-        _tripForPage = trip;
-        placeHolder = _tripForPage.name;
-      });
-    }, onError: (error) {
-      setState(() {
-        placeHolder = "Failed loading Trip Name";
-        });
-      print(error);
-    });
-    super.initState();
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: tripService.getTrip(tripId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return TripViewWidget(snapshot.data);
+        }
+        if (snapshot.hasError) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text("Error getting trip"),
+            action: SnackBarAction(
+              label: "Dismiss",
+              onPressed: () {},
+            ),
+          ));
+          return Container();
+        }
+        return CircularProgressIndicator();
+      },
+    );
   }
+}
+
+class TripViewWidget extends StatelessWidget {
+  final Trip trip;
+
+  TripViewWidget(this.trip);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class _TripWidgetState extends State<TripViewWidget> {
       padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
-          Text(placeHolder),
+          Text(trip.name),
           PlaceBlockWidget("Place 1"),
           PlaceBlockWidget("Place 2"),
           PlaceBlockWidget("Place 3"),
@@ -58,13 +59,5 @@ class _TripWidgetState extends State<TripViewWidget> {
         ],
       ),
     );
-  }
-
-  Future<Trip> getTripFuture(tripId) async {
-    try {final trip = await tripService.getTrip(tripId);
-    return trip;
-    } catch (err){
-    return Future.error('Error getting $tripId');
-    }
   }
 }

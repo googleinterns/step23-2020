@@ -20,26 +20,14 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
   bool _enabled = false;
 
   String place;
-  int radius = 0;
-  String newInformation = 'Grabbed info placed here.';
-  void submitTrip() async {
-    try {
-      await tripService.createTrip(Trip(
+
+  Future<Trip> submitTrip() async{
+    Trip trip = await tripService.createTrip(Trip(
         name: place,
+        // Everywhere Seattle now.
         placesApiPlaceId: 'ChIJVTPokywQkFQRmtVEaUZlJRA',
       ));
-      setState(() {});
-    } catch (e, s) {
-      print("error creating trip: $e");
-      print(s);
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("Error creating trip"),
-        action: SnackBarAction(
-          label: "Dismiss",
-          onPressed: () {},
-        ),
-      ));
-    }
+    return trip;
   }
 
   @override
@@ -47,7 +35,12 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
     var _onPressed;
     if (_enabled) {
       _onPressed = () {
-        submitTrip();
+        submitTrip().then((trip) {
+     Navigator.pushNamed(context, Router.createTripViewRoute(trip.id));
+    }, onError: (error) {
+      print(error);
+    });
+        
       };
     }
 

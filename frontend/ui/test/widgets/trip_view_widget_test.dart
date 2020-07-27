@@ -1,17 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:mockito/mockito.dart';
+import 'package:tripmeout/model/trip.dart';
+import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/trip_view_widget.dart';
 import 'package:tripmeout/widgets/place_block_widget.dart';
+
+class MockTripService extends Mock implements TripService {}
 
 void main() {
   testWidgets('Showing the text on page correctly shows up',
       (WidgetTester tester) async {
-    var tripViewWidget = TripViewWidget();
+    var tripService = MockTripService();
+    var tripCompleter = Completer<Trip>();
+    when(tripService.getTrip(any)).thenAnswer((_) => tripCompleter.future);
+
+    var tripViewWidget = TripViewWidget(tripService, 'id1');
+
     await tester.pumpWidget(wrapForDirectionality(tripViewWidget));
     await tester.pumpAndSettle();
 
+    tripCompleter.complete(Trip(id: 'id1', name: 'name1'));
+
     // Should be everything on the view trip screen expanded...
-    expect(find.text("Name of the Trip"), findsOneWidget);
+    expect(find.text("id1"), findsOneWidget);
     expect(find.text("Place 1"), findsOneWidget);
     expect(find.text("Place 2"), findsOneWidget);
     expect(find.text("Place 3"), findsOneWidget);
@@ -21,11 +35,18 @@ void main() {
 
   testWidgets('Showing the expanded Place correctly shows up',
       (WidgetTester tester) async {
-    var tripViewWidget = TripViewWidget();
+    var tripService = MockTripService();
+    var tripCompleter = Completer<Trip>();
+    when(tripService.getTrip(any)).thenAnswer((_) => tripCompleter.future);
+
+    var tripViewWidget = TripViewWidget(tripService, 'id1');
+
     await tester.pumpWidget(wrapForDirectionality(tripViewWidget));
     await tester.pumpAndSettle();
 
-    expect(find.text("Name of the Trip"), findsOneWidget);
+    tripCompleter.complete(Trip(id: 'id1', name: 'name1'));
+
+    expect(find.text("id1"), findsOneWidget);
     expect(find.text("Place 1"), findsOneWidget);
     expect(find.text("Description"), findsNothing);
     expect(find.text("Foo"), findsNothing);
@@ -36,7 +57,7 @@ void main() {
     await tester.pumpAndSettle();
 
     //Shows expanded Place
-    expect(find.text("Name of the Trip"), findsOneWidget);
+    expect(find.text("id1"), findsOneWidget);
     expect(find.text("Place 1"), findsOneWidget);
     expect(find.text("Description"), findsOneWidget);
     expect(find.text("Foo"), findsOneWidget);
@@ -52,7 +73,7 @@ void main() {
 
     expect(find.text("Hello World"), findsOneWidget);
     expect(find.byIcon(Icons.favorite), findsOneWidget);
-    expect(find.widgetWithText(ToggleButtons, 'T'), findsOneWidget);
+    expect(find.byIcon(Icons.alarm), findsOneWidget);
     expect(find.byType(IconButton), findsOneWidget);
   });
 }

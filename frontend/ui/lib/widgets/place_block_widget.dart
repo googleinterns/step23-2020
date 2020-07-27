@@ -25,7 +25,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
               ToggleButtons(
                 children: [
                   Tooltip(message: "MUST GO", child: Icon(Icons.favorite)),
-                  Tooltip(message: "TIME PERMITS", child: Text('T')),
+                  Tooltip(message: "TIME PERMITS", child: Icon(Icons.alarm)),
                 ],
                 onPressed: (int index) {
                   setState(() {

@@ -2,7 +2,6 @@ import 'dart:core';
 
 class Trip {
   Trip({this.name, this.id, this.placesApiPlaceId});
-
   final String name;
   final String id;
   final String placesApiPlaceId;
@@ -31,8 +30,16 @@ class Trip {
   @override
   int get hashCode {
     // This is bad, but dart gets upset if you don't have hashCode when you have equals.
+
     return this.name.hashCode ^
         this.id.hashCode ^
         this.placesApiPlaceId.hashCode;
+  }
+
+  factory Trip.fromJson(Map<String, dynamic> json) {
+    return Trip(
+        name: json['name'],
+        id: json['id'],
+        placesApiPlaceId: json['placesApiPlaceId']);
   }
 }

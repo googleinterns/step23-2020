@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/model/trip.dart';
-import 'package:tripmeout/model/location.dart';
 import 'package:tripmeout/router/router.dart';
 import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';

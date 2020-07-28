@@ -13,37 +13,46 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
   final String placeName;
   _PlaceBlockWidgetState(this.placeName);
 
-  List<bool> _selections = List.generate(2, (_) => false);
+  List<Widget> pictures = new List<Widget>();
+  List<Color> colors = [
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.yellow,
+    Colors.orange,
+  ];
+
+  bool _selected = false;
+  Icon _icon = Icon(Icons.favorite_border);
+  Color _color = Colors.black;
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
+        initiallyExpanded: true,
         title: Text(placeName),
         trailing: Container(
-            width: 250.0,
+            width: 100.0,
             child: Row(children: [
-              ToggleButtons(
-                children: [
-                  Tooltip(message: "MUST GO", child: Icon(Icons.favorite)),
-                  Tooltip(message: "TIME PERMITS", child: Icon(Icons.alarm)),
-                ],
-                onPressed: (int index) {
-                  setState(() {
-                    for (int buttonIndex = 0;
-                        buttonIndex < _selections.length;
-                        buttonIndex++) {
-                      if (buttonIndex == index) {
-                        _selections[buttonIndex] = true;
-                      } else {
-                        _selections[buttonIndex] = false;
-                      }
-                    }
-                  });
-                },
-                isSelected: _selections,
-                color: Colors.black,
-                selectedColor: Theme.of(context).accentColor,
-              ),
+              Tooltip(
+                  message: "MUST GO",
+                  child: IconButton(
+                    icon: _icon,
+                    onPressed: () {
+                      setState(() {
+                        if (_selected == true) {
+                          _selected = false;
+                          _icon = Icon(Icons.favorite_border);
+                          _color = Colors.black;
+                        } else {
+                          _selected = true;
+                          _icon = Icon(Icons.favorite);
+                          _color = Colors.pink;
+                        }
+                      });
+                    },
+                    color: _color,
+                  )),
               IconButton(
                 onPressed: () => {},
                 icon: Icon(Icons.delete),
@@ -51,12 +60,23 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
               ),
             ])),
         children: [
-          Column(children: [
-            Text('Description'),
-            Text('Foo'),
-            Text('Bar'),
-            Text('Baz'),
-          ])
+          Container(
+              height: 200,
+              child: ListView(children: [
+                Container(
+                    height: 100, child: Center(child: Text('Description'))),
+                Container(height: 200, child: getPictureWidgets(colors)),
+                Container(height: 100, child: Center(child: Text('Bar'))),
+                Container(height: 100, child: Center(child: Text('Baz'))),
+              ]))
         ]);
   }
+}
+
+Widget getPictureWidgets(List<Color> colors) {
+  return new ListView(
+      scrollDirection: Axis.horizontal,
+      children: colors
+          .map((item) => new Container(width: 200.0, color: item))
+          .toList());
 }

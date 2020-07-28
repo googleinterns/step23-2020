@@ -20,3 +20,23 @@ class RoutingButton extends StatelessWidget {
         ));
   }
 }
+
+class FloatingRoutingButton extends StatelessWidget {
+  final String description;
+  final String route;
+  final Icon iconType;
+
+  FloatingRoutingButton(this.route, this.iconType, this.description);
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+        message: description,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, route);
+          },
+          child: iconType,
+        ));
+  }
+}

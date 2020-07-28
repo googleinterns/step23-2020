@@ -40,24 +40,30 @@ class TripViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          floating: true,
+          snap: true,
+          expandedHeight: 250.0,
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text(trip.name),
+            background: Image.network(
+              'https://www.gannett-cdn.com/presto/2019/02/01/USAT/2af52e69-3fd1-4438-99d7-487a9b51d03c-GettyImages-878868924.jpg',
+              fit: BoxFit.cover,
+            ), //Everybackground is seattle
           ),
-          borderRadius: BorderRadius.all(Radius.circular(5))),
-      margin: const EdgeInsets.all(15.0),
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: [
-          Text(trip.name),
-          PlaceBlockWidget("Place 1"),
-          PlaceBlockWidget("Place 2"),
-          PlaceBlockWidget("Place 3"),
-          PlaceBlockWidget("Place 4"),
-          PlaceBlockWidget("Place 5"),
-        ],
-      ),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              if (index == 5) return null;
+              return Container(child: PlaceBlockWidget('Place ${index + 1}'));
+            },
+          ),
+        ),
+      ],
     );
   }
 }

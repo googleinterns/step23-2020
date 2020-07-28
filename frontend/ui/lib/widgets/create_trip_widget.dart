@@ -12,8 +12,10 @@ import 'package:tripmeout/router/router.dart';
 
 class CreateTripWidget extends StatefulWidget {
   final TripService tripService;
+  final PlacesService placesService;
+  final AutocompleteService autocompleteService;
 
-  CreateTripWidget(this.tripService);
+  CreateTripWidget(this.tripService, this.placesService, this.autocompleteService);
 
   @override
   _CreateTripWidgetState createState() => _CreateTripWidgetState();
@@ -21,6 +23,8 @@ class CreateTripWidget extends StatefulWidget {
 
 class _CreateTripWidgetState extends State<CreateTripWidget> {
   TripService get tripService => widget.tripService;
+  PlacesService get placesService => widget.placesService;
+  AutocompleteService get autocompleteService => widget.autocompleteService;
 
   bool _enabled = false;
 
@@ -55,7 +59,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
 
     return Column(
       children: [
-        Padding(
+        basic.Padding(
           padding: const EdgeInsets.all(25.0),
           child: Container(
             width: 250.0,
@@ -81,8 +85,8 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             ),
           ),
         ),
-        MapsApiPlacesTextFieldWidget(['(cities)']),
-        Padding(
+        MapsApiPlacesTextFieldWidget(['(cities)'], placesService, autocompleteService),
+        basic.Padding(
           padding: const EdgeInsets.all(25.0),
           child: RaisedButton(
             onPressed: _onPressed,

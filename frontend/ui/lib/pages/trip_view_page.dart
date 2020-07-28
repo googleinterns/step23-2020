@@ -4,7 +4,6 @@ import 'package:tripmeout/widgets/trip_view_widget.dart';
 import 'package:tripmeout/widgets/default_app_bar.dart';
 
 class TripViewPage extends StatelessWidget {
-
   final TripService tripService;
   final String tripId;
 

@@ -21,13 +21,12 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
 
   String place;
 
-  Future<Trip> submitTrip() async{
-    Trip trip = await tripService.createTrip(Trip(
-        name: place,
-        // Everywhere Seattle now.
-        placesApiPlaceId: 'ChIJVTPokywQkFQRmtVEaUZlJRA',
-      ));
-    return trip;
+  Future<Trip> submitTrip() async {
+    return tripService.createTrip(Trip(
+      name: place,
+      // Everywhere Seattle now.
+      placesApiPlaceId: 'ChIJVTPokywQkFQRmtVEaUZlJRA',
+    ));
   }
 
   @override
@@ -36,11 +35,16 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
     if (_enabled) {
       _onPressed = () {
         submitTrip().then((trip) {
-     Navigator.pushNamed(context, Router.createTripViewRoute(trip.id));
-    }, onError: (error) {
-      print(error);
-    });
-        
+          Navigator.pushNamed(context, Router.createTripViewRoute(trip.id));
+        }, onError: (error) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text("Error getting trip"),
+            action: SnackBarAction(
+              label: "Dismiss",
+              onPressed: () {},
+            ),
+          ));
+        });
       };
     }
 

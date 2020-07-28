@@ -21,8 +21,8 @@ class TripViewWidgetFromService extends StatelessWidget {
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text("Error getting trip"),
             action: SnackBarAction(
-              label: "Dismiss",
-              onPressed: () {},
+              label: "Retry",
+              onPressed: () {}, //TODO: Make retry button actually work.
             ),
           ));
           return Container();

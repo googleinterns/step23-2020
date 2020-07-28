@@ -17,12 +17,12 @@ void main() {
     var tripCompleter = Completer<Trip>();
     when(tripService.getTrip(any)).thenAnswer((_) => tripCompleter.future);
 
-    var tripViewWidget = TripViewWidget(tripService, 'id1');
+    var tripViewWidget = TripViewWidgetFromService(tripService, 'id1');
 
     await tester.pumpWidget(wrapForDirectionality(tripViewWidget));
     await tester.pumpAndSettle();
 
-    tripCompleter.complete(Trip(id: 'id1', name: 'name1'));
+    Future.value(Trip(id: 'id1', name: 'name1'));
 
     // Should be everything on the view trip screen expanded...
     expect(find.text("id1"), findsOneWidget);
@@ -39,12 +39,12 @@ void main() {
     var tripCompleter = Completer<Trip>();
     when(tripService.getTrip(any)).thenAnswer((_) => tripCompleter.future);
 
-    var tripViewWidget = TripViewWidget(tripService, 'id1');
+    var tripViewWidget = TripViewWidgetFromService(tripService, 'id1');
 
     await tester.pumpWidget(wrapForDirectionality(tripViewWidget));
     await tester.pumpAndSettle();
 
-    tripCompleter.complete(Trip(id: 'id1', name: 'name1'));
+    Future.value(Trip(id: 'id1', name: 'name1'));
 
     expect(find.text("id1"), findsOneWidget);
     expect(find.text("Place 1"), findsOneWidget);

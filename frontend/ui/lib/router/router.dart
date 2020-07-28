@@ -34,7 +34,6 @@ class Router {
     RegExpMatch match = tripViewRouteRegExp.firstMatch(settings.name);
     if (match != null) {
       String tripId = match.namedGroup('tripId');
-      //TODO:inject actual tripId
       return MaterialPageRoute(
         builder: (context) => TripViewPage(tripService, tripId),
         settings: settings,

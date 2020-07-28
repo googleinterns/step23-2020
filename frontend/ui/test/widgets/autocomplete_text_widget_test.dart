@@ -1,17 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:mockito/mockito.dart';
+import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/widgets/auto_complete_text_field_widget_html.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
+import 'package:tripmeout/widgets/autocomplete_text_field_widget_html.dart';
+
+import 'create_trip_widget_test.dart';
 
 class MockPlacesApiService extends Mock implements PlacesApiServices {}
 
 void main() {
-  final AutocompleteService autocompleteService = MockAutocompleteService();
-  final PlacesApiServices placesApiServices = MockPlacesService();
+  final PlacesApiServices placesApiServices = MockPlacesApiService();
 
   testWidgets('Showing the text on page correctly shows up',
       (WidgetTester tester) async {
-    var autcompleteWidget = MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
+    var autocompleteWidget = MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
     await tester.pumpWidget(wrapForDirectionality(autocompleteWidget));
 
     await tester.pumpAndSettle();
@@ -22,7 +29,7 @@ void main() {
   });
 
   testWidgets('Typing in text gives suggestions', (WidgetTester tester) async {
-    var autcompleteWidget = MapsApiPlacesTextFieldWidget(['(cities)']);
+    var autocompleteWidget = MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
 
     TextField autocomplete = find.widgetWithText(TypeAheadField, 'Enter your Destination')
     await tester.enterText(autocomplete, "London");
@@ -48,4 +55,7 @@ void main() {
     expect(autocomplete.controller.text, "London, UK");
 
   });
+}
+
+class MockPlacesService {
 }

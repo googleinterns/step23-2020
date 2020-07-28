@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
+import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/widgets/create_trip_widget.dart';
 import 'package:tripmeout/widgets/map_widget.dart';
 import 'package:tripmeout/services/trip_service.dart';

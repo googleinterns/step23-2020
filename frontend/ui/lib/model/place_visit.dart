@@ -8,9 +8,19 @@ enum UserMark {
 }
 
 class PlaceVisit {
+  static final Map<String, UserMark> stringToUserMark = {
+    "YES": UserMark.YES,
+    "NO": UserMark.NO,
+    "MAYBE": UserMark.MAYBE,
+    "UNKNOWN": UserMark.UNKNOWN,
+  };
+  
   static UserMark userMarkEnumFromString(String userMark) {
-    return UserMark.values
-        .firstWhere((e) => e.toString() == "UserMark.$userMark");
+    UserMark mark = stringToUserMark[userMark];
+    if (mark == null) {
+      throw Exception("invalid user mark");
+    }
+    return mark;
   }
 
   PlaceVisit(

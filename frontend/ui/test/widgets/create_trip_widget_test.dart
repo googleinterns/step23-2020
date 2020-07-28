@@ -9,14 +9,12 @@ import 'package:tripmeout/model/trip.dart';
 class MockTripService extends Mock implements TripService {}
 
 void main() {
-  final AutocompleteService autocompleteService = AutocompleteService();
-  final PlacesService placesService =
-      PlacesService(document.getElementById("maps"));
+  final PlacesApiServices placesApiServices = PlacesApiServices();
 
   testWidgets('Showing the text on page correctly shows up',
       (WidgetTester tester) async {
     var tripService = MockTripService();
-    var createTripsWidget = CreateTripWidget(tripService, placesService, autocompleteService);
+    var createTripsWidget = CreateTripWidget(tripService, placesApiServices);
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
     //TODO: Add test for loading screen after it's added to the Create Trip Widget
 
@@ -37,7 +35,7 @@ void main() {
     when(tripService.createTrip(any))
         .thenAnswer((t) => Future.value(t.positionalArguments[0]));
 
-    var createTripsWidget = CreateTripWidget(tripService, placesService, autocompleteService);
+    var createTripsWidget = CreateTripWidget(tripService, placesApiServices);
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
     await tester.pumpAndSettle();
 

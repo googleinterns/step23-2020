@@ -1,24 +1,20 @@
-import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:tripmeout/pages/create_trip_page.dart';
 import 'package:tripmeout/pages/trip_list_page.dart';
 import 'package:tripmeout/pages/trip_view_page.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:tripmeout/services/trip_service.dart';
-import 'package:google_maps/google_maps.dart';
-import 'package:google_maps/google_maps_places.dart';
+import 'package:tripmeout/services/places_services.dart';
 
 class Router {
   static final String tripListRoute = '/trips';
   static final String createTripRoute = '/trips/new';
   static final RegExp tripViewRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)$');
 
-  final AutocompleteService autocompleteService = AutocompleteService();
-  final PlacesService placesService =
-      PlacesService(document.getElementById("maps"));
 
   final TripService tripService;
   final PlaceVisitService placeVisitService;
+  final PlacesApiServices placesApiServices = PlacesApiServices();
 
   static String createTripViewRoute(String tripId) {
     return "/trips/$tripId";
@@ -35,7 +31,7 @@ class Router {
     }
     if (settings.name == createTripRoute) {
       return MaterialPageRoute(
-        builder: (context) => CreateTripPage(tripService, placesService, autocompleteService),
+        builder: (context) => CreateTripPage(tripService, placesApiServices),
         settings: settings,
       );
     }

@@ -1,21 +1,21 @@
 import 'package:tripmeout/widgets/auto_complete_text_field_widget.dart';
 import 'package:tripmeout/model/trip.dart';
+import 'package:google_maps/google_maps.dart';
+import 'package:google_maps/google_maps_places.dart';
 
-class MockTripService extends Mock implements TripService {}
+class MockPlacesApiService extends Mock implements PlacesApiServices {}
 
 void main() {
-  final AutocompleteService autocompleteService = AutocompleteService();
-  final PlacesService placesService =
-      PlacesService(document.getElementById("maps"));
+  final AutocompleteService autocompleteService = MockAutocompleteService();
+  final PlacesApiServices placesApiServices = MockPlacesService();
 
   testWidgets('Showing the text on page correctly shows up',
       (WidgetTester tester) async {
-    var autcompleteWidget = MapsApiPlacesTextFieldWidget(['(cities)'], placesService, autocompleteService);
+    var autcompleteWidget = MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
     await tester.pumpWidget(wrapForDirectionality(autocompleteWidget));
 
     await tester.pumpAndSettle();
 
-    // Should be everything on the create trip screen...
     expect(find.text('Enter your Destination'), findsOneWidget);
     expect(find.text('Please enter a city'), findsOneWidget);
     expect(find.byType(ListTile), findsNothing);
@@ -26,6 +26,13 @@ void main() {
 
     TextField autocomplete = find.widgetWithText(TypeAheadField, 'Enter your Destination')
     await tester.enterText(autocomplete, "London");
+
+    AutocompletePrediction london = AutocompletePrediction()
+      ..placeId = "LONDON,UK"
+      ..description = "London, UK";
+
+    when(autocompleteService.getPlacePredictions(any))
+        .thenAnswer((_) => Future.value([london]));
 
     await tester.pumpAndSettle();
     expect(find.text('Enter your Destination'), findsOneWidget);

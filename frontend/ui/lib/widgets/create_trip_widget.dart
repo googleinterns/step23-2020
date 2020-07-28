@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
 import 'package:tripmeout/services/trip_service.dart';
+import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/model/trip.dart';
@@ -12,10 +13,9 @@ import 'package:tripmeout/router/router.dart';
 
 class CreateTripWidget extends StatefulWidget {
   final TripService tripService;
-  final PlacesService placesService;
-  final AutocompleteService autocompleteService;
+  final PlacesApiServices placesApiServices;
 
-  CreateTripWidget(this.tripService, this.placesService, this.autocompleteService);
+  CreateTripWidget(this.tripService, this.placesApiServices);
 
   @override
   _CreateTripWidgetState createState() => _CreateTripWidgetState();
@@ -23,8 +23,7 @@ class CreateTripWidget extends StatefulWidget {
 
 class _CreateTripWidgetState extends State<CreateTripWidget> {
   TripService get tripService => widget.tripService;
-  PlacesService get placesService => widget.placesService;
-  AutocompleteService get autocompleteService => widget.autocompleteService;
+  PlacesApiServices get placesApiServices => widget.placesApiServices;
 
   bool _enabled = false;
 
@@ -59,7 +58,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
 
     return Column(
       children: [
-        basic.Padding(
+        Padding(
           padding: const EdgeInsets.all(25.0),
           child: Container(
             width: 250.0,
@@ -85,8 +84,8 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             ),
           ),
         ),
-        MapsApiPlacesTextFieldWidget(['(cities)'], placesService, autocompleteService),
-        basic.Padding(
+        MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices),
+        Padding(
           padding: const EdgeInsets.all(25.0),
           child: RaisedButton(
             onPressed: _onPressed,

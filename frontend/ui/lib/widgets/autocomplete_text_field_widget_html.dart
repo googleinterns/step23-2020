@@ -1,35 +1,42 @@
 import 'dart:async';
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:tripmeout/services/places_services.dart';
+import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
+import 'package:flutter/src/widgets/basic.dart' as basic;
 
 class MapsApiPlacesTextFieldWidget extends StatefulWidget {
   final List<String> allowedTypes;
-  MapsApiPlacesTextFieldWidget(this.allowedTypes);
+  PlacesApiServices placesApiServices;
+  MapsApiPlacesTextFieldWidget(this.allowedTypes, this.placesApiServices);
 
   @override
   _MapsApiPlacesTextFieldState createState() =>
-      _MapsApiPlacesTextFieldState(allowedTypes);
+      _MapsApiPlacesTextFieldState();
 }
 
 class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
-  final AutocompleteService autocompleteService = AutocompleteService();
-  final PlacesService placesService =
-      PlacesService(document.getElementById("maps"));
-  final List<String> allowedTypes;
+  PlacesApiServices get placesApiServices => widget.placesApiServices;
+  List<String> get allowedTypes => widget.allowedTypes;
 
-  _MapsApiPlacesTextFieldState(this.allowedTypes);
+  _MapsApiPlacesTextFieldState();
 
-  bool show = false;
   String placeId = "";
+  Future<List<String>> image;
+  bool show = false;
 
-  void showImage(String placeId) {
+  void showImage(String placeId, bool show) {
     setState(() {
       this.placeId = placeId;
-      this.show = true;
+      this.show = show;
+      if (show) {
+        this.image = placesApiServices.getPhotos(this.placeId);
+      } else {
+          this.image = null;
+      }
+
     });
   }
 
@@ -37,18 +44,18 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
+        basic.Padding(
           padding: const EdgeInsets.all(25.0),
           child: TypeAheadField<AutocompletePrediction>(
             textFieldConfiguration: TextFieldConfiguration(
                 autofocus: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Enter your Location',
+                  labelText: 'Enter your Destination',
                 ),
                 controller: this._typeAheadController),
             suggestionsCallback: (pattern) =>
-                getAutocomplete(pattern, allowedTypes),
+                placesApiServices.getAutocomplete(pattern, allowedTypes),
             itemBuilder: (context, suggestion) {
               return ListTile(
                 title: Text(suggestion.description),
@@ -56,64 +63,39 @@ class _MapsApiPlacesTextFieldState extends State<MapsApiPlacesTextFieldWidget> {
             },
             onSuggestionSelected: (suggestion) {
               this._typeAheadController.text = suggestion.description;
-              showImage(suggestion.placeId);
+              showImage(suggestion.placeId, true);
             },
+            noItemsFoundBuilder: (BuildContext context) => Text('Please enter a city'),
           ),
         ),
-        //show ? getPhotos(this.placeId) : Container(),
+        FutureBuilder<List<String>>(
+            future: image,
+            builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+              if (snapshot.hasData) {
+                List<Widget> imageWidgets = imagesToContainer(snapshot.data);
+                return Container(height: 500.0, width: 500, child: ListView(children: imageWidgets));
+              } else {
+                if (show) {
+                    return CircularProgressIndicator();
+                } else {
+                    return Container();
+                }
+                
+              }
+            },
+        )
       ],
     );
   }
 
-  Future<List<AutocompletePrediction>> getAutocomplete(
-      String input, List<String> allowedTypes) {
-    if (input == null || input == "") {
-      return Future.sync(() => []);
-    }
-
-    Completer<List<AutocompletePrediction>> completer = Completer();
-    AutocompletionRequest request = AutocompletionRequest()..input = input;
-
-    if (allowedTypes.length > 0) {
-      request = request..types = allowedTypes;
-    }
-
-    autocompleteService.getPlacePredictions(request, (result, status) {
-      if (status == PlacesServiceStatus.OK) {
-        completer.complete(result);
-      } else if (status == PlacesServiceStatus.ZERO_RESULTS) {
-        completer.complete([]);
-      } else {
-        completer.completeError(status);
-      }
-    });
-
-    return completer.future;
-  }
-
-  /*
-  // TO-DO figure out what's wrong with this request
-  Container getPhotos(String placeId) {
-    List<String> images = [];
-    final request = PlaceDetailsRequest()..placeId = placeId;
-
-    placesService.getDetails(request, (result, status) {
-      if (status == PlacesServiceStatus.OK) {
-        final photoOptions = PhotoOptions()
-          ..maxHeight = 50
-          ..maxWidth = 50;
-        images = result.photos.map((photo) => photo.getUrl(photoOptions));
-      }
-    });
-
+  List<Widget> imagesToContainer(List<String> images) {
     if (images.length == 0) {
-      return Container(child: Text("no images found"));
+      return [Text("No images found.")];
     } else {
-      return Container(
-          child: Row(
-              children: images
-                  .map<Widget>((url) => Image(image: NetworkImage(url)))));
+      List<Widget> imageWidgets = (images.map<Widget>((url) {
+        return Card(child: Image(image: NetworkImage(url)));
+      })).toList();
+      return imageWidgets;
     }
   }
-  */
 }

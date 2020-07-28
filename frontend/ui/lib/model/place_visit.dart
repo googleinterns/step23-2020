@@ -8,7 +8,7 @@ enum UserMark {
 }
 
 class PlaceVisit {
-  UserMark userMarkEnumFromString(String userMark) {
+  static UserMark userMarkEnumFromString(String userMark) {
     return UserMark.values
         .firstWhere((e) => e.toString() == "UserMark.$userMark");
   }

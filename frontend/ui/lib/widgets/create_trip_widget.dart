@@ -25,7 +25,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
   String place;
   int radius = 0;
   String newInformation = 'Grabbed info placed here.';
-  void submitTrip() async{
+  void submitTrip() async {
     try {
       await tripService.createTrip(Trip(
         name: place,

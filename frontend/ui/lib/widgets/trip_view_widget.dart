@@ -22,15 +22,17 @@ class _TripWidgetState extends State<TripViewWidget> {
           borderRadius: BorderRadius.all(Radius.circular(5))),
       margin: const EdgeInsets.all(15.0),
       padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: [
-          Text("Name of the Trip"),
-          PlaceBlockWidget("Place 1"),
-          PlaceBlockWidget("Place 2"),
-          PlaceBlockWidget("Place 3"),
-          PlaceBlockWidget("Place 4"),
-          PlaceBlockWidget("Place 5"),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text("Name of the Trip"),
+            PlaceBlockWidget("Place 1"),
+            PlaceBlockWidget("Place 2"),
+            PlaceBlockWidget("Place 3"),
+            PlaceBlockWidget("Place 4"),
+            PlaceBlockWidget("Place 5"),
+          ],
+        ),
       ),
     );
   }

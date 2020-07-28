@@ -6,6 +6,7 @@ import com.google.tripmeout.frontend.error.TripNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -49,7 +50,7 @@ public class PersistentTripStorage implements TripStorage {
     try{
     Entity tripEntity = datastore.get(tripKey);
     tripEntity.setProperty(NAME_PROPERTY_NAME, tripName);
-    datastore.update(tripEntity);
+    datastore.put(tripEntity);
     }catch(EntityNotFoundException e){
         throw new TripNotFoundException("Trip with id: " + tripId + " not found");
     }
@@ -61,9 +62,10 @@ public class PersistentTripStorage implements TripStorage {
     Key tripKey = KeyFactory.stringToKey(tripId);
     try{
     Entity tripEntity = datastore.get(tripKey);
-    TripModel trip.toBuilder().setId((String)tripEntity.getProperty(TRIP_ID_PROPERTY_NAME)).setName((String)tripEntity.getProperty(NAME_PROPERTY_NAME))
+    
+    return TripModel.builder().setId((String)tripEntity.getProperty(TRIP_ID_PROPERTY_NAME)).setName((String)tripEntity.getProperty(NAME_PROPERTY_NAME))
     .setUserId((String)tripEntity.getProperty(USER_ID_PROPERTY_NAME)).setPlacesApiPlaceId((String)tripEntity.getProperty(PLACE_API_ID_PROPERTY_NAME)).build();
-    return trip;
+    
     }catch(EntityNotFoundException e){
         throw new TripNotFoundException("Trip with id: " + tripId + " not found");
     }
@@ -77,13 +79,13 @@ public class PersistentTripStorage implements TripStorage {
         PreparedQuery results = datastore.prepare(query);
         List<TripModel>trips = new ArrayList<>();
         for(Entity tripEntity: results.asIterable()){
-            TripModel trip.toBuilder()
+            
+            trips.add(TripModel.builder()
             .setId((String)tripEntity.getProperty(TRIP_ID_PROPERTY_NAME))
             .setName((String)tripEntity.getProperty(NAME_PROPERTY_NAME))
             .setUserId((String)tripEntity.getProperty(USER_ID_PROPERTY_NAME))
             .setPlacesApiPlaceId((String)tripEntity.getProperty(PLACE_API_ID_PROPERTY_NAME))
-            .build();
-            trips.add(trip);
+            .build());
         }
         return trips;
 

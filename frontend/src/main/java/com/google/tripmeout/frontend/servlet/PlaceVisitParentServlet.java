@@ -37,6 +37,8 @@ public class PlaceVisitParentServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    logger.atInfo().log("%s serving POST %s", PlaceVisitParentServlet.class.getSimpleName(),
+        request.getRequestURI());
     try (PrintWriter writer = response.getWriter()) {
       PlaceVisitModel place =
           ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
@@ -55,17 +57,21 @@ public class PlaceVisitParentServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_CREATED);
 
     } catch (TripMeOutException e) {
+      logger.atWarning().withCause(e).log("business logic exception");
       response.setStatus(e.restStatusCode());
     } catch (JsonParseException e) {
+      logger.atWarning().withCause(e).log("business logic exception");
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (Exception e) {
-      logger.atWarning().log(e.getMessage());
+      logger.atWarning().withCause(e).log("internal error");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    logger.atInfo().log("%s serving GET %s", PlaceVisitParentServlet.class.getSimpleName(),
+        request.getRequestURI());
     try (PrintWriter writer = response.getWriter()) {
       String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
       List<PlaceVisitModel> nearbyPlaces = placeStorage.getTripPlaceVisits(tripId);
@@ -73,8 +79,10 @@ public class PlaceVisitParentServlet extends HttpServlet {
       writer.println(gson.toJson(nearbyPlaces));
       response.setStatus(HttpServletResponse.SC_OK);
     } catch (TripMeOutException e) {
+      logger.atWarning().withCause(e).log("business logic exception");
       response.setStatus(e.restStatusCode());
     } catch (Exception e) {
+      logger.atWarning().withCause(e).log("internal error");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }

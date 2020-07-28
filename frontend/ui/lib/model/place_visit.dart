@@ -14,7 +14,7 @@ class PlaceVisit {
     "MAYBE": UserMark.MAYBE,
     "UNKNOWN": UserMark.UNKNOWN,
   };
-  
+
   static UserMark userMarkEnumFromString(String userMark) {
     UserMark mark = stringToUserMark[userMark];
     if (mark == null) {

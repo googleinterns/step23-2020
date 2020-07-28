@@ -1,4 +1,4 @@
-import 'package:tripmeout/widgets/auto_complete_text_field_widget.dart';
+import 'package:tripmeout/widgets/auto_complete_text_field_widget_html.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';

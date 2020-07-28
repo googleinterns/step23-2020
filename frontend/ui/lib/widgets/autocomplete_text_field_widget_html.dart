@@ -8,7 +8,7 @@ import 'package:flutter/src/widgets/basic.dart' as basic;
 
 class MapsApiPlacesTextFieldWidget extends StatefulWidget {
   final List<String> allowedTypes;
-  PlacesApiServices placesApiServices;
+  final PlacesApiServices placesApiServices;
   MapsApiPlacesTextFieldWidget(this.allowedTypes, this.placesApiServices);
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tripmeout/services/places_services.dart';
 
 // TODO: Decompose the auto-complete widget into the smallest possible component
 // that requires dart:html. Doing so will simplify this stub code itself which
@@ -6,7 +7,7 @@ import 'package:flutter/material.dart';
 // because this stub is never displayed in the real UI.
 
 class MapsApiPlacesTextFieldWidget extends StatefulWidget {
-  MapsApiPlacesTextFieldWidget(List<String> allowedTypes);
+  MapsApiPlacesTextFieldWidget(List<String> allowedTypes, PlacesApiServices placesApiServices);
 
   @override
   _MapsApiPlacesTextFieldState createState() => _MapsApiPlacesTextFieldState();

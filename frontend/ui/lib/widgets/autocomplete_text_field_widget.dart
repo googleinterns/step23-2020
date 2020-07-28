@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:html';
+
 import 'package:flutter/material.dart';
-import 'package:google_maps/google_maps.dart';
-import 'package:google_maps/google_maps_places.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter/src/widgets/basic.dart' as basic;
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:google_maps/google_maps_places.dart';
 
 class MapsApiPlacesTextFieldWidget extends StatefulWidget {
   final List<String> allowedTypes;

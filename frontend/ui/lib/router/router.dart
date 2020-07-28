@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tripmeout/pages/create_trip_page.dart';
 import 'package:tripmeout/pages/trip_list_page.dart';
 import 'package:tripmeout/pages/trip_view_page.dart';
+import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:tripmeout/services/trip_service.dart';
 
 class Router {
@@ -10,12 +11,13 @@ class Router {
   static final RegExp tripViewRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)$');
 
   final TripService tripService;
+  final PlaceVisitService placeVisitService;
 
   static String createTripViewRoute(String tripId) {
     return "/trips/$tripId";
   }
 
-  Router(this.tripService);
+  Router(this.tripService, this.placeVisitService);
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     if (settings.name == tripListRoute) {

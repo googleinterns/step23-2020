@@ -56,10 +56,8 @@ class PlaceVisit {
       return true;
     }
     return other is PlaceVisit &&
-        this.name == other.name &&
         this.id == other.id &&
         this.tripid == other.tripid &&
-        this.userMark == other.userMark &&
         this.placesApiPlaceId == other.placesApiPlaceId;
   }
 

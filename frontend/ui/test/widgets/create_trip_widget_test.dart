@@ -22,7 +22,6 @@ void main() {
     expect(find.text('Enter your Location'), findsOneWidget);
     expect(find.text('Radius KM'), findsOneWidget);
     expect(find.byType(MapWidget), findsOneWidget);
-    expect(find.text('Grabbed info placed here.'), findsOneWidget);
     expect(find.byType(RaisedButton), findsOneWidget);
   });
 

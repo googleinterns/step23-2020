@@ -7,7 +7,6 @@ import 'package:tripmeout/router/router.dart';
 import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
 
 //TODO: Add loading screen after to the Create Trip Widget
-//TODO: Get rid of the newInformation text on the page.
 
 class CreateTripWidget extends StatefulWidget {
   final TripService tripService;
@@ -26,16 +25,24 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
   String place;
   int radius = 0;
   String newInformation = 'Grabbed info placed here.';
-  void submitTrip() {
-    setState(() {
-      tripService.createTrip(Trip(
+  void submitTrip() async{
+    try {
+      await tripService.createTrip(Trip(
         name: place,
-        id: radius.toString(),
-        // Everywhere Seattle now.
         placesApiPlaceId: 'ChIJVTPokywQkFQRmtVEaUZlJRA',
       ));
-      newInformation = "$place ${radius}km";
-    });
+      setState(() {});
+    } catch (e, s) {
+      print("error creating trip: $e");
+      print(s);
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("Error creating trip"),
+        action: SnackBarAction(
+          label: "Dismiss",
+          onPressed: () {},
+        ),
+      ));
+    }
   }
 
   @override

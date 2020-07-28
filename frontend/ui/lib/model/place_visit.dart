@@ -1,26 +1,36 @@
 import 'dart:core';
 
 enum UserMark {
-  YES, NO, MAYBE, UNKNOWN,
+  YES,
+  NO,
+  MAYBE,
+  UNKNOWN,
 }
 
 class PlaceVisit {
-
-  UserMark userMarkEnumFromString (String userMark) {
-    return UserMark.values.firstWhere((e) => e.toString() == "UserMark.$userMark");
+  UserMark userMarkEnumFromString(String userMark) {
+    return UserMark.values
+        .firstWhere((e) => e.toString() == "UserMark.$userMark");
   }
 
-  PlaceVisit({this.name, this.id, this.tripid, this.placesApiPlaceId, this.userMark});
-  
+  PlaceVisit(
+      {this.name, this.id, this.tripid, this.placesApiPlaceId, this.userMark});
+
   final String name;
   final String id;
   final String tripid;
   final UserMark userMark;
   final String placesApiPlaceId;
 
-  factory PlaceVisit.from(PlaceVisit placeVisit, {name, id, tripid, userMark, placesApiPlaceId}) {
+  factory PlaceVisit.from(PlaceVisit placeVisit,
+      {name, id, tripid, userMark, placesApiPlaceId}) {
     return placeVisit == null
-        ? PlaceVisit(name: name, id: id, tripid: tripid, userMark: userMark, placesApiPlaceId: placesApiPlaceId)
+        ? PlaceVisit(
+            name: name,
+            id: id,
+            tripid: tripid,
+            userMark: userMark,
+            placesApiPlaceId: placesApiPlaceId)
         : PlaceVisit(
             name: name ?? placeVisit.name,
             id: id ?? placeVisit.id,

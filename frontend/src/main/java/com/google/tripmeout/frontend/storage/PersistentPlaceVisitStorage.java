@@ -7,19 +7,21 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.KeyFactory.Builder;
-import com.google.appengine.repackaged.com.google.datastore.v1.Datastore;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.repackaged.com.google.datastore.v1.Datastore;
+import com.google.inject.Inject;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.error.PlaceVisitAlreadyExistsException;
 import com.google.tripmeout.frontend.error.PlaceVisitNotFoundException;
+import com.google.tripmeout.frontend.error.TripMeOutException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PersistentPlaceVisitStorage implements PlaceVisitStorage {
-  private static final String PLACE_KIND_NAME = "Place";
+class PersistentPlaceVisitStorage implements PlaceVisitStorage {
   private static final String TRIP_ID_PROPERTY_NAME = "tripId";
   private static final String USER_MARK_PROPERTY_NAME = "userMark";
   private static final String ID_PROPERTY_NAME = "id";
@@ -28,24 +30,39 @@ public class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   private final DatastoreService datastore;
 
-  PersistentPlaceVisitStorage(DatastoreService datastore){
-      this.datastore = datastore;
+  @Inject
+  PersistentPlaceVisitStorage(DatastoreService datastore) {
+    this.datastore = datastore;
   }
 
   public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
     Key placeKey = KeyFactory.stringToKey(placeVisit.id());
-    Entity placeEntity = new Entity(placeKey);
-    placeEntity.setProperty(ID_PROPERTY_NAME, placeVisit.id());
-    placeEntity.setProperty(TRIP_ID_PROPERTY_NAME, placeVisit.tripId());
-    placeEntity.setProperty(USER_MARK_PROPERTY_NAME, placeVisit.userMark().toString());
-    placeEntity.setProperty(PLACE_NAME_PROPERTY_NAME, placeVisit.placeName());
-    placeEntity.setProperty(PLACE_API_ID_PROPERTY_NAME, placeVisit.placesApiPlaceId());
-    datastore.put(placeEntity);
+    try {
+      datastore.get(placeKey);
+      throw new PlaceVisitAlreadyExistsException("Place Already Exists");
+    } catch (EntityNotFoundException e) {
+    }
+    try {
+      Entity placeEntity = new Entity(placeKey);
+      placeEntity.setProperty(ID_PROPERTY_NAME, placeVisit.id());
+      placeEntity.setProperty(TRIP_ID_PROPERTY_NAME, placeVisit.tripId());
+      placeEntity.setProperty(USER_MARK_PROPERTY_NAME, placeVisit.userMark().toString());
+      placeEntity.setProperty(PLACE_NAME_PROPERTY_NAME, placeVisit.placeName());
+      placeEntity.setProperty(PLACE_API_ID_PROPERTY_NAME, placeVisit.placesApiPlaceId());
+      datastore.put(placeEntity);
+    } catch (Exception e) {
+      throw e;
+    }
   }
 
   public void removePlaceVisit(String tripId, String placeVisitId)
       throws PlaceVisitNotFoundException {
     Key placeKey = KeyFactory.stringToKey(placeVisitId);
+    try {
+      datastore.get(placeKey);
+    } catch (EntityNotFoundException e) {
+      throw new PlaceVisitNotFoundException("Place with id: " + placeVisitId + " doesn't exist");
+    }
     datastore.delete(placeKey);
   }
 
@@ -106,6 +123,9 @@ public class PersistentPlaceVisitStorage implements PlaceVisitStorage {
   public void removeTripPlaceVisits(String tripId) throws TripNotFoundException {
     Query query = new Query(tripId);
     PreparedQuery results = datastore.prepare(query);
+    if (results.countEntities() == 0) {
+      throw new TripNotFoundException("Trip with id: " + tripId + " doesn't exist");
+    }
     for (Entity placeEntity : results.asIterable()) {
       datastore.delete(placeEntity.getKey());
     }

@@ -1,4 +1,4 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/rest_api_place_visit_service.dart';
 

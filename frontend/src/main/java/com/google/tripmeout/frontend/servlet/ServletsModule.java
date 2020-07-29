@@ -9,9 +9,9 @@ import com.google.inject.servlet.ServletModule;
 public class ServletsModule extends ServletModule {
   @Override
   protected void configureServlets() {
-    serve("/api/trips/*/placeVisits/*").with(PlaceVisitIndividualServlet.class);
-    serve("/api/trips/*/placeVisits").with(PlaceVisitParentServlet.class);
-    serve("/api/trips/*").with(TripServlet.class);
+    serveRegex("/api/trips/[^/]+/placeVisits/[^/]+").with(PlaceVisitIndividualServlet.class);
+    serveRegex("/api/trips/[^/]+/placeVisits").with(PlaceVisitParentServlet.class);
+    serveRegex("/api/trips/[^/]+").with(TripServlet.class);
     serve("/api/trips").with(TripParentServlet.class);
   }
 }

@@ -34,9 +34,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
         trailing: Container(
             width: 100.0,
             child: Row(children: [
-              Tooltip(
-                  message: "MUST GO",
-                  child: IconButton(
+                  IconButton(
                     icon: _icon,
                     onPressed: () {
                       setState(() {
@@ -52,11 +50,14 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                       });
                     },
                     color: _color,
-                  )),
+
+                tooltip: "Must Go",
+                  ),
               IconButton(
-                onPressed: () => {},
+                onPressed: () => {},//TODO: Add delete place method to Button
                 icon: Icon(Icons.delete),
                 color: Colors.red,
+                tooltip: "Delete this place",
               ),
             ])),
         children: [

@@ -15,16 +15,19 @@ class RestApiPlaceVisitService implements PlaceVisitService {
           (json.decode(response.body) as List).cast<Map<String, dynamic>>();
       return asList.map((x) => PlaceVisit.fromJson(x)).toList();
     } else {
-      throw Exception('Failed to get List of PlaceVisits with status code ${response.statusCode}');
+      throw Exception(
+          'Failed to get List of PlaceVisits with status code ${response.statusCode}');
     }
   }
 
   Future<PlaceVisit> getPlaceVisit(String tripid, String id) async {
-    final response = await http.get('$endpoint/api/trips/$tripid/placeVisits/$id');
+    final response =
+        await http.get('$endpoint/api/trips/$tripid/placeVisits/$id');
     if (response.statusCode == 200) {
       return PlaceVisit.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to get PlaceVisit with status code ${response.statusCode}');
+      throw Exception(
+          'Failed to get PlaceVisit with status code ${response.statusCode}');
     }
   }
 
@@ -44,7 +47,8 @@ class RestApiPlaceVisitService implements PlaceVisitService {
     if (response.statusCode == 201) {
       return PlaceVisit.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to load PlaceVisit with status code ${response.statusCode}');
+      throw Exception(
+          'Failed to load PlaceVisit with status code ${response.statusCode}');
     }
   }
 
@@ -65,15 +69,18 @@ class RestApiPlaceVisitService implements PlaceVisitService {
     if (response.statusCode == 200) {
       return PlaceVisit.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to update PlaceVisit with status code ${response.statusCode}');
+      throw Exception(
+          'Failed to update PlaceVisit with status code ${response.statusCode}');
     }
   }
 
   Future<Null> deletePlaceVisit(String tripid, String id) async {
-    final response = await http.delete('$endpoint/api/trips/$tripid/placeVisits/$id');
+    final response =
+        await http.delete('$endpoint/api/trips/$tripid/placeVisits/$id');
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete PlaceVisit $id with status code ${response.statusCode}');
+      throw Exception(
+          'Failed to delete PlaceVisit $id with status code ${response.statusCode}');
     }
   }
 }

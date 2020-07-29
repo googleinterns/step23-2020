@@ -62,8 +62,10 @@ class PlaceVisit {
       return true;
     }
     return other is PlaceVisit &&
+        this.name == other.name &&
         this.id == other.id &&
         this.tripid == other.tripid &&
+        this.userMark == other.userMark &&
         this.placesApiPlaceId == other.placesApiPlaceId;
   }
 
@@ -78,7 +80,7 @@ class PlaceVisit {
 
   factory PlaceVisit.fromJson(Map<String, dynamic> json) {
     return PlaceVisit(
-        name: json['name'],
+        name: json['placeName'],
         id: json['id'],
         tripid: json['tripId'],
         userMark: userMarkEnumFromString(json['userMark']),

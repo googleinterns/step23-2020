@@ -38,7 +38,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
           Navigator.pushNamed(context, Router.createTripViewRoute(trip.id));
         }, onError: (error) {
           Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text("Error getting trip"),
+            content: Text("Error creating trip"),
             action: SnackBarAction(
               label: "Dismiss",
               onPressed: () {},

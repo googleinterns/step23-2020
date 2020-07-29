@@ -27,18 +27,6 @@ void main() {
     expect(find.text("Place 1"), findsOneWidget);
   });
 
-  testWidgets('Shows everything within the expanded Place shows up',
-      (WidgetTester tester) async {
-    var placeBlockWidget = PlaceBlockWidget("Hello World");
-    await tester.pumpWidget(wrapForDirectionality(placeBlockWidget));
-    await tester.pumpAndSettle();
-    
-    expect(find.text("Place 1"), findsOneWidget);
-    expect(find.byWidget(getPictureWidgets()), findsOneWidget);
-    expect(find.text("Bar"), findsOneWidget);
-    expect(find.text("Baz"), findsOneWidget);
-  });
-
   testWidgets(
       'Showing the each place has an Fav and Delete and the Fav toggles',
       (WidgetTester tester) async {
@@ -57,17 +45,12 @@ void main() {
 
     expect(find.byIcon(Icons.favorite_border), findsNothing);
     expect(find.byIcon(Icons.favorite), findsOneWidget);
-<<<<<<< HEAD
-    expect(find.byIcon(Icons.alarm), findsOneWidget);
-    expect(find.byType(IconButton), findsOneWidget);
-=======
 
     await tester.tap(find.byIcon(Icons.favorite));
     await tester.pumpAndSettle();
 
     expect(find.byIcon(Icons.favorite_border), findsOneWidget);
     expect(find.byIcon(Icons.favorite), findsNothing);
->>>>>>> 27e57a5... Fixing test.
   });
 }
 

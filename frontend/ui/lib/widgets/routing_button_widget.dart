@@ -10,14 +10,13 @@ class RoutingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-        message: description,
-        child: IconButton(
+    return IconButton(
           onPressed: () {
             Navigator.pushNamed(context, route);
           },
           icon: iconType,
-        ));
+          tooltip: description,
+        );
   }
 }
 
@@ -30,13 +29,12 @@ class FloatingRoutingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-        message: description,
-        child: FloatingActionButton(
+    return FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, route);
           },
           child: iconType,
-        ));
+          tooltip: description,
+        );
   }
 }

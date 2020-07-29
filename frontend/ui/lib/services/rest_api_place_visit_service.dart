@@ -36,7 +36,7 @@ class RestApiPlaceVisitService implements PlaceVisitService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'name': placeVisit.name,
+        'placeName': placeVisit.name,
         'placesApiPlaceId': placeVisit.placesApiPlaceId,
         'userMark': PlaceVisit.userMarkToString(placeVisit.userMark),
       }),
@@ -57,15 +57,15 @@ class RestApiPlaceVisitService implements PlaceVisitService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'name': placeVisit.name,
+        'placeName': placeVisit.name,
         'placesApiPlaceId': placeVisit.placesApiPlaceId,
-        'userMark': placeVisit.userMark.toString(),
+        'userMark': PlaceVisit.userMarkToString(placeVisit.userMark),
       }),
     );
     if (response.statusCode == 200) {
       return PlaceVisit.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to load PlaceVisit with status code ${response.statusCode}');
+      throw Exception('Failed to update PlaceVisit with status code ${response.statusCode}');
     }
   }
 

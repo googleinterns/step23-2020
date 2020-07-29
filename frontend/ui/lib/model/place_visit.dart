@@ -80,7 +80,7 @@ class PlaceVisit {
     return PlaceVisit(
         name: json['name'],
         id: json['id'],
-        tripid: json['tripid'],
+        tripid: json['tripId'],
         userMark: userMarkEnumFromString(json['userMark']),
         placesApiPlaceId: json['placesApiPlaceId']);
   }

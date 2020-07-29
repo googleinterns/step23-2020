@@ -47,6 +47,7 @@ class TripViewWidget extends StatelessWidget {
           floating: true,
           snap: true,
           expandedHeight: 250.0,
+          automaticallyImplyLeading: false,//Gets rid of appBar
           flexibleSpace: FlexibleSpaceBar(
             title: Text(trip.name),
             background: Image.network(

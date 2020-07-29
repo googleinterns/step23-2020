@@ -34,27 +34,26 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
         trailing: Container(
             width: 100.0,
             child: Row(children: [
-                  IconButton(
-                    icon: _icon,
-                    onPressed: () {
-                      setState(() {
-                        if (_selected == true) {
-                          _selected = false;
-                          _icon = Icon(Icons.favorite_border);
-                          _color = Colors.black;
-                        } else {
-                          _selected = true;
-                          _icon = Icon(Icons.favorite);
-                          _color = Colors.pink;
-                        }
-                      });
-                    },
-                    color: _color,
-
-                tooltip: "Must Go",
-                  ),
               IconButton(
-                onPressed: () => {},//TODO: Add delete place method to Button
+                icon: _icon,
+                onPressed: () {
+                  setState(() {
+                    if (_selected == true) {
+                      _selected = false;
+                      _icon = Icon(Icons.favorite_border);
+                      _color = Colors.black;
+                    } else {
+                      _selected = true;
+                      _icon = Icon(Icons.favorite);
+                      _color = Colors.pink;
+                    }
+                  });
+                },
+                color: _color,
+                tooltip: "Must Go",
+              ),
+              IconButton(
+                onPressed: () => {}, //TODO: Add delete place method to Button
                 icon: Icon(Icons.delete),
                 color: Colors.red,
                 tooltip: "Delete this place",

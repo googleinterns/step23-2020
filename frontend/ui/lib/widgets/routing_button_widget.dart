@@ -11,12 +11,12 @@ class RoutingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, route);
-          },
-          icon: iconType,
-          tooltip: description,
-        );
+      onPressed: () {
+        Navigator.pushNamed(context, route);
+      },
+      icon: iconType,
+      tooltip: description,
+    );
   }
 }
 
@@ -30,11 +30,11 @@ class FloatingRoutingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, route);
-          },
-          child: iconType,
-          tooltip: description,
-        );
+      onPressed: () {
+        Navigator.pushNamed(context, route);
+      },
+      child: iconType,
+      tooltip: description,
+    );
   }
 }

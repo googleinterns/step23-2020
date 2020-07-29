@@ -37,6 +37,8 @@ public class PlaceVisitIndividualServlet extends HttpServlet {
 
   @Override
   public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    logger.atInfo().log("%s serving PUT %s", PlaceVisitIndividualServlet.class.getSimpleName(),
+        request.getRequestURI());
     try (PrintWriter writer = response.getWriter()) {
       Matcher matcher = ServletUtil.matchUriOrThrowError(request, URI_NAME_PATTERN);
 
@@ -62,9 +64,10 @@ public class PlaceVisitIndividualServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_OK);
 
     } catch (TripMeOutException e) {
+      logger.atWarning().withCause(e).log("business logic exception");
       response.setStatus(e.restStatusCode());
     } catch (Exception e) {
-      logger.atInfo().log(e.getMessage());
+      logger.atWarning().withCause(e).log("internal error");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
@@ -72,6 +75,8 @@ public class PlaceVisitIndividualServlet extends HttpServlet {
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
+    logger.atInfo().log("%s serving DELETE %s", PlaceVisitIndividualServlet.class.getSimpleName(),
+        request.getRequestURI());
     try {
       Matcher matcher = ServletUtil.matchUriOrThrowError(request, URI_NAME_PATTERN);
       String tripId = matcher.group(1);
@@ -81,14 +86,18 @@ public class PlaceVisitIndividualServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_OK);
 
     } catch (TripMeOutException e) {
+      logger.atWarning().withCause(e).log("business logic exception");
       response.setStatus(e.restStatusCode());
     } catch (Exception e) {
+      logger.atWarning().withCause(e).log("internal error");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    logger.atInfo().log("%s serving GET %s", PlaceVisitIndividualServlet.class.getSimpleName(),
+        request.getRequestURI());
     try (PrintWriter writer = response.getWriter()) {
       Matcher matcher = ServletUtil.matchUriOrThrowError(request, URI_NAME_PATTERN);
       String tripId = matcher.group(1);
@@ -105,8 +114,10 @@ public class PlaceVisitIndividualServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_OK);
 
     } catch (TripMeOutException e) {
+      logger.atWarning().withCause(e).log("business logic exception");
       response.setStatus(e.restStatusCode());
     } catch (Exception e) {
+      logger.atWarning().withCause(e).log("internal error");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }

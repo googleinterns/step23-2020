@@ -1,23 +1,26 @@
+# Local repo configuration configuration. This can be used to overwrite
+# configs/environment variables with persistent defaults. It should not be
+# checked into git.
+-include environment.mk
 
-SHELL=/bin/bash
+CLANG_FORMAT?=clang-format
 DART_CLI?=dart
+FIND?=find
+FLUTTER_APP_ROOT?=frontend/ui
 FLUTTER_CLI?=flutter
 MAVEN_CLI?=mvn
-FLUTTER_APP_ROOT?=frontend/ui
 MAVEN_FRONTEND_ROOT?=frontend
-CLANG_FORMAT?=clang-format
+OPENSSL?=openssl
+SHELL=/bin/bash
 
-# Is there a better way to do this??
-# From https://stackoverflow.com/questions/4036191
-rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
 format:
-	$(CLANG_FORMAT) --style=Google -i --sort-includes $(call rwildcard,frontend/,*.java)
+	$(FIND) frontend -name '*.java' -exec $(CLANG_FORMAT) --style=Google -i --sort-includes '{}' +
 	$(DART_CLI) format $(FLUTTER_APP_ROOT)
 
-test-secrets:
+test-secrets: encrypted/ui-maps-places-test.enc
 	mkdir test-secrets
-	openssl aes-256-cbc -d -pbkdf2 -iter 100000 -md sha512 -iv 683df25da352abfd5a5a559505c9034a \
+	$(OPENSSL) aes-256-cbc -d -pbkdf2 -iter 100000 -md sha512 -iv 683df25da352abfd5a5a559505c9034a \
 		-in encrypted/ui-maps-places-test.enc -out test-secrets/ui-maps-places-test
 
 instantiate-html-template-test: test-secrets

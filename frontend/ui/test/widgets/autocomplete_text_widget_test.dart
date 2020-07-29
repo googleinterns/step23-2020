@@ -36,10 +36,7 @@ void main() {
     expect(find.byType(ListTile), findsNWidgets(2));
 
 
-    PlaceVisit london = PlaceVisit(
-      placesApiPlaceId: "LCY",
-      name: "London, UK",
-    );
+    PlaceVisit london = PlaceVisit(placesApiPlaceId: "LCY", name: "London, UK");
 
     await tester.tap(find.widgetWithText(ListTile, 'London, UK'));
     await tester.pumpAndSettle();

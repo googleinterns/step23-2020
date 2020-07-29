@@ -36,15 +36,14 @@ class TripListWidget extends StatelessWidget {
                 Navigator.pushNamed(
                     context, Router.createTripViewRoute(trip.id));
               },
-              trailing: Tooltip(
-                  message: 'Click here to delete trip.',
-                  child: IconButton(
+              trailing: IconButton(
                     onPressed: () {
                       _showDialog(context);
                     },
                     icon: Icon(Icons.delete),
                     color: Colors.red,
-                  )),
+                    tooltip: 'Click here to delete trip.',
+                  ),
             ))
         .toList();
     return ListView(children: listItems);

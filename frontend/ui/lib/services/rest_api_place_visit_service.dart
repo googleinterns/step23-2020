@@ -15,7 +15,7 @@ class RestApiPlaceVisitService implements PlaceVisitService {
           (json.decode(response.body) as List).cast<Map<String, dynamic>>();
       return asList.map((x) => PlaceVisit.fromJson(x)).toList();
     } else {
-      throw Exception('Failed to get List of PlaceVisits');
+      throw Exception('Failed to get List of PlaceVisits with status code ${response.statusCode}');
     }
   }
 
@@ -24,7 +24,7 @@ class RestApiPlaceVisitService implements PlaceVisitService {
     if (response.statusCode == 200) {
       return PlaceVisit.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to get PlaceVisit');
+      throw Exception('Failed to get PlaceVisit with status code ${response.statusCode}');
     }
   }
 
@@ -38,13 +38,13 @@ class RestApiPlaceVisitService implements PlaceVisitService {
       body: jsonEncode(<String, dynamic>{
         'name': placeVisit.name,
         'placesApiPlaceId': placeVisit.placesApiPlaceId,
-        'userMark': 'PlaceVisitModel.' + placeVisit.userMark.toString(),
+        'userMark': PlaceVisit.userMarkToString(placeVisit.userMark),
       }),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return PlaceVisit.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to load PlaceVisit');
+      throw Exception('Failed to load PlaceVisit with status code ${response.statusCode}');
     }
   }
 
@@ -59,13 +59,13 @@ class RestApiPlaceVisitService implements PlaceVisitService {
       body: jsonEncode(<String, dynamic>{
         'name': placeVisit.name,
         'placesApiPlaceId': placeVisit.placesApiPlaceId,
-        'userMark': 'PlaceVisitModel.' + placeVisit.userMark.toString(),
+        'userMark': placeVisit.userMark.toString(),
       }),
     );
     if (response.statusCode == 200) {
       return PlaceVisit.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to load PlaceVisit');
+      throw Exception('Failed to load PlaceVisit with status code ${response.statusCode}');
     }
   }
 
@@ -73,7 +73,7 @@ class RestApiPlaceVisitService implements PlaceVisitService {
     final response = await http.delete('$endpoint/api/trips/$tripid/placeVisits/$id');
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete PlaceVisit $id');
+      throw Exception('Failed to delete PlaceVisit $id with status code ${response.statusCode}');
     }
   }
 }

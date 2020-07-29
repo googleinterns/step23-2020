@@ -50,14 +50,14 @@ void main() {
       );
       var createdPlaceVisit = await placeVisitService.createPlaceVisit(originalPlaceVisit);
 
-      var updatedPlaceVisit = PlaceVisit(
+      var newPlaceVisit = PlaceVisit(
         name: 'London', 
         id: createdPlaceVisit.id,
         tripid: 'abc123',
         placesApiPlaceId: 'LCY, UK',
         userMark: UserMark.YES,
       );
-      var updatedPlaceVisit = await placeVisitService.updatePlaceVisitUserMark(placeVisit);
+      var updatedPlaceVisit = await placeVisitService.updatePlaceVisitUserMark(newPlaceVisit);
 
       expect(await placeVisitService.getPlaceVisit(createdPlaceVisit.tripid, createdPlaceVisit.id), equals(updatedPlaceVisit));
 
@@ -77,7 +77,7 @@ void main() {
         placesApiPlaceId: 'LCY, UK',
         userMark: UserMark.YES,
       );
-      await placeVisitService.createTrip(placeVisit2);
+      await placeVisitService.createPlaceVisit(placeVisit2);
       expect(await placeVisitService.listPlaceVisits('abc123'), unorderedEquals([placeVisit1, placeVisit2]));
     });
 
@@ -95,8 +95,8 @@ void main() {
         placesApiPlaceId: 'LCY, UK',
         userMark: UserMark.YES,
       );
-      await placeVisitService.createTrip(placeVisit2);
-      expect(await placeVisitService.listPlaceVisits('123abc'), isEmpty());
+      await placeVisitService.createPlaceVisit(placeVisit2);
+      expect(await placeVisitService.listPlaceVisits('123abc'), isEmpty);
     });
 
   });

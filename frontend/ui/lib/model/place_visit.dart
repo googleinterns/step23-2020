@@ -23,6 +23,12 @@ class PlaceVisit {
     return mark;
   }
 
+  static String userMarkToString(UserMark userMark) {
+    final s = userMark.toString();
+    final dotIndex = s.lastIndexOf(".");
+    return s.substring(dotIndex + 1);
+  }
+
   PlaceVisit(
       {this.name, this.id, this.tripid, this.placesApiPlaceId, this.userMark});
 

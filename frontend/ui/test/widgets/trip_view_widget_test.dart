@@ -15,17 +15,16 @@ void main() {
       (WidgetTester tester) async {
     var tripService = MockTripService();
     var tripCompleter = Completer<Trip>();
-    when(tripService.getTrip(any)).thenAnswer((_) => tripCompleter.future);
+    when(tripService.getTrip(any))
+        .thenAnswer((_) => Future.value(Trip(id: 'id1', name: 'name1')));
 
     var tripViewWidget = TripViewWidgetFromService(tripService, 'id1');
 
     await tester.pumpWidget(wrapForDirectionality(tripViewWidget));
     await tester.pumpAndSettle();
 
-    Future.value(Trip(id: 'id1', name: 'name1'));
-
     // Should be everything on the view trip screen expanded...
-    expect(find.text("id1"), findsOneWidget);
+    expect(find.text("name1"), findsOneWidget);
     expect(find.text("Place 1"), findsOneWidget);
     expect(find.text("Place 2"), findsOneWidget);
     expect(find.text("Place 3"), findsOneWidget);
@@ -37,16 +36,14 @@ void main() {
       (WidgetTester tester) async {
     var tripService = MockTripService();
     var tripCompleter = Completer<Trip>();
-    when(tripService.getTrip(any)).thenAnswer((_) => tripCompleter.future);
+    when(tripService.getTrip(any))
+        .thenAnswer((_) => Future.value(Trip(id: 'id1', name: 'name1')));
 
     var tripViewWidget = TripViewWidgetFromService(tripService, 'id1');
-
     await tester.pumpWidget(wrapForDirectionality(tripViewWidget));
     await tester.pumpAndSettle();
 
-    Future.value(Trip(id: 'id1', name: 'name1'));
-
-    expect(find.text("id1"), findsOneWidget);
+    expect(find.text("name1"), findsOneWidget);
     expect(find.text("Place 1"), findsOneWidget);
     expect(find.text("Description"), findsNothing);
     expect(find.text("Foo"), findsNothing);
@@ -57,7 +54,7 @@ void main() {
     await tester.pumpAndSettle();
 
     //Shows expanded Place
-    expect(find.text("id1"), findsOneWidget);
+    expect(find.text("name1"), findsOneWidget);
     expect(find.text("Place 1"), findsOneWidget);
     expect(find.text("Description"), findsOneWidget);
     expect(find.text("Foo"), findsOneWidget);

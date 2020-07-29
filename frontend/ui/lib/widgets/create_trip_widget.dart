@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
+import 'package:tripmeout/router/router.dart';
 
 //TODO: Add loading screen after to the Create Trip Widget
 

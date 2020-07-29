@@ -14,7 +14,6 @@ void main() {
   testWidgets('Showing the text on page correctly shows up',
       (WidgetTester tester) async {
     var tripService = MockTripService();
-    var tripCompleter = Completer<Trip>();
     when(tripService.getTrip(any))
         .thenAnswer((_) => Future.value(Trip(id: 'id1', name: 'name1')));
 
@@ -35,7 +34,6 @@ void main() {
   testWidgets('Showing the expanded Place correctly shows up',
       (WidgetTester tester) async {
     var tripService = MockTripService();
-    var tripCompleter = Completer<Trip>();
     when(tripService.getTrip(any))
         .thenAnswer((_) => Future.value(Trip(id: 'id1', name: 'name1')));
 

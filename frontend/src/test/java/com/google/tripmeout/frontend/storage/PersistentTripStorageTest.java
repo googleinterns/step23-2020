@@ -1,61 +1,24 @@
 package com.google.tripmeout.frontend.storage;
 
-import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
+import java.util.UUID;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class PersistentTripStorageTest {
-  public static final TripModel LONDON_TRIP1 = TripModel.builder()
-                                                   .setId("agg")
-                                                   .setName("London Trip")
-                                                   .setUserId("person 1")
-                                                   .setPlacesApiPlaceId("place-id")
-                                                   .build();
-
-  public static final TripModel CANCUN_TRIP = TripModel.builder()
-                                                  .setId("bhh")
-                                                  .setName("Cancun Trip")
-                                                  .setUserId("person 2")
-                                                  .setPlacesApiPlaceId("place-id")
-                                                  .build();
-
-  public static final TripModel NEW_JERSEY_TRIP = TripModel.builder()
-                                                      .setId("ctt")
-                                                      .setName("New Jersey Trip")
-                                                      .setUserId("person 1")
-                                                      .setPlacesApiPlaceId("place-id")
-                                                      .build();
-
-  public static final TripModel TOKYO_TRIP1 = TripModel.builder()
-                                                  .setId("dhh")
-                                                  .setName("Tokyo Trip")
-                                                  .setUserId("person 1")
-                                                  .setPlacesApiPlaceId("place-id")
-                                                  .build();
-
-  public static final TripModel LONDON_TRIP_DUPLICATE_ID = TripModel.builder()
-                                                               .setId("ahh")
-                                                               .setName("London Trip")
-                                                               .setUserId("person 2")
-                                                               .setPlacesApiPlaceId("place-id")
-                                                               .build();
-
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
   private PersistentTripStorage storage;
@@ -73,7 +36,9 @@ public class PersistentTripStorageTest {
   }
 
   @Test
-  public void addTrip_getTrip() throws TripAlreadyExistsException, TripNotFoundException {
+  public void addTrip_getTrip() throws Exception {
+    TripModel TOKYO_TRIP1 = createTripForUser1();
+    TripModel LONDON_TRIP1 = createTripForUser1();
     storage.addTrip(TOKYO_TRIP1);
     storage.addTrip(LONDON_TRIP1);
     TripModel gottenTrip = storage.getTrip(LONDON_TRIP1.id());
@@ -81,37 +46,124 @@ public class PersistentTripStorageTest {
   }
 
   @Test
-  public void getAllUserTrips_withOneUser() throws TripAlreadyExistsException {
+  public void addTrip_returnTripAlreadyExistsException() throws Exception {
+    TripModel TOKYO_TRIP1 = createTripForUser1();
+    storage.addTrip(TOKYO_TRIP1);
+    Assert.assertThrows(TripAlreadyExistsException.class, () -> storage.addTrip(TOKYO_TRIP1));
+  }
+
+  @Test
+  public void getTrip_returnTripNotFoundException() throws Exception {
+    TripModel TOKYO_TRIP1 = createTripForUser1();
+    storage.addTrip(TOKYO_TRIP1);
+    String id = KeyFactory.keyToString(KeyFactory.createKey("user1", UUID.randomUUID().toString()));
+    Assert.assertThrows(TripNotFoundException.class, () -> storage.getTrip(id));
+  }
+
+  @Test
+  public void getAllUserTrips_withOneUser() throws Exception {
+    TripModel TOKYO_TRIP1 = createTripForUser1();
+    TripModel LONDON_TRIP1 = createTripForUser1();
+    TripModel NEW_JERSEY_TRIP = createTripForUser1();
     storage.addTrip(TOKYO_TRIP1);
     storage.addTrip(LONDON_TRIP1);
     storage.addTrip(NEW_JERSEY_TRIP);
-    assertThat(storage.getAllUserTrips("person 1"))
+    assertThat(storage.getAllUserTrips("user1"))
         .containsExactly(TOKYO_TRIP1, LONDON_TRIP1, NEW_JERSEY_TRIP);
   }
 
   @Test
-  public void getAllUserTrips_withMultipleUsers() throws TripAlreadyExistsException {
+  public void getAllUserTrips_returnEmptyList() throws Exception {
+    TripModel TOKYO_TRIP1 = createTripForUser1();
+    TripModel LONDON_TRIP1 = createTripForUser1();
+    TripModel NEW_JERSEY_TRIP = createTripForUser1();
+    storage.addTrip(TOKYO_TRIP1);
+    storage.addTrip(LONDON_TRIP1);
+    storage.addTrip(NEW_JERSEY_TRIP);
+    assertThat(storage.getAllUserTrips("user2")).isEmpty();
+    ;
+  }
+
+  @Test
+  public void getAllUserTrips_withMultipleUsers_returnUser1() throws Exception {
+    TripModel TOKYO_TRIP1 = createTripForUser1();
+    TripModel LONDON_TRIP1 = createTripForUser1();
+    TripModel NEW_JERSEY_TRIP = createTripForUser1();
+    TripModel CANCUN_TRIP = createTripForUser2();
     storage.addTrip(TOKYO_TRIP1);
     storage.addTrip(LONDON_TRIP1);
     storage.addTrip(CANCUN_TRIP);
     storage.addTrip(NEW_JERSEY_TRIP);
-    assertThat(storage.getAllUserTrips("person 1"))
+    assertThat(storage.getAllUserTrips("user1"))
         .containsExactly(TOKYO_TRIP1, LONDON_TRIP1, NEW_JERSEY_TRIP);
   }
 
   @Test
+  public void getAllUserTrips_withMultipleUsers_returnUser2() throws Exception {
+    TripModel TOKYO_TRIP1 = createTripForUser1();
+    TripModel LONDON_TRIP1 = createTripForUser1();
+    TripModel NEW_JERSEY_TRIP = createTripForUser1();
+    TripModel CANCUN_TRIP = createTripForUser2();
+    storage.addTrip(TOKYO_TRIP1);
+    storage.addTrip(LONDON_TRIP1);
+    storage.addTrip(CANCUN_TRIP);
+    storage.addTrip(NEW_JERSEY_TRIP);
+    assertThat(storage.getAllUserTrips("user2")).containsExactly(CANCUN_TRIP);
+  }
+
+  @Test
   public void removeTrip_returnTrips() throws Exception {
+    TripModel TOKYO_TRIP1 = createTripForUser1();
+    TripModel LONDON_TRIP1 = createTripForUser1();
+    TripModel NEW_JERSEY_TRIP = createTripForUser1();
     storage.addTrip(TOKYO_TRIP1);
     storage.addTrip(LONDON_TRIP1);
     storage.addTrip(NEW_JERSEY_TRIP);
     storage.removeTrip(NEW_JERSEY_TRIP.id());
-    assertThat(storage.getAllUserTrips("person 1")).containsExactly(TOKYO_TRIP1, LONDON_TRIP1);
+    assertThat(storage.getAllUserTrips("user1")).containsExactly(TOKYO_TRIP1, LONDON_TRIP1);
+  }
+  @Test
+  public void removeTrip_returnTripNotFoundException() throws Exception {
+    TripModel NEW_JERSEY_TRIP = createTripForUser1();
+    storage.addTrip(NEW_JERSEY_TRIP);
+    String id = KeyFactory.keyToString(KeyFactory.createKey("user1", UUID.randomUUID().toString()));
+    Assert.assertThrows(TripNotFoundException.class, () -> storage.removeTrip(id));
   }
 
   @Test
   public void updateTripName_returnTripWithNewName() throws Exception {
+    TripModel NEW_JERSEY_TRIP = createTripForUser1();
     storage.addTrip(NEW_JERSEY_TRIP);
     storage.updateTripName(NEW_JERSEY_TRIP.id(), "JERSEY 2020");
     assertEquals("JERSEY 2020", storage.getTrip(NEW_JERSEY_TRIP.id()).name());
+  }
+
+  @Test
+  public void updateTripName_returnTripNotFoundException() throws Exception {
+    TripModel NEW_JERSEY_TRIP = createTripForUser1();
+    storage.addTrip(NEW_JERSEY_TRIP);
+    String id = KeyFactory.keyToString(KeyFactory.createKey("user1", UUID.randomUUID().toString()));
+    Assert.assertThrows(
+        TripNotFoundException.class, () -> storage.updateTripName(id, "JERSEY 2020"));
+  }
+
+  private static TripModel createTripForUser2() {
+    String id = KeyFactory.keyToString(KeyFactory.createKey("user2", UUID.randomUUID().toString()));
+    return TripModel.builder()
+        .setId(id)
+        .setName("name")
+        .setUserId("user2")
+        .setPlacesApiPlaceId("place-api-place-id")
+        .build();
+  }
+
+  private static TripModel createTripForUser1() {
+    String id = KeyFactory.keyToString(KeyFactory.createKey("user1", UUID.randomUUID().toString()));
+    return TripModel.builder()
+        .setId(id)
+        .setName("name")
+        .setUserId("user1")
+        .setPlacesApiPlaceId("place-api-place-id")
+        .build();
   }
 }

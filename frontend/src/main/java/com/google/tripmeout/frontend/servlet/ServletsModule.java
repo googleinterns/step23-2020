@@ -12,6 +12,7 @@ public class ServletsModule extends ServletModule {
     serveRegex("/api/trips/[^/]+/placeVisits/[^/]+").with(PlaceVisitIndividualServlet.class);
     serveRegex("/api/trips/[^/]+/placeVisits").with(PlaceVisitParentServlet.class);
     serveRegex("/api/trips/[^/]+").with(TripServlet.class);
-    serve("/api/trips").with(TripParentServlet.class);
+    serveRegex("/api/trips").with(TripParentServlet.class);
+    serveRegex("/api(?:/.*)?").with(InvalidPathServlet.class);
   }
 }

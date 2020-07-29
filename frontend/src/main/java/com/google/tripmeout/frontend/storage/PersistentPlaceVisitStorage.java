@@ -7,6 +7,7 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.KeyFactory.Builder;
+import com.google.appengine.repackaged.com.google.datastore.v1.Datastore;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.tripmeout.frontend.PlaceVisitModel;
@@ -25,14 +26,18 @@ public class PersistentPlaceVisitStorage implements PlaceVisitStorage {
   private static final String PLACE_NAME_PROPERTY_NAME = "placeName";
   private static final String PLACE_API_ID_PROPERTY_NAME = "placeApiId";
 
+  private final DatastoreService datastore;
+
+  PersistentPlaceVisitStorage(DatastoreService datastore){
+      this.datastore = datastore;
+  }
+
   public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key placeKey = KeyFactory.createKey(PLACE_KIND_NAME, placeVisit.id());
-    placeVisit.toBuilder().setId(KeyFactory.keyToString(placeKey));
-    Entity placeEntity = new Entity(placeVisit.tripId(), placeKey);
+    Key placeKey = KeyFactory.stringToKey(placeVisit.id());
+    Entity placeEntity = new Entity(placeKey);
     placeEntity.setProperty(ID_PROPERTY_NAME, placeVisit.id());
     placeEntity.setProperty(TRIP_ID_PROPERTY_NAME, placeVisit.tripId());
-    placeEntity.setProperty(USER_MARK_PROPERTY_NAME, placeVisit.userMark());
+    placeEntity.setProperty(USER_MARK_PROPERTY_NAME, placeVisit.userMark().toString());
     placeEntity.setProperty(PLACE_NAME_PROPERTY_NAME, placeVisit.placeName());
     placeEntity.setProperty(PLACE_API_ID_PROPERTY_NAME, placeVisit.placesApiPlaceId());
     datastore.put(placeEntity);
@@ -40,25 +45,24 @@ public class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   public void removePlaceVisit(String tripId, String placeVisitId)
       throws PlaceVisitNotFoundException {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key placeKey = KeyFactory.stringToKey(placeVisitId);
     datastore.delete(placeKey);
   }
 
   public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeVisitId) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key placeKey = KeyFactory.stringToKey(placeVisitId);
     Optional<PlaceVisitModel> optionalPlace = Optional.empty();
     try {
       Entity placeEntity = datastore.get(placeKey);
+      String mark = (String) placeEntity.getProperty(USER_MARK_PROPERTY_NAME);
+      PlaceVisitModel.UserMark userMark = PlaceVisitModel.UserMark.valueOf(mark);
       optionalPlace = Optional.of(
           PlaceVisitModel.builder()
               .setId((String) placeEntity.getProperty(ID_PROPERTY_NAME))
               .setPlaceName((String) placeEntity.getProperty(PLACE_NAME_PROPERTY_NAME))
               .setPlacesApiPlaceId((String) placeEntity.getProperty(PLACE_API_ID_PROPERTY_NAME))
               .setTripId((String) placeEntity.getProperty(TRIP_ID_PROPERTY_NAME))
-              .setUserMark(
-                  (PlaceVisitModel.UserMark) placeEntity.getProperty(USER_MARK_PROPERTY_NAME))
+              .setUserMark(userMark)
               .build());
 
     } catch (EntityNotFoundException e) {
@@ -68,11 +72,10 @@ public class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   public PlaceVisitModel updateUserMarkOrAddPlaceVisit(
       PlaceVisitModel placeVisit, PlaceVisitModel.UserMark newStatus) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key placeKey = KeyFactory.stringToKey(placeVisit.id());
     try {
       Entity placeEntity = datastore.get(placeKey);
-      placeEntity.setProperty(USER_MARK_PROPERTY_NAME, newStatus);
+      placeEntity.setProperty(USER_MARK_PROPERTY_NAME, newStatus.toString());
       datastore.put(placeEntity);
       placeVisit.toBuilder().setUserMark(newStatus);
 
@@ -83,18 +86,18 @@ public class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   public List<PlaceVisitModel> getTripPlaceVisits(String tripId) {
     Query query = new Query(tripId);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     List<PlaceVisitModel> places = new ArrayList<>();
     for (Entity placeEntity : results.asIterable()) {
+      String mark = (String) placeEntity.getProperty(USER_MARK_PROPERTY_NAME);
+      PlaceVisitModel.UserMark userMark = PlaceVisitModel.UserMark.valueOf(mark);
       places.add(
           PlaceVisitModel.builder()
               .setId((String) placeEntity.getProperty(ID_PROPERTY_NAME))
               .setPlaceName((String) placeEntity.getProperty(PLACE_NAME_PROPERTY_NAME))
               .setPlacesApiPlaceId((String) placeEntity.getProperty(PLACE_API_ID_PROPERTY_NAME))
               .setTripId((String) placeEntity.getProperty(TRIP_ID_PROPERTY_NAME))
-              .setUserMark(
-                  (PlaceVisitModel.UserMark) placeEntity.getProperty(USER_MARK_PROPERTY_NAME))
+              .setUserMark(userMark)
               .build());
     }
     return places;
@@ -102,7 +105,6 @@ public class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   public void removeTripPlaceVisits(String tripId) throws TripNotFoundException {
     Query query = new Query(tripId);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     for (Entity placeEntity : results.asIterable()) {
       datastore.delete(placeEntity.getKey());

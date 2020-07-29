@@ -4,7 +4,6 @@
 -include environment.mk
 
 CLANG_FORMAT?=clang-format
-DART_CLI?=dart
 FIND?=find
 FLUTTER_APP_ROOT?=frontend/ui
 FLUTTER_CLI?=flutter
@@ -16,7 +15,7 @@ SHELL=/bin/bash
 
 format:
 	$(FIND) frontend -name '*.java' -exec $(CLANG_FORMAT) --style=Google -i --sort-includes '{}' +
-	$(DART_CLI) format $(FLUTTER_APP_ROOT)
+	$(FLUTTER_CLI) format $(FLUTTER_APP_ROOT)
 
 test-secrets: encrypted/ui-maps-places-test.enc
 	mkdir test-secrets

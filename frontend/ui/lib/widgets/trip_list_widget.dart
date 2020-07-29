@@ -37,13 +37,13 @@ class TripListWidget extends StatelessWidget {
                     context, Router.createTripViewRoute(trip.id));
               },
               trailing: IconButton(
-                    onPressed: () {
-                      _showDialog(context);
-                    },
-                    icon: Icon(Icons.delete),
-                    color: Colors.red,
-                    tooltip: 'Click here to delete trip.',
-                  ),
+                onPressed: () {
+                  _showDialog(context);
+                },
+                icon: Icon(Icons.delete),
+                color: Colors.red,
+                tooltip: 'Click here to delete trip.',
+              ),
             ))
         .toList();
     return ListView(children: listItems);

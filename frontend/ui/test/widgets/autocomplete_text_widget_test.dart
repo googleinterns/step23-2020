@@ -13,8 +13,8 @@ void main() {
   PlacesApiServices placesApiServices = PlacesApiServices();
   testWidgets('Showing the text on page correctly shows up',
       (WidgetTester tester) async {
-    var autocompleteWidget =
-        MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
+    var autocompleteWidget = MapsApiPlacesTextFieldWidget(
+        ['(cities)'], placesApiServices, (placeid) => Container());
     await tester.pumpWidget(wrapForDirectionality(autocompleteWidget));
 
     await tester.pumpAndSettle();
@@ -25,24 +25,22 @@ void main() {
   });
 
   testWidgets('Typing in text gives suggestions', (WidgetTester tester) async {
-    var autocompleteWidget =
-        MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
+    var autocompleteWidget = MapsApiPlacesTextFieldWidget(
+        ['(cities)'], placesApiServices, (placeid) => Container());
     await tester.pumpWidget(wrapForDirectionality(autocompleteWidget));
 
     Finder autocomplete =
         find.widgetWithText(TextField, 'Enter your Destination');
     expect(autocomplete, findsOneWidget);
-    await tester.enterText(find.byType(TextField), "London");
+    await tester.enterText(find.byType(TextField), 'London');
 
     await tester.pumpAndSettle();
     expect(find.byType(ListTile), findsNWidgets(2));
-
-    PlaceVisit london = PlaceVisit(placesApiPlaceId: "LCY", name: "London, UK");
 
     await tester.tap(find.widgetWithText(ListTile, 'London, UK'));
     await tester.pumpAndSettle();
 
     TextField textbox = autocomplete.evaluate().first.widget;
-    expect(textbox.controller.text, "London, UK");
+    expect(textbox.controller.text, 'London, UK');
   });
 }

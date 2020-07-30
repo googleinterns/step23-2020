@@ -45,7 +45,27 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(
-        find.widgetWithText(TextField, 'enter your trip name'), "Italy");
+        find.widgetWithText(TextField, 'enter your trip name'), 'London Trip');
+    await tester.pumpAndSettle();
+
+    Finder autocomplete =
+        find.widgetWithText(TextField, 'Enter your Destination');
+    expect(autocomplete, findsOneWidget);
+
+    await tester.enterText(find.byType(MapsApiPlacesTextFieldWidget), 'London');
+    await tester.pumpAndSettle();
+
+    TextField textbox = find
+        .widgetWithText(TextField, 'Enter your Destination')
+        .evaluate()
+        .first
+        .widget;
+    expect(textbox.controller.text, 'London');
+
+    //TODO figure out why it can't find any list tiles
+    expect(find.byType(ListTile), findsNWidgets(2));
+
+    await tester.tap(find.widgetWithText(ListTile, 'London, UK'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.widgetWithText(RaisedButton, 'Submit'));
@@ -54,7 +74,7 @@ void main() {
     Trip createdTrip =
         verify(tripService.createTrip(captureAny)).captured.single;
 
-    expect(createdTrip.name, equals('Italy'));
+    expect(createdTrip.name, equals('London Trip'));
   });
 }
 

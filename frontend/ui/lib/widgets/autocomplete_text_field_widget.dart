@@ -17,7 +17,7 @@ class MapsApiPlacesTextFieldWidget<T> extends StatefulWidget {
   _MapsApiPlacesTextFieldState createState() => _MapsApiPlacesTextFieldState();
 }
 
-typedef _OnClick<T> = Widget Function(String);
+typedef _OnClick<T> = void Function(String);
 
 class _MapsApiPlacesTextFieldState<T>
     extends State<MapsApiPlacesTextFieldWidget<T>> {

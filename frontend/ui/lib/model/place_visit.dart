@@ -91,12 +91,23 @@ class PlaceVisit {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'tripId': this.tripid,
-      'id': this.id,
-      'placeName': this.name,
-      'placesApiPlaceId': this.placesApiPlaceId,
-      'userMark': PlaceVisit.userMarkToString(this.userMark),
-    };
+    Map<String, dynamic> json = Map();
+    if (tripid != null) {
+      json['tripId'] = this.tripid;
+    }
+    if (id != null) {
+      json['id'] = this.id;
+    }
+    if (this.name != null) {
+      json['placeName'] = this.name;
+    }
+    if (this.placesApiPlaceId != null) {
+      json['placesApiPlaceId'] = this.placesApiPlaceId;
+    }
+    if (this.userMark != null) {
+      json['userMark'] = PlaceVisit.userMarkToString(this.userMark);
+    }
+
+    return json;
   }
 }

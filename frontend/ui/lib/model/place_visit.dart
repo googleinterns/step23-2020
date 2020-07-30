@@ -8,20 +8,15 @@ enum UserMark {
 }
 
 class PlaceVisit {
-  static final Map<String, UserMark> stringToUserMark = {
-    "YES": UserMark.YES,
-    "NO": UserMark.NO,
-    "MAYBE": UserMark.MAYBE,
-    "UNKNOWN": UserMark.UNKNOWN,
-  };
-
-  static UserMark userMarkEnumFromString(String userMark) {
-    UserMark mark = stringToUserMark[userMark];
-    if (mark == null) {
-      throw Exception("invalid user mark");
-    }
-    return mark;
-  }
+  static final Map<String, UserMark> stringToUserMark = Map.fromIterable(
+    UserMark.values,
+    key: (v) {
+      final s = v.toString();
+      final dotIndex = s.lastIndexOf(".");
+      return s.substring(dotIndex + 1);
+    },
+    value: (v) => v,
+  );
 
   PlaceVisit(
       {this.name, this.id, this.tripid, this.placesApiPlaceId, this.userMark});
@@ -31,6 +26,20 @@ class PlaceVisit {
   final String tripid;
   final UserMark userMark;
   final String placesApiPlaceId;
+
+  static userMarkEnumFromString(String mark) {
+    if (stringToUserMark[mark] == null) {
+      //TODO: create custom exception
+      throw Exception("invalid userMark");
+    }
+    return stringToUserMark[mark];
+  }
+
+  static String userMarkToString(UserMark userMark) {
+    final s = userMark.toString();
+    final dotIndex = s.lastIndexOf(".");
+    return s.substring(dotIndex + 1);
+  }
 
   factory PlaceVisit.from(PlaceVisit placeVisit,
       {name, id, tripid, userMark, placesApiPlaceId}) {
@@ -74,10 +83,31 @@ class PlaceVisit {
 
   factory PlaceVisit.fromJson(Map<String, dynamic> json) {
     return PlaceVisit(
-        name: json['name'],
+        name: json['placeName'],
         id: json['id'],
-        tripid: json['tripid'],
+        tripid: json['tripId'],
         userMark: userMarkEnumFromString(json['userMark']),
         placesApiPlaceId: json['placesApiPlaceId']);
+  }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = Map();
+    if (tripid != null) {
+      json['tripId'] = this.tripid;
+    }
+    if (id != null) {
+      json['id'] = this.id;
+    }
+    if (this.name != null) {
+      json['placeName'] = this.name;
+    }
+    if (this.placesApiPlaceId != null) {
+      json['placesApiPlaceId'] = this.placesApiPlaceId;
+    }
+    if (this.userMark != null) {
+      json['userMark'] = PlaceVisit.userMarkToString(this.userMark);
+    }
+
+    return json;
   }
 }

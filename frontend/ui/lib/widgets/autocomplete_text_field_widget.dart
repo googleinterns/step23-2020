@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_maps/google_maps_places.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:tripmeout/services/places_services.dart';
@@ -17,7 +18,7 @@ class MapsApiPlacesTextFieldWidget<T> extends StatefulWidget {
   _MapsApiPlacesTextFieldState createState() => _MapsApiPlacesTextFieldState();
 }
 
-typedef _OnClick<T> = void Function(String);
+typedef _OnClick<T> = void Function(PlaceVisit);
 
 class _MapsApiPlacesTextFieldState<T>
     extends State<MapsApiPlacesTextFieldWidget<T>> {
@@ -51,7 +52,7 @@ class _MapsApiPlacesTextFieldState<T>
             },
             onSuggestionSelected: (suggestion) {
               this._typeAheadController.text = suggestion.name;
-              onClick.call(suggestion.placesApiPlaceId);
+              onClick.call(suggestion);
             },
             noItemsFoundBuilder: (BuildContext context) =>
                 Text('Please enter a city'),

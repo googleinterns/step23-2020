@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/model/trip.dart';
@@ -38,12 +39,12 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
     ));
   }
 
-  void displayImages(String placesApiPlaceId) async {
+  void displayImages(PlaceVisit placeVisit) async {
     List<String> imageUrls =
-        await placesApiServices.getPhotos(placesApiPlaceId);
+        await placesApiServices.getPhotos(placeVisit.placesApiPlaceId);
     setState(() {
       _showPics = true;
-      placeId = placesApiPlaceId;
+      placeId = placeVisit.placesApiPlaceId;
       if (imageUrls.length == 0) {
         _imageWidget = Text("No images found.");
       } else {

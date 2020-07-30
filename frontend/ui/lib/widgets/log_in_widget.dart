@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
 class LogInWidget extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
-
     final loginButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(10.0),
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {},
-        child: Text("Login",
-            textAlign: TextAlign.center,
+        child: Text(
+          "Login",
+          textAlign: TextAlign.center,
         ),
       ),
     );

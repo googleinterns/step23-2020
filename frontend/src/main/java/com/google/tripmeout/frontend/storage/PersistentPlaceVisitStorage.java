@@ -43,6 +43,7 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
       transaction.rollback();
       throw new PlaceVisitAlreadyExistsException("Place Already Exists");
     } catch (EntityNotFoundException e) {
+        //Do nothing
     }
     try {
       Entity placeEntity = new Entity(placeKey);
@@ -53,8 +54,8 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
       placeEntity.setProperty(PLACE_API_ID_PROPERTY_NAME, placeVisit.placesApiPlaceId());
       datastore.put(placeEntity);
     } catch (Exception e) {
+      //TODO:Wrap this in new storage exception
       transaction.rollback();
-      throw e;
     }
     transaction.commit();
   }
@@ -69,8 +70,11 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
       transaction.rollback();
       throw new PlaceVisitNotFoundException("Place with id: " + placeVisitId + " doesn't exist");
     }
-    datastore.delete(placeKey);
-    transaction.commit();
+    try{
+         datastore.delete(placeKey);
+    }finally{
+        transaction.commit();
+    } 
   }
 
   public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeVisitId) {
@@ -90,12 +94,13 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
               .build());
 
     } catch (EntityNotFoundException e) {
+         //Do nothing
     }
     return optionalPlace;
   }
 
   public PlaceVisitModel updateUserMarkOrAddPlaceVisit(
-      PlaceVisitModel placeVisit, PlaceVisitModel.UserMark newStatus) {
+    PlaceVisitModel placeVisit, PlaceVisitModel.UserMark newStatus) {
     Key placeKey = KeyFactory.stringToKey(placeVisit.id());
     try {
       Entity placeEntity = datastore.get(placeKey);
@@ -104,6 +109,7 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
       placeVisit.toBuilder().setUserMark(newStatus);
 
     } catch (EntityNotFoundException e) {
+    
     }
     return placeVisit;
   }
@@ -128,13 +134,19 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   public void removeTripPlaceVisits(String tripId) throws TripNotFoundException {
+    Transaction transaction = datastore.beginTransaction();
     Query query = new Query(tripId);
     PreparedQuery results = datastore.prepare(query);
-    if (results.countEntities() == 0) {
-      throw new TripNotFoundException("Trip with id: " + tripId + " doesn't exist");
-    }
+    int count = 0;
     for (Entity placeEntity : results.asIterable()) {
-      datastore.delete(placeEntity.getKey());
+        Key key = placeEntity.getKey();
+      datastore.delete(key);
+      count +=1;
     }
+    if(count==0){
+        transaction.rollback();
+        throw new TripNotFoundException("Trip with id: " + tripId + " doesn't exist");
+    }
+    transaction.commit();
   }
 }

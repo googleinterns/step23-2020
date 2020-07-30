@@ -37,8 +37,10 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
     Key placeKey = KeyFactory.stringToKey(placeVisit.id());
+    Transaction transaction = datastore.beginTransaction();
     try {
       datastore.get(placeKey);
+      transaction.rollback();
       throw new PlaceVisitAlreadyExistsException("Place Already Exists");
     } catch (EntityNotFoundException e) {
     }
@@ -51,19 +53,24 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
       placeEntity.setProperty(PLACE_API_ID_PROPERTY_NAME, placeVisit.placesApiPlaceId());
       datastore.put(placeEntity);
     } catch (Exception e) {
+      transaction.rollback();
       throw e;
     }
+    transaction.commit();
   }
 
   public void removePlaceVisit(String tripId, String placeVisitId)
       throws PlaceVisitNotFoundException {
     Key placeKey = KeyFactory.stringToKey(placeVisitId);
+    Transaction transaction = datastore.beginTransaction();
     try {
       datastore.get(placeKey);
     } catch (EntityNotFoundException e) {
+      transaction.rollback();
       throw new PlaceVisitNotFoundException("Place with id: " + placeVisitId + " doesn't exist");
     }
     datastore.delete(placeKey);
+    transaction.commit();
   }
 
   public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeVisitId) {

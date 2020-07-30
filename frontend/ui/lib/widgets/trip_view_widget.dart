@@ -79,7 +79,13 @@ class TripViewWidget extends StatelessWidget {
   }
 
   Future<List<PlaceBlockWidget>> getPlaceBlockWidgets(String tripid) async {
-    List<PlaceVisit> placeVisits = await placeVisitService.listPlaceVisits(tripid);
+    //List<PlaceVisit> placeVisits = await placeVisitService.listPlaceVisits(tripid);
+    PlaceVisit seattle = PlaceVisit(
+      name: 'Seattle',
+      placesApiPlaceId: 'ChIJ3S-JXmauEmsRUcIaWtf4MzE',
+      userMark: UserMark.YES
+    );
+    List<PlaceVisit> placeVisits = [seattle];
 
     List<PlaceBlockWidget> placeBlockWidgets = [];
     for (int i = 0; i < placeVisits.length; i++) {

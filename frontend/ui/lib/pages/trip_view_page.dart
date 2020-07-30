@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/services/trip_service.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps/google_maps_places.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PlaceBlockWidget extends StatefulWidget {
   final PlaceVisit placeVisit;
@@ -35,6 +36,8 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print(placeVisit.id);
+    print(placeVisit.tripid);
 
     if (placeVisit.userMark == UserMark.YES) {
       setState(() {
@@ -80,50 +83,175 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
             ])),
         children: [
           Column(children: [
-            Row(children: details.types.map((type) => Text(type)).toList()),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20.0,
+                right: 20.0,
+                bottom: 10.0
+              ),
+              child: Row(children: formatTypes(details.types)),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(children: [
-                  Text(details.website), 
-                  Text(details.formattedAddress), 
-                  Text(details.formattedPhoneNumber)
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                      top: 10.0,
+                      bottom: 10.0
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Website: ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            color: Theme.of(context).accentColor
+                          ),
+                        ),
+                        InkWell(
+                          child: new Text(
+                            details.website ?? "",
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          onTap: () => launch(details.website)
+                        ),
+                      ],
+                    ),
+                  ), 
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                      top: 10.0,
+                      bottom: 10.0
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Address: ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            color: Theme.of(context).accentColor
+                          ),
+                        ),
+                        Text(details.formattedAddress ?? ""),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                      top: 10.0,
+                      bottom: 10.0
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Phone #: ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            color: Theme.of(context).accentColor
+                          ),
+                        ),
+                        Text(details.formattedPhoneNumber ?? ""),
+                      ],
+                    ),
+                  ),
                 ]),
                 Row(children: [
-                  Row(children: getDollarSigns(details.priceLevel)),
-                  Row(children: getStars(details.rating))
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                      top: 10.0,
+                      bottom: 10.0
+                    ),
+                    child: Row(children: getDollarSigns(details.priceLevel))
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                      top: 10.0,
+                      bottom: 10.0
+                    ),
+                    child: Row(children: getStars(details.rating))
+                  ),
                 ]),
               ],
             ),
-            Image(image: NetworkImage(details.photos[0].getUrl(PhotoOptions())),)
+            Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: Image(image: NetworkImage(details.photos[0].getUrl(
+              PhotoOptions()
+                ..maxHeight = 450
+                ..maxWidth = 450)))
+            ),
           ])
         ]);
   }
 
   List<Widget> getDollarSigns(num numSigns) {
+    if (numSigns == null) {
+      return [Text('no price info found')];
+    }
     List<Icon> dollarSigns = [];
     while (numSigns > 0) {
-      dollarSigns.add(Icon(Icons.attach_money));
+      dollarSigns.add(Icon(Icons.attach_money, color: Colors.green));
       numSigns--;
     }
-
     return dollarSigns;
   }
 
   List<Widget> getStars(num numStars) {
+    if (numStars == null) {
+      return [Text('no ratings found')];
+    }
+    int totalStars = 5;
     List<Icon> stars = [];
-    while (numStars > 0) {
-      stars.add(Icon(Icons.star));
+    while (numStars > 1) {
+      stars.add(Icon(Icons.star, color: Colors.amber));
       numStars--;
+      totalStars--;
+    }
+    if (numStars > 0.25 && numStars < 0.75) {
+      stars.add(Icon(Icons.star_half, color: Colors.amber));
+      totalStars--;
+    } else if (numStars >= 0.75) {
+      stars.add(Icon(Icons.star, color: Colors.amber));
+      totalStars--;
     }
 
-    if (numStars > 0.25 && numStars < 0.75) {
-      stars.add(Icon(Icons.star_half));
-    } else if (numStars >= 0.75) {
-      stars.add(Icon(Icons.star));
+    while(totalStars > 0) {
+      stars.add(Icon(Icons.star_border, color: Colors.amber));
+      totalStars--;
     }
 
     return stars;
+  }
+
+  List<Widget> formatTypes(List<String> types) {
+    List<Text> formattedTypes = [];
+    for (int i = 0; i < types.length; i++) {
+      String type;
+      if (i == types.length - 1) {
+        type = types[i];
+      } else {
+        type = types[i] + ", ";
+      }
+      formattedTypes.add(Text(
+        type, 
+        style: TextStyle(
+          fontStyle: FontStyle.italic),
+      ));
+    }
+    return formattedTypes;
   }
 }
 

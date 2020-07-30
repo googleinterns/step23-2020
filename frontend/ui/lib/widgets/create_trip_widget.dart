@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
+import 'package:tripmeout/router/router.dart';
 
 //TODO: Add loading screen after to the Create Trip Widget
 
@@ -20,26 +21,13 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
   bool _enabled = false;
 
   String place;
-  int radius = 0;
-  String newInformation = 'Grabbed info placed here.';
-  void submitTrip() async {
-    try {
-      await tripService.createTrip(Trip(
-        name: place,
-        placesApiPlaceId: 'ChIJVTPokywQkFQRmtVEaUZlJRA',
-      ));
-      setState(() {});
-    } catch (e, s) {
-      print("error creating trip: $e");
-      print(s);
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("Error creating trip"),
-        action: SnackBarAction(
-          label: "Dismiss",
-          onPressed: () {},
-        ),
-      ));
-    }
+
+  Future<Trip> submitTrip() async {
+    return tripService.createTrip(Trip(
+      name: place,
+      // Everywhere Seattle now.
+      placesApiPlaceId: 'ChIJVTPokywQkFQRmtVEaUZlJRA',
+    ));
   }
 
   @override
@@ -47,7 +35,17 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
     var _onPressed;
     if (_enabled) {
       _onPressed = () {
-        submitTrip();
+        submitTrip().then((trip) {
+          Navigator.pushNamed(context, Router.createTripViewRoute(trip.id));
+        }, onError: (error) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text("Error creating trip"),
+            action: SnackBarAction(
+              label: "Dismiss",
+              onPressed: () {},
+            ),
+          ));
+        });
       };
     }
 

@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tripmeout/model/place_visit.dart';
 
-
 class PlacesApiServices {
-
   Future<List<PlaceVisit>> getAutocomplete(
       String input, List<String> allowedTypes) {
     if (input == null || input == "") {
@@ -13,7 +11,8 @@ class PlacesApiServices {
 
     Completer<List<PlaceVisit>> completer = Completer();
     PlaceVisit london = PlaceVisit(name: 'London, UK', placesApiPlaceId: 'LCY');
-    PlaceVisit la = PlaceVisit(name: 'Los Angeles, CA, US', placesApiPlaceId: 'LAX');
+    PlaceVisit la =
+        PlaceVisit(name: 'Los Angeles, CA, US', placesApiPlaceId: 'LAX');
     completer.complete([london, la]);
     return completer.future;
   }

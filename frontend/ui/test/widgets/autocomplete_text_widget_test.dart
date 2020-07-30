@@ -10,10 +10,11 @@ import 'package:tripmeout/model/place_visit.dart';
 import 'create_trip_widget_test.dart';
 
 void main() {
-  PlacesApiServices placesApiServices = PlacesApiServices(); 
+  PlacesApiServices placesApiServices = PlacesApiServices();
   testWidgets('Showing the text on page correctly shows up',
       (WidgetTester tester) async {
-    var autocompleteWidget = MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
+    var autocompleteWidget =
+        MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
     await tester.pumpWidget(wrapForDirectionality(autocompleteWidget));
 
     await tester.pumpAndSettle();
@@ -24,10 +25,12 @@ void main() {
   });
 
   testWidgets('Typing in text gives suggestions', (WidgetTester tester) async {
-    var autocompleteWidget = MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
+    var autocompleteWidget =
+        MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices);
     await tester.pumpWidget(wrapForDirectionality(autocompleteWidget));
 
-    Finder autocomplete = find.widgetWithText(TextField, 'Enter your Destination');
+    Finder autocomplete =
+        find.widgetWithText(TextField, 'Enter your Destination');
     expect(autocomplete, findsOneWidget);
     await tester.enterText(find.byType(TextField), "London");
 
@@ -41,6 +44,5 @@ void main() {
 
     TextField textbox = autocomplete.evaluate().first.widget;
     expect(textbox.controller.text, "London, UK");
-
   });
 }

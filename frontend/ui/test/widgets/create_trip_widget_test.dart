@@ -9,6 +9,7 @@ import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
 
 class MockTripService extends Mock implements TripService {}
+
 class MockPlacesApiServices extends Mock implements PlacesApiServices {}
 
 void main() {
@@ -44,14 +45,14 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(
-         find.widgetWithText(TextField, 'enter your trip name'), "Italy");
+        find.widgetWithText(TextField, 'enter your trip name'), "Italy");
     await tester.pumpAndSettle();
-    
+
     await tester.tap(find.widgetWithText(RaisedButton, 'Submit'));
     await tester.pumpAndSettle();
 
     Trip createdTrip =
-         verify(tripService.createTrip(captureAny)).captured.single;
+        verify(tripService.createTrip(captureAny)).captured.single;
 
     expect(createdTrip.name, equals('Italy'));
   });

@@ -11,7 +11,6 @@ class Router {
   static final String createTripRoute = '/trips/new';
   static final RegExp tripViewRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)$');
 
-
   final TripService tripService;
   final PlaceVisitService placeVisitService;
   final PlacesApiServices placesApiServices = PlacesApiServices();

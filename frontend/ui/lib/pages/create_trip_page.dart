@@ -8,14 +8,15 @@ class CreateTripPage extends StatelessWidget {
   final TripService tripService;
   final PlacesApiServices placesApiServices;
 
-
-  CreateTripPage(this.tripService, this.placesApiServices, {Key key}) : super(key: key);
+  CreateTripPage(this.tripService, this.placesApiServices, {Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: defaultAppBar(context),
-      body: Center(child: CreateTripWidget(this.tripService, this.placesApiServices)),
+      body: Center(
+          child: CreateTripWidget(this.tripService, this.placesApiServices)),
     );
   }
 }

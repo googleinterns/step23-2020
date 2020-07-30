@@ -5,7 +5,6 @@ import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
 import 'package:tripmeout/model/place_visit.dart';
 
-
 class PlacesApiServices {
   final AutocompleteService autocompleteService = AutocompleteService();
   final PlacesService placesService =
@@ -45,8 +44,9 @@ class PlacesApiServices {
         final photoOptions = PhotoOptions()
           ..maxHeight = 500
           ..maxWidth = 500;
-        
-        List<String> images = result.photos.map((photo) => photo.getUrl(photoOptions));
+
+        List<String> images =
+            result.photos.map((photo) => photo.getUrl(photoOptions));
         completer.complete(images);
       } else {
         completer.complete([]);

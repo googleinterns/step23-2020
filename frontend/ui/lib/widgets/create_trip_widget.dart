@@ -28,31 +28,19 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
   bool _showPics = false;
   Widget _imageWidget = Container();
 
-  String tripGivenName;
+  String userSpecifiedTripName;
   String placeId;
 
-  void submitTrip() async {
-    try {
-      await tripService.createTrip(Trip(
-        name: tripGivenName,
-        placesApiPlaceId: placeId,
-      ));
-      setState(() {});
-    } catch (e, s) {
-      print("error creating trip: $e");
-      print(s);
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("Error creating trip"),
-        action: SnackBarAction(
-          label: "Dismiss",
-          onPressed: () {},
-        ),
-      ));
-    }
+  Future<Trip> submitTrip() async {
+    return tripService.createTrip(Trip(
+      name: userSpecifiedTripName,
+      placesApiPlaceId: placeId,
+    ));
   }
 
   void displayImages(String placesApiPlaceId) async {
-    List<String> imageUrls = await placesApiServices.getPhotos(placesApiPlaceId);
+    List<String> imageUrls =
+        await placesApiServices.getPhotos(placesApiPlaceId);
     setState(() {
       _showPics = true;
       placeId = placesApiPlaceId;
@@ -63,7 +51,8 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
           return Card(child: Image(image: NetworkImage(url)));
         })).toList();
 
-        _imageWidget = Container(height: 450, width: 500, child: ListView(children: imageWidgets));
+        _imageWidget = Container(
+            height: 450, width: 500, child: ListView(children: imageWidgets));
       }
     });
   }
@@ -96,12 +85,12 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             child: TextField(
               onChanged: (text) {
                 if (text == '') {
-                  tripGivenName = text;
+                  userSpecifiedTripName = text;
                   setState(() {
                     _enabled = false;
                   });
                 } else {
-                  tripGivenName = text;
+                  userSpecifiedTripName = text;
                   setState(() {
                     _enabled = true;
                   });
@@ -115,7 +104,8 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
             ),
           ),
         ),
-        MapsApiPlacesTextFieldWidget(['(cities)'], placesApiServices, displayImages),
+        MapsApiPlacesTextFieldWidget(
+            ['(cities)'], placesApiServices, displayImages),
         _imageWidget,
         Padding(
           padding: const EdgeInsets.all(25.0),

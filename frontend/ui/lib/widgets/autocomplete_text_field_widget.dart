@@ -10,16 +10,17 @@ class MapsApiPlacesTextFieldWidget<T> extends StatefulWidget {
   final PlacesApiServices placesApiServices;
   final _OnClick<T> onClick;
 
-  MapsApiPlacesTextFieldWidget(this.allowedTypes, this.placesApiServices, @required this.onClick);
+  MapsApiPlacesTextFieldWidget(
+      this.allowedTypes, this.placesApiServices, @required this.onClick);
 
   @override
-  _MapsApiPlacesTextFieldState createState() =>
-      _MapsApiPlacesTextFieldState();
+  _MapsApiPlacesTextFieldState createState() => _MapsApiPlacesTextFieldState();
 }
 
 typedef _OnClick<T> = Widget Function(String);
 
-class _MapsApiPlacesTextFieldState<T> extends State<MapsApiPlacesTextFieldWidget<T>> {
+class _MapsApiPlacesTextFieldState<T>
+    extends State<MapsApiPlacesTextFieldWidget<T>> {
   final TextEditingController _typeAheadController = TextEditingController();
   PlacesApiServices get placesApiServices => widget.placesApiServices;
   List<String> get allowedTypes => widget.allowedTypes;
@@ -52,7 +53,8 @@ class _MapsApiPlacesTextFieldState<T> extends State<MapsApiPlacesTextFieldWidget
               this._typeAheadController.text = suggestion.name;
               onClick.call(suggestion.placesApiPlaceId);
             },
-            noItemsFoundBuilder: (BuildContext context) => Text('Please enter a city'),
+            noItemsFoundBuilder: (BuildContext context) =>
+                Text('Please enter a city'),
           ),
         ),
       ],

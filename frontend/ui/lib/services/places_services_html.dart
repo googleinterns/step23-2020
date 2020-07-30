@@ -58,4 +58,17 @@ class PlacesApiServices {
     return PlaceWrapper(
         name: suggestion.description, placeId: suggestion.placeId);
   }
+  
+  Future<PlaceResult> getPlaceDetails(String placeId) {
+    Completer<PlaceResult> completer = Completer();
+    final request = PlaceDetailsRequest()..placeId = placeId;
+    placesService.getDetails(request, (result, status) async {
+      if (status == PlacesServiceStatus.OK) {
+        completer.complete(result);
+      } else {
+        completer.completeError("errored getting place details with status code: $status");
+      }
+    });
+    return completer.future;
+  }
 }

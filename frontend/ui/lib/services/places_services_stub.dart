@@ -22,4 +22,19 @@ class PlacesApiServices {
     completer.complete([]);
     return completer.future;
   }
+
+  Future<PlaceResult> getPlaceDetails(String placeId) {
+    Completer<PlaceResult> completer = Completer();
+    PlaceResult london = PlaceResult()
+      ..placeId = placeId
+      ..name = 'London'
+      ..formattedAddress = 'London, UK'
+      ..priceLevel = 4
+      ..rating = 4
+      ..types = ['city', 'tourist attraction']
+      ..url = 'london.uk';
+    
+    completer.complete(london);
+    return completer.future;
+  }
 }

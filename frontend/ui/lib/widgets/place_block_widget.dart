@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps/google_maps_places.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 
 class PlaceBlockWidget extends StatefulWidget {
   final PlaceVisit placeVisit;
   final PlaceVisitService placeVisitService;
+  final PlaceResult details;
 
-  PlaceBlockWidget(this.placeVisit, this.placeVisitService);
+  PlaceBlockWidget(this.placeVisit, this.placeVisitService, this.details);
 
   @override
-  State createState() => _PlaceBlockWidgetState(placeVisit, placeVisitService);
+  State createState() => _PlaceBlockWidgetState(placeVisit, placeVisitService, details);
 }
 
 class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
   final PlaceVisit placeVisit;
   final PlaceVisitService placeVisitService;
-  _PlaceBlockWidgetState(this.placeVisit, this.placeVisitService);
+  final PlaceResult details;
+  _PlaceBlockWidgetState(this.placeVisit, this.placeVisitService, this.details);
 
   List<Widget> pictures = new List<Widget>();
   List<Color> colors = [
@@ -76,16 +79,51 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
               ),
             ])),
         children: [
-          Container(
-              height: 200,
-              child: ListView(children: [
-                Container(
-                    height: 100, child: Center(child: Text('Description'))),
-                Container(height: 200, child: getPictureWidgets(colors)),
-                Container(height: 100, child: Center(child: Text('Bar'))),
-                Container(height: 100, child: Center(child: Text('Baz'))),
-              ]))
+          Column(children: [
+            Row(children: details.types.map((type) => Text(type)).toList()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(children: [
+                  Text(details.website), 
+                  Text(details.formattedAddress), 
+                  Text(details.formattedPhoneNumber)
+                ]),
+                Row(children: [
+                  Row(children: getDollarSigns(details.priceLevel)),
+                  Row(children: getStars(details.rating))
+                ]),
+              ],
+            ),
+            Image(image: NetworkImage(details.photos[0].getUrl(PhotoOptions())),)
+          ])
         ]);
+  }
+
+  List<Widget> getDollarSigns(num numSigns) {
+    List<Icon> dollarSigns = [];
+    while (numSigns > 0) {
+      dollarSigns.add(Icon(Icons.attach_money));
+      numSigns--;
+    }
+
+    return dollarSigns;
+  }
+
+  List<Widget> getStars(num numStars) {
+    List<Icon> stars = [];
+    while (numStars > 0) {
+      stars.add(Icon(Icons.star));
+      numStars--;
+    }
+
+    if (numStars > 0.25 && numStars < 0.75) {
+      stars.add(Icon(Icons.star_half));
+    } else if (numStars >= 0.75) {
+      stars.add(Icon(Icons.star));
+    }
+
+    return stars;
   }
 }
 

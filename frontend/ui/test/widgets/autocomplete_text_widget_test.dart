@@ -9,7 +9,6 @@ import 'package:tripmeout/model/place_visit.dart';
 
 import 'create_trip_widget_test.dart';
 
-
 void main() {
   PlacesApiServices placesApiServices = PlacesApiServices(); 
   testWidgets('Showing the text on page correctly shows up',
@@ -34,7 +33,6 @@ void main() {
 
     await tester.pumpAndSettle();
     expect(find.byType(ListTile), findsNWidgets(2));
-
 
     PlaceVisit london = PlaceVisit(placesApiPlaceId: "LCY", name: "London, UK");
 

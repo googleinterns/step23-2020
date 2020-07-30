@@ -22,15 +22,16 @@ public class AuthenticationHandlerServlet extends HttpServlet {
  
    UserService userService = UserServiceFactory.getUserService();
    if (userService.isUserLoggedIn()) {
-     boolean returnInfo = true;
+     boolean loggedIn = true;
      Gson gson = new Gson();
-     String json = gson.toJson(returnInfo);
+     String json = gson.toJson(loggedIn);
      response.getWriter().println(json);
    } else {
  
-     boolean returnInfo =false;
+     boolean loggedIn =false;
      Gson gson = new Gson();
-     String json = gson.toJson(returnInfo);
+     String json = gson.toJson(loggedIn);
      response.getWriter().println(json);
    }
  }
+}

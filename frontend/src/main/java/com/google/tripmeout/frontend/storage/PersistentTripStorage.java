@@ -7,46 +7,58 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Transaction;
+import com.google.inject.Inject;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripAlreadyExistsException;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersistentTripStorage implements TripStorage {
+class PersistentTripStorage implements TripStorage {
   private static final String TRIP_ID_PROPERTY_NAME = "tripId";
   private static final String USER_ID_PROPERTY_NAME = "userId";
   private static final String NAME_PROPERTY_NAME = "name";
   private static final String PLACE_API_ID_PROPERTY_NAME = "placeId";
 
   private final DatastoreService datastore;
-
+  @Inject
   PersistentTripStorage(DatastoreService datastore) {
     this.datastore = datastore;
   }
 
   public void addTrip(TripModel trip) throws TripAlreadyExistsException {
     Key tripKey = KeyFactory.stringToKey(trip.id());
+    Transaction transaction = datastore.beginTransaction();
     try {
       datastore.get(tripKey);
-      throw new TripAlreadyExistsException("Trip Already Exits");
+      transaction.rollback();
+      throw new TripAlreadyExistsException("Trip Already Exists");
     } catch (EntityNotFoundException e) {
+    }
+    try {
       Entity tripEntity = new Entity(tripKey);
       tripEntity.setProperty(TRIP_ID_PROPERTY_NAME, trip.id());
       tripEntity.setProperty(USER_ID_PROPERTY_NAME, trip.userId());
       tripEntity.setProperty(NAME_PROPERTY_NAME, trip.name());
       tripEntity.setProperty(PLACE_API_ID_PROPERTY_NAME, trip.placesApiPlaceId());
       datastore.put(tripEntity);
+    } catch (Exception e) {
+      transaction.rollback();
     }
+    transaction.commit();
   }
   public void removeTrip(String tripId) throws TripNotFoundException {
     Key tripKey = KeyFactory.stringToKey(tripId);
+    Transaction transaction = datastore.beginTransaction();
     try {
       datastore.get(tripKey);
       datastore.delete(tripKey);
     } catch (EntityNotFoundException e) {
+      transaction.rollback();
       throw new TripNotFoundException("Trip with id: " + tripId + " not found");
     }
+    transaction.commit();
   }
 
   public void updateTripName(String tripId, String tripName) throws TripNotFoundException {

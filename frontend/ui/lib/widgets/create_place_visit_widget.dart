@@ -39,10 +39,10 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
     ));
   }
 
-  void setFields(AutocompletePrediction suggestion) {
+  void setFields(PlaceVisit suggestion) {
     setState(() {
-      placeId = suggestion.placeId;
-      placesApiSpecifiedName = suggestion.description;
+      placeId = suggestion.placesApiPlaceId;
+      placesApiSpecifiedName = suggestion.name;
     });
   }
 
@@ -52,7 +52,8 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
     if (_enabled) {
       _onPressed = () {
         submitPlaceVisit().then((placeVisit) {
-          Navigator.pushNamed(context, "/trip/${placeVisit.tripid}/placeVisits");
+          Navigator.pushNamed(
+              context, "/trip/${placeVisit.tripid}/placeVisits");
         }, onError: (error) {
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text("Error creating trip"),
@@ -69,39 +70,37 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
 
     return Column(
       children: [
-        Row(
-          children: [
-            MapsApiPlacesTextFieldWidget([], placesApiServices, setFields),
-            ToggleButtons(
-                children: [
-                  Tooltip(message: "MUST GO", child: Icon(Icons.favorite)),
-                  Tooltip(message: "TIME PERMITS", child: Icon(Icons.alarm)),
-                ],
-                onPressed: (int index) {
-                  setState(() {
-                    if (index == 0) {
-                      userMark = UserMark.YES;
-                    } else {
-                      userMark = UserMark.MAYBE;
-                    }
-                    
-                    for (int buttonIndex = 0;
-                        buttonIndex < _selections.length;
-                        buttonIndex++) {
-                      if (buttonIndex == index) {
-                        _selections[buttonIndex] = true;
-                      } else {
-                        _selections[buttonIndex] = false;
-                      }
-                    }
-                  });
-                },
-                isSelected: _selections,
-                color: Colors.black,
-                selectedColor: Theme.of(context).accentColor,
-            ),
-          ]
-        ),
+        Row(children: [
+          MapsApiPlacesTextFieldWidget([], placesApiServices, setFields),
+          ToggleButtons(
+            children: [
+              Tooltip(message: "MUST GO", child: Icon(Icons.favorite)),
+              Tooltip(message: "TIME PERMITS", child: Icon(Icons.alarm)),
+            ],
+            onPressed: (int index) {
+              setState(() {
+                if (index == 0) {
+                  userMark = UserMark.YES;
+                } else {
+                  userMark = UserMark.MAYBE;
+                }
+
+                for (int buttonIndex = 0;
+                    buttonIndex < _selections.length;
+                    buttonIndex++) {
+                  if (buttonIndex == index) {
+                    _selections[buttonIndex] = true;
+                  } else {
+                    _selections[buttonIndex] = false;
+                  }
+                }
+              });
+            },
+            isSelected: _selections,
+            color: Colors.black,
+            selectedColor: Theme.of(context).accentColor,
+          ),
+        ]),
         Padding(
           padding: const EdgeInsets.all(25.0),
           child: RaisedButton(

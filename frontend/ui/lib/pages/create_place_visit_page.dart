@@ -7,13 +7,17 @@ class CreatePlaceVisitPage extends StatelessWidget {
   final PlaceVisitService placeVisitService;
   final PlacesApiServices placesApiServices;
 
-  CreatePlaceVisitPage(this.placeVisitService, this.placesApiServices, {Key key}) : super(key: key);
+  CreatePlaceVisitPage(this.placeVisitService, this.placesApiServices,
+      {Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: defaultAppBar(context),
-      body: Center(child: CreatePlaceVisitWidget(this.placeVisitService, this.placesApiServices)),
+      body: Center(
+          child: CreatePlaceVisitWidget(
+              this.placeVisitService, this.placesApiServices)),
     );
   }
 }

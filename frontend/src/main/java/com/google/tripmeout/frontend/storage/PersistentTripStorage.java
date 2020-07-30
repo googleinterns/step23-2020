@@ -35,6 +35,7 @@ class PersistentTripStorage implements TripStorage {
       transaction.rollback();
       throw new TripAlreadyExistsException("Trip Already Exists");
     } catch (EntityNotFoundException e) {
+      // Do nothing if trip doesn't exist
     }
     try {
       Entity tripEntity = new Entity(tripKey);
@@ -44,6 +45,7 @@ class PersistentTripStorage implements TripStorage {
       tripEntity.setProperty(PLACE_API_ID_PROPERTY_NAME, trip.placesApiPlaceId());
       datastore.put(tripEntity);
     } catch (Exception e) {
+      // TODO:Wrap in new storage exception
       transaction.rollback();
     }
     transaction.commit();

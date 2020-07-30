@@ -1,8 +1,16 @@
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/rest_api_place_visit_service.dart';
 
 void main() {
+  final serverRunning = restServerRunning();
+  if (!serverRunning) {
+    print(
+        "Skipping REST API tests. Run tests with REST_SERVER_RUNNING=true to enable these.");
+    return;
+  }
+
   group('Populated RestApiPlaceVisitService', () {
     var placeVisitService =
         RestApiPlaceVisitService(endpoint: 'http://localhost:8080');
@@ -130,4 +138,9 @@ void main() {
           equals(updatedPlaceVisit));
     });
   });
+}
+
+bool restServerRunning() {
+  final runningValue = Platform.environment["REST_SERVER_RUNNING"] ?? "false";
+  return runningValue.toLowerCase() == "true";
 }

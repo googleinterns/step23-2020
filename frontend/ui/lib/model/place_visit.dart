@@ -8,26 +8,15 @@ enum UserMark {
 }
 
 class PlaceVisit {
-  static final Map<String, UserMark> stringToUserMark = {
-    "YES": UserMark.YES,
-    "NO": UserMark.NO,
-    "MAYBE": UserMark.MAYBE,
-    "UNKNOWN": UserMark.UNKNOWN,
-  };
-
-  static UserMark userMarkEnumFromString(String userMark) {
-    UserMark mark = stringToUserMark[userMark];
-    if (mark == null) {
-      throw Exception("invalid user mark");
-    }
-    return mark;
-  }
-
-  static String userMarkToString(UserMark userMark) {
-    final s = userMark.toString();
-    final dotIndex = s.lastIndexOf(".");
-    return s.substring(dotIndex + 1);
-  }
+  static final Map<String, UserMark> stringToUserMark = Map.fromIterable(
+    UserMark.values,
+    key: (v) {
+      final s = v.toString();
+      final dotIndex = s.lastIndexOf(".");
+      return s.substring(dotIndex + 1);
+    },
+    value: (v) => v,
+  );
 
   PlaceVisit(
       {this.name, this.id, this.tripid, this.placesApiPlaceId, this.userMark});
@@ -37,6 +26,20 @@ class PlaceVisit {
   final String tripid;
   final UserMark userMark;
   final String placesApiPlaceId;
+
+  static userMarkEnumFromString(String mark) {
+    if (stringToUserMark[mark] == null) {
+      //TODO: create custom exception
+      throw Exception("invalid userMark");
+    }
+    return stringToUserMark[mark];
+  }
+
+  static String userMarkToString(UserMark userMark) {
+    final s = userMark.toString();
+    final dotIndex = s.lastIndexOf(".");
+    return s.substring(dotIndex + 1);
+  }
 
   factory PlaceVisit.from(PlaceVisit placeVisit,
       {name, id, tripid, userMark, placesApiPlaceId}) {
@@ -85,5 +88,15 @@ class PlaceVisit {
         tripid: json['tripId'],
         userMark: userMarkEnumFromString(json['userMark']),
         placesApiPlaceId: json['placesApiPlaceId']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'tripId': this.tripid,
+      'id': this.id,
+      'placeName': this.name,
+      'placesApiPlaceId': this.placesApiPlaceId,
+      'userMark': PlaceVisit.userMarkToString(this.userMark),
+    };
   }
 }

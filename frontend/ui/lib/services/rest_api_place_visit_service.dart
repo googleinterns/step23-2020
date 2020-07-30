@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:tripmeout/services/place_visit_service.dart';
 
 class RestApiPlaceVisitService implements PlaceVisitService {
+  static final String CONTENT_TYPE = 'application/json; charset=UTF-8';
   final String endpoint;
 
   RestApiPlaceVisitService({this.endpoint = ''});
@@ -36,13 +37,9 @@ class RestApiPlaceVisitService implements PlaceVisitService {
     final http.Response response = await http.post(
       '$endpoint/api/trips/$tripid/placeVisits',
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': CONTENT_TYPE,
       },
-      body: jsonEncode(<String, dynamic>{
-        'placeName': placeVisit.name,
-        'placesApiPlaceId': placeVisit.placesApiPlaceId,
-        'userMark': PlaceVisit.userMarkToString(placeVisit.userMark),
-      }),
+      body: jsonEncode(placeVisit.toJson()),
     );
     if (response.statusCode == 201) {
       return PlaceVisit.fromJson(json.decode(response.body));
@@ -58,13 +55,9 @@ class RestApiPlaceVisitService implements PlaceVisitService {
     final http.Response response = await http.put(
       '$endpoint/api/trips/$tripid/placeVisits/$id',
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': CONTENT_TYPE,
       },
-      body: jsonEncode(<String, dynamic>{
-        'placeName': placeVisit.name,
-        'placesApiPlaceId': placeVisit.placesApiPlaceId,
-        'userMark': PlaceVisit.userMarkToString(placeVisit.userMark),
-      }),
+      body: jsonEncode(placeVisit.toJson()),
     );
     if (response.statusCode == 200) {
       return PlaceVisit.fromJson(json.decode(response.body));

@@ -24,7 +24,7 @@ class PlaceVisit {
   final String name;
   final String id;
   final String tripid;
-  final UserMark userMark;
+  UserMark userMark;
   final String placesApiPlaceId;
 
   static userMarkEnumFromString(String mark) {

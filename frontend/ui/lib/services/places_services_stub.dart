@@ -9,7 +9,6 @@ class PlacesApiServices {
     }
 
     Completer<List<PlaceWrapper>> completer = Completer();
-
     PlaceWrapper london = PlaceWrapper(name: 'London, UK', placeId: 'LCY');
 
     PlaceWrapper la = PlaceWrapper(name: 'Los Angeles, CA, Us', placeId: 'LAX');

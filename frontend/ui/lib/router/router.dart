@@ -50,7 +50,7 @@ class Router {
     if (match != null) {
       String tripId = match.namedGroup('tripId');
       return MaterialPageRoute(
-        builder: (context) => TripViewPage(tripService, tripId),
+        builder: (context) => TripViewPage(tripService, placeVisitService, tripId),
         settings: settings,
       );
     }

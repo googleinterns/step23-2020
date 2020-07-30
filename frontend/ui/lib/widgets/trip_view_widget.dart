@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/model/trip.dart';
+import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/place_block_widget.dart';
 
 class TripViewWidgetFromService extends StatelessWidget {
   final TripService tripService;
+  final PlaceVisitService placeVisitService;
   final String tripId;
 
-  TripViewWidgetFromService(this.tripService, this.tripId);
+  TripViewWidgetFromService(this.tripService, this.placeVisitService, this.tripId);
 
   @override
   Widget build(BuildContext context) {

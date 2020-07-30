@@ -33,7 +33,8 @@ void main() {
     expect(find.byType(MapsApiPlacesTextFieldWidget), findsOneWidget);
   });
 
-  testWidgets('Testing the submit button does not submit without clicking autocomplete suggestion',
+  testWidgets(
+      'Testing the submit button does not submit without clicking autocomplete suggestion',
       (WidgetTester tester) async {
     var tripService = MockTripService();
 
@@ -73,7 +74,8 @@ void main() {
         find.widgetWithText(TextField, 'Enter your Destination');
     expect(autocomplete, findsOneWidget);
 
-    await tester.enterText(find.widgetWithText(TextField, 'Enter your Destination'), 'London');
+    await tester.enterText(
+        find.widgetWithText(TextField, 'Enter your Destination'), 'London');
     await tester.pumpAndSettle();
 
     TextField textbox = autocomplete.evaluate().first.widget;

@@ -33,6 +33,27 @@ void main() {
     expect(find.byType(MapsApiPlacesTextFieldWidget), findsOneWidget);
   });
 
+  testWidgets('Testing the submit button does not submit without clicking autocomplete suggestion',
+      (WidgetTester tester) async {
+    var tripService = MockTripService();
+
+    when(tripService.createTrip(any))
+        .thenAnswer((t) => Future.value(t.positionalArguments[0]));
+
+    var createTripsWidget = CreateTripWidget(tripService, placesApiServices);
+    await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.widgetWithText(TextField, 'enter your trip name'), 'London Trip');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(RaisedButton, 'Submit'));
+    await tester.pumpAndSettle();
+
+    verifyNever(tripService.createTrip(captureAny));
+  });
+
   testWidgets('Testing the submit button which creates a trip',
       (WidgetTester tester) async {
     var tripService = MockTripService();
@@ -52,14 +73,10 @@ void main() {
         find.widgetWithText(TextField, 'Enter your Destination');
     expect(autocomplete, findsOneWidget);
 
-    await tester.enterText(find.byType(MapsApiPlacesTextFieldWidget), 'London');
+    await tester.enterText(find.widgetWithText(TextField, 'Enter your Destination'), 'London');
     await tester.pumpAndSettle();
 
-    TextField textbox = find
-        .widgetWithText(TextField, 'Enter your Destination')
-        .evaluate()
-        .first
-        .widget;
+    TextField textbox = autocomplete.evaluate().first.widget;
     expect(textbox.controller.text, 'London');
 
     //TODO figure out why it can't find any list tiles

@@ -98,7 +98,7 @@ public class PersistentPlaceVisitStorageTest {
     Assert.assertThrows(
         PlaceVisitNotFoundException.class, () -> storage.removePlaceVisit(place1.tripId(), id));
   }
-  
+
   @Test
   public void getTripPlaceVisits_returnListofTrip1() throws Exception {
     PlaceVisitModel place1 = createPlaceWithTrip1();
@@ -112,7 +112,7 @@ public class PersistentPlaceVisitStorageTest {
     assertThat(storage.getTripPlaceVisits("trip1")).containsExactly(place1, place3);
     assertThat(storage.getTripPlaceVisits("trip2")).containsExactly(place2, place4);
   }
-  
+
   @Test
   public void removeTripPlaceVisits_returnListofTrip1() throws Exception {
     PlaceVisitModel place1 = createPlaceWithTrip1();
@@ -139,7 +139,8 @@ public class PersistentPlaceVisitStorageTest {
 
   private PlaceVisitModel createPlaceWithTrip1() {
     Key parentKey = KeyFactory.createKey("TripMeOut", "Places");
-    String id = KeyFactory.keyToString(KeyFactory.createKey(parentKey,"trip1", UUID.randomUUID().toString()));
+    String id = KeyFactory.keyToString(
+        KeyFactory.createKey(parentKey, "trip1", UUID.randomUUID().toString()));
     return PlaceVisitModel.builder()
         .setId(id)
         .setPlaceName("placeName")
@@ -151,7 +152,8 @@ public class PersistentPlaceVisitStorageTest {
 
   private PlaceVisitModel createPlaceWithTrip2() {
     Key parentKey = KeyFactory.createKey("TripMeOut", "Places");
-    String id = KeyFactory.keyToString(KeyFactory.createKey(parentKey,"trip2", UUID.randomUUID().toString()));
+    String id = KeyFactory.keyToString(
+        KeyFactory.createKey(parentKey, "trip2", UUID.randomUUID().toString()));
     return PlaceVisitModel.builder()
         .setId(id)
         .setPlaceName("placeName")

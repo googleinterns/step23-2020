@@ -21,7 +21,7 @@ void main() {
 
     await tester.pumpWidget(wrapForDirectionality(tripViewWidget));
     await tester.pumpAndSettle();
-    
+
     // Should be everything on the view trip screen expanded...
     expect(find.text("name1"), findsOneWidget);
     expect(find.text("Place 1"), findsOneWidget);

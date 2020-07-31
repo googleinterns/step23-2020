@@ -15,11 +15,11 @@ class TripListPage extends StatelessWidget {
     return Scaffold(
         appBar: defaultAppBar(context),
         body: Column(children: [
-          RoutingButton(Router.createTripRoute, Icon(Icons.add),
-              "Click to make New Trip"),
           Expanded(
             child: ServiceLoadedTripListWidget(this.tripService),
           )
-        ]));
+        ]),
+        floatingActionButton: FloatingRoutingButton(
+            Router.createTripRoute, Icon(Icons.add), "Click to make New Trip"));
   }
 }

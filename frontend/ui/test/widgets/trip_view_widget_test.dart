@@ -25,51 +25,32 @@ void main() {
     // Should be everything on the view trip screen expanded...
     expect(find.text("name1"), findsOneWidget);
     expect(find.text("Place 1"), findsOneWidget);
-    expect(find.text("Place 2"), findsOneWidget);
-    expect(find.text("Place 3"), findsOneWidget);
-    expect(find.text("Place 4"), findsOneWidget);
-    expect(find.text("Place 5"), findsOneWidget);
   });
 
-  testWidgets('Showing the expanded Place correctly shows up',
-      (WidgetTester tester) async {
-    var tripService = MockTripService();
-    when(tripService.getTrip(any))
-        .thenAnswer((_) => Future.value(Trip(id: 'id1', name: 'name1')));
-
-    var tripViewWidget = TripViewWidgetFromService(tripService, 'id1');
-    await tester.pumpWidget(wrapForDirectionality(tripViewWidget));
-    await tester.pumpAndSettle();
-
-    expect(find.text("name1"), findsOneWidget);
-    expect(find.text("Place 1"), findsOneWidget);
-    expect(find.text("Description"), findsNothing);
-    expect(find.text("Foo"), findsNothing);
-    expect(find.text("Bar"), findsNothing);
-    expect(find.text("Baz"), findsNothing);
-
-    await tester.tap(find.widgetWithText(ExpansionTile, "Place 1"));
-    await tester.pumpAndSettle();
-
-    //Shows expanded Place
-    expect(find.text("name1"), findsOneWidget);
-    expect(find.text("Place 1"), findsOneWidget);
-    expect(find.text("Description"), findsOneWidget);
-    expect(find.text("Foo"), findsOneWidget);
-    expect(find.text("Bar"), findsOneWidget);
-    expect(find.text("Baz"), findsOneWidget);
-  });
-
-  testWidgets('Showing the each place has an M T and Delete',
+  testWidgets(
+      'Showing the each place has an Fav and Delete and the Fav toggles',
       (WidgetTester tester) async {
     var placeBlockWidget = PlaceBlockWidget("Hello World");
     await tester.pumpWidget(wrapForDirectionality(placeBlockWidget));
     await tester.pumpAndSettle();
 
     expect(find.text("Hello World"), findsOneWidget);
+    expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsNothing);
+    expect(find.byIcon(Icons.delete), findsOneWidget);
+
+    //Shows that it toggles between favorite and not
+    await tester.tap(find.byIcon(Icons.favorite_border));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.favorite_border), findsNothing);
     expect(find.byIcon(Icons.favorite), findsOneWidget);
-    expect(find.byIcon(Icons.alarm), findsOneWidget);
-    expect(find.byType(IconButton), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.favorite));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsNothing);
   });
 }
 

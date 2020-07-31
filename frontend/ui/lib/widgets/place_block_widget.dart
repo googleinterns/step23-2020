@@ -13,50 +13,70 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
   final String placeName;
   _PlaceBlockWidgetState(this.placeName);
 
-  List<bool> _selections = List.generate(2, (_) => false);
+  List<Widget> pictures = new List<Widget>();
+  List<Color> colors = [
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.yellow,
+    Colors.orange,
+  ];
+
+  bool _selected = false;
+  Icon _icon = Icon(Icons.favorite_border);
+  Color _color = Colors.black;
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
+        initiallyExpanded: true,
         title: Text(placeName),
         trailing: Container(
-            width: 250.0,
+            width: 100.0,
             child: Row(children: [
-              ToggleButtons(
-                children: [
-                  Tooltip(message: "MUST GO", child: Icon(Icons.favorite)),
-                  Tooltip(message: "TIME PERMITS", child: Icon(Icons.alarm)),
-                ],
-                onPressed: (int index) {
+              IconButton(
+                icon: _icon,
+                onPressed: () {
                   setState(() {
-                    for (int buttonIndex = 0;
-                        buttonIndex < _selections.length;
-                        buttonIndex++) {
-                      if (buttonIndex == index) {
-                        _selections[buttonIndex] = true;
-                      } else {
-                        _selections[buttonIndex] = false;
-                      }
+                    if (_selected == true) {
+                      _selected = false;
+                      _icon = Icon(Icons.favorite_border);
+                      _color = Colors.black;
+                    } else {
+                      _selected = true;
+                      _icon = Icon(Icons.favorite);
+                      _color = Colors.pink;
                     }
                   });
                 },
-                isSelected: _selections,
-                color: Colors.black,
-                selectedColor: Theme.of(context).accentColor,
+                color: _color,
+                tooltip: "Must Go",
               ),
               IconButton(
-                onPressed: () => {},
+                onPressed: () => {}, //TODO: Add delete place method to Button
                 icon: Icon(Icons.delete),
                 color: Colors.red,
+                tooltip: "Delete this place",
               ),
             ])),
         children: [
-          Column(children: [
-            Text('Description'),
-            Text('Foo'),
-            Text('Bar'),
-            Text('Baz'),
-          ])
+          Container(
+              height: 200,
+              child: ListView(children: [
+                Container(
+                    height: 100, child: Center(child: Text('Description'))),
+                Container(height: 200, child: getPictureWidgets(colors)),
+                Container(height: 100, child: Center(child: Text('Bar'))),
+                Container(height: 100, child: Center(child: Text('Baz'))),
+              ]))
         ]);
   }
+}
+
+Widget getPictureWidgets(List<Color> colors) {
+  return new ListView(
+      scrollDirection: Axis.horizontal,
+      children: colors
+          .map((item) => new Container(width: 200.0, color: item))
+          .toList());
 }

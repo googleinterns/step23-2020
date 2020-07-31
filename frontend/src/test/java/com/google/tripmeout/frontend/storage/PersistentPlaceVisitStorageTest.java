@@ -65,6 +65,7 @@ public class PersistentPlaceVisitStorageTest {
     storage.addPlaceVisit(place3);
     assertThat(storage.getTripPlaceVisits("trip1")).containsExactly(place1, place2, place3);
   }
+
   @Test
   public void updateUserMark_returnTripWithNewUserMark() throws Exception {
     PlaceVisitModel place1 = createPlaceWithTrip1();
@@ -74,6 +75,26 @@ public class PersistentPlaceVisitStorageTest {
         storage.getPlaceVisit(place1.tripId(), place1.id()).get().userMark());
   }
 
+  @Test
+  public void updateUserMark_returnNewPlace() throws Exception {
+    Key parentKey = KeyFactory.createKey("TripMeOut", "trip3");
+    String id = KeyFactory.keyToString(
+        KeyFactory.createKey(parentKey, "trip3", UUID.randomUUID().toString()));
+    PlaceVisitModel place1 = PlaceVisitModel.builder()
+                                 .setId(id)
+                                 .setPlaceName("placeName")
+                                 .setPlacesApiPlaceId("placeId")
+                                 .setTripId("trip3")
+                                 .setUserMark(PlaceVisitModel.UserMark.YES)
+                                 .build();
+    PlaceVisitModel newPlace =
+        storage.updateUserMarkOrAddPlaceVisit(place1, PlaceVisitModel.UserMark.NO);
+    place1 = place1.toBuilder().setUserMark(PlaceVisitModel.UserMark.NO).build();
+    assertEquals(place1, newPlace);
+    assertEquals(
+        newPlace.userMark(), storage.getPlaceVisit(place1.tripId(), place1.id()).get().userMark());
+  }
+  
   @Test
   public void removePlaceVisit_returnListofTrips() throws Exception {
     PlaceVisitModel place1 = createPlaceWithTrip1();
@@ -138,7 +159,7 @@ public class PersistentPlaceVisitStorageTest {
   }
 
   private PlaceVisitModel createPlaceWithTrip1() {
-    Key parentKey = KeyFactory.createKey("TripMeOut", "Places");
+    Key parentKey = KeyFactory.createKey("TripMeOut", "trip1");
     String id = KeyFactory.keyToString(
         KeyFactory.createKey(parentKey, "trip1", UUID.randomUUID().toString()));
     return PlaceVisitModel.builder()
@@ -151,7 +172,7 @@ public class PersistentPlaceVisitStorageTest {
   }
 
   private PlaceVisitModel createPlaceWithTrip2() {
-    Key parentKey = KeyFactory.createKey("TripMeOut", "Places");
+    Key parentKey = KeyFactory.createKey("TripMeOut", "trip2");
     String id = KeyFactory.keyToString(
         KeyFactory.createKey(parentKey, "trip2", UUID.randomUUID().toString()));
     return PlaceVisitModel.builder()

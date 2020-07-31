@@ -15,7 +15,6 @@ public class PersistentStorageBindingModule extends AbstractModule {
 
   @Provides
   DatastoreService provideDatastoreService() {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    return datastore;
+    return DatastoreServiceFactory.getDatastoreService();
   }
 }

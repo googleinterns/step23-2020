@@ -4,10 +4,10 @@ import 'package:tripmeout/widgets/default_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class CreatePlaceVisitPage extends StatelessWidget {
+  final String tripId;
   final PlaceVisitService placeVisitService;
-  final PlacesApiServices placesApiServices;
 
-  CreatePlaceVisitPage(this.placeVisitService, this.placesApiServices,
+  CreatePlaceVisitPage(this.placeVisitService, this.tripId,
       {Key key})
       : super(key: key);
 
@@ -17,7 +17,7 @@ class CreatePlaceVisitPage extends StatelessWidget {
       appBar: defaultAppBar(context),
       body: Center(
           child: CreatePlaceVisitWidget(
-              this.placeVisitService, this.placesApiServices)),
+              this.placeVisitService, this.tripId)),
     );
   }
 }

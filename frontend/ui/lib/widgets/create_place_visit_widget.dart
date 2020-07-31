@@ -82,14 +82,14 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
                 ],
                 onPressed: (int index) {
                   setState(() {
-                    for (int buttonIndex = 0;
-                        buttonIndex < _selections.length;
-                        buttonIndex++) {
-                      if (buttonIndex == index) {
-                        _selections[buttonIndex] = true;
-                      } else {
-                        _selections[buttonIndex] = false;
-                      }
+                    if (index == 0) {
+                      _selections[0] = true;
+                      _selections[1] = false;
+                      userMark = UserMark.YES;
+                    } else {
+                      _selections[0] = false;
+                      _selections[1] = true;
+                      userMark = UserMark.NO;
                     }
                   });
                 },

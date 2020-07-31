@@ -5,6 +5,7 @@ import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/trip_view_widget.dart';
 import 'package:tripmeout/widgets/default_app_bar.dart';
+import 'package:tripmeout/widgets/routing_button_widget.dart';
 
 class TripViewPage extends StatelessWidget {
   final TripService tripService;
@@ -24,12 +25,9 @@ class TripViewPage extends StatelessWidget {
       body: Center(
           child: TripViewWidgetFromService(this.tripService,
               this.placeVisitService, this.placesApiServices, this.tripId)),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Add place add method to this button
-        },
-        child: Icon(Icons.add),
-        tooltip: "Click to add a place to your trip.",
+      floatingActionButton: FloatingRoutingButton(
+        "/trips/$tripId/placeVisits/new",
+        Icon(Icons.add), "Click to add a place to your trip.",
       ),
     );
   }

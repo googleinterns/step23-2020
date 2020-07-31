@@ -17,7 +17,7 @@ public final class TripServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private static final long serialVersionUID = 1L;
-  private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json;";
+  private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json";
 
   private final Gson gson;
   private final TripStorage storage;

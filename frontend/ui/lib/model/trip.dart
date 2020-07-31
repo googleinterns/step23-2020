@@ -1,17 +1,19 @@
 import 'dart:core';
 
 class Trip {
-  Trip({this.name, this.id, this.placesApiPlaceId});
+  Trip({this.name, this.id, this.userId, this.placesApiPlaceId});
   final String name;
   final String id;
   final String placesApiPlaceId;
+  final String userId;
 
-  factory Trip.from(Trip trip, {name, id, placesApiPlaceId}) {
+  factory Trip.from(Trip trip, {name, id, userId, placesApiPlaceId}) {
     return trip == null
         ? Trip(name: name, id: id, placesApiPlaceId: placesApiPlaceId)
         : Trip(
             name: name ?? trip.name,
             id: id ?? trip.id,
+            userId: userId ?? trip.userId,
             placesApiPlaceId: placesApiPlaceId ?? trip.placesApiPlaceId,
           );
   }
@@ -24,6 +26,7 @@ class Trip {
     return other is Trip &&
         this.name == other.name &&
         this.id == other.id &&
+        this.userId == other.userId &&
         this.placesApiPlaceId == other.placesApiPlaceId;
   }
 
@@ -36,10 +39,29 @@ class Trip {
         this.placesApiPlaceId.hashCode;
   }
 
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = Map();
+    if (this.name != null) {
+      json['name'] = this.name;
+    }
+    if (this.placesApiPlaceId != null) {
+      json['placesApiPlaceId'] = this.placesApiPlaceId;
+    }
+    if (this.id != null) {
+      json['id'] = this.id;
+    }
+    if (this.userId != null) {
+      json['userId'] = this.userId;
+    }
+
+    return json;
+  }
+
   factory Trip.fromJson(Map<String, dynamic> json) {
     return Trip(
         name: json['name'],
         id: json['id'],
+        userId: json['userId'],
         placesApiPlaceId: json['placesApiPlaceId']);
   }
 }

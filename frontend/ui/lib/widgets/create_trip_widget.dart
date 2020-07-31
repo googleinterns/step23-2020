@@ -80,9 +80,11 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
         MapsApiPlacesTextFieldWidget(['(cities)']),
         Padding(
           padding: const EdgeInsets.all(25.0),
-          child: RaisedButton(
+          child: IconButton(
             onPressed: _onPressed,
-            child: Text('Submit'),
+            icon: Icon(Icons.send),
+            tooltip: "Click this to submit your trip.",
+            color: Colors.green,
           ),
         ),
       ],

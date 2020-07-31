@@ -188,10 +188,10 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
             ),
             Padding(
               padding: const EdgeInsets.all(25.0),
-              child: Image(image: NetworkImage(details.photos[0].getUrl(
-              PhotoOptions()
-                ..maxHeight = 450
-                ..maxWidth = 450)))
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: getPhotos(details.photos)
+              ),
             ),
           ])
         ]);
@@ -252,6 +252,17 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
       ));
     }
     return formattedTypes;
+  }
+
+  List<Widget> getPhotos(List<PlacePhoto> photos) {
+    List<Image> imageWidgets = [];
+    PhotoOptions photoOptions = PhotoOptions()
+                ..maxHeight = 400
+                ..maxWidth = 400;
+    for (int i = 0; i < photos.length && i < 3; i++) {
+      imageWidgets.add(Image(image: NetworkImage(photos[i].getUrl(photoOptions))));
+    }
+    return imageWidgets;
   }
 }
 

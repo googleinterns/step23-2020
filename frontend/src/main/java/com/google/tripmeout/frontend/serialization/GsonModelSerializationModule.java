@@ -7,6 +7,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.TripModel;
+import com.google.tripmeout.frontend.AuthenticationInfoModel;
 
 /**
  * Provides a {@link Gson} instance configured to handle model objects.
@@ -18,6 +19,8 @@ public class GsonModelSerializationModule extends AbstractModule {
     return new GsonBuilder()
         .registerTypeHierarchyAdapter(PlaceVisitModel.class, new GsonPlaceVisitTypeAdapter())
         .registerTypeHierarchyAdapter(TripModel.class, new GsonTripModelTypeAdapter())
+        .registerTypeHierarchyAdapter(
+            AuthenticationInfoModel.class, new GsonAuthenticationInfoModelTypeAdapter())
         .create();
   }
 }

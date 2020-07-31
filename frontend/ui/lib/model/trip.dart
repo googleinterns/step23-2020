@@ -39,24 +39,6 @@ class Trip {
         this.placesApiPlaceId.hashCode;
   }
 
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> json = Map();
-    if (this.name != null) {
-      json['name'] = this.name;
-    }
-    if (this.placesApiPlaceId != null) {
-      json['placesApiPlaceId'] = this.placesApiPlaceId;
-    }
-    if (this.id != null) {
-      json['id'] = this.id;
-    }
-    if (this.userId != null) {
-      json['userId'] = this.userId;
-    }
-
-    return json;
-  }
-
   factory Trip.fromJson(Map<String, dynamic> json) {
     return Trip(
         name: json['name'],

@@ -38,7 +38,10 @@ class RestApiTripService implements TripService {
       headers: <String, String>{
         'Content-Type': CONTENT_TYPE,
       },
-      body: jsonEncode(trip.toJson()),
+      body: jsonEncode(<String, dynamic>{
+        'name': trip.name,
+        'placesApiPlaceId': trip.placesApiPlaceId,
+      }),
     );
     if (response.statusCode == 200) {
       return Trip.fromJson(json.decode(response.body));

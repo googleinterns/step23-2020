@@ -11,6 +11,7 @@ public class PersistentStorageBindingModule extends AbstractModule {
   public void configure() {
     bind(TripStorage.class).to(PersistentTripStorage.class).in(Singleton.class);
   }
+
   @Provides
   DatastoreService provideDatastoreService() {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

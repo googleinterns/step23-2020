@@ -31,7 +31,7 @@ class PersistentTripStorage implements TripStorage {
     Key tripKey = KeyFactory.stringToKey(trip.id());
     Transaction transaction = datastore.beginTransaction();
     try {
-      datastore.get(tripKey);
+      datastore.get(transaction, tripKey);
       transaction.rollback();
       throw new TripAlreadyExistsException("Trip Already Exists");
     } catch (EntityNotFoundException e) {
@@ -43,10 +43,10 @@ class PersistentTripStorage implements TripStorage {
       tripEntity.setProperty(USER_ID_PROPERTY_NAME, trip.userId());
       tripEntity.setProperty(NAME_PROPERTY_NAME, trip.name());
       tripEntity.setProperty(PLACE_API_ID_PROPERTY_NAME, trip.placesApiPlaceId());
-      datastore.put(tripEntity);
-    } catch (Exception e) {
-      // TODO:Wrap in new storage exception
+      datastore.put(transaction, tripEntity);
+    } catch (RuntimeException e) {
       transaction.rollback();
+      throw new RuntimeException();
     }
     transaction.commit();
   }
@@ -54,8 +54,8 @@ class PersistentTripStorage implements TripStorage {
     Key tripKey = KeyFactory.stringToKey(tripId);
     Transaction transaction = datastore.beginTransaction();
     try {
-      datastore.get(tripKey);
-      datastore.delete(tripKey);
+      datastore.get(transaction, tripKey);
+      datastore.delete(transaction, tripKey);
     } catch (EntityNotFoundException e) {
       transaction.rollback();
       throw new TripNotFoundException("Trip with id: " + tripId + " not found");

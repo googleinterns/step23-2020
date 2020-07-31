@@ -1,18 +1,22 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:tripmeout/model/place_visit.dart';
+import 'package:google_maps/google_maps_places.dart';
 
 class PlacesApiServices {
-  Future<List<PlaceVisit>> getAutocomplete(
+  Future<List<AutocompletePrediction>> getAutocomplete(
       String input, List<String> allowedTypes) {
     if (input == null || input == "") {
       return Future.sync(() => []);
     }
 
-    Completer<List<PlaceVisit>> completer = Completer();
-    PlaceVisit london = PlaceVisit(name: 'London, UK', placesApiPlaceId: 'LCY');
-    PlaceVisit la =
-        PlaceVisit(name: 'Los Angeles, CA, US', placesApiPlaceId: 'LAX');
+    Completer<List<AutocompletePrediction>> completer = Completer();
+    AutocompletePrediction london = AutocompletePrediction()
+      ..description = 'London, UK'
+      ..placeId = 'LCY';
+
+    AutocompletePrediction la = AutocompletePrediction()
+      ..description = 'Los Angeles, CA, Us'
+      ..placeId = 'LAX';
+
     completer.complete([london, la]);
     return completer.future;
   }

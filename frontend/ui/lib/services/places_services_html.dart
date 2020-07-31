@@ -1,22 +1,19 @@
 import 'dart:async';
 import 'dart:html';
-import 'package:flutter/material.dart';
-import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
-import 'package:tripmeout/model/place_visit.dart';
 
 class PlacesApiServices {
   final AutocompleteService autocompleteService = AutocompleteService();
   final PlacesService placesService =
       PlacesService(document.getElementById("maps"));
 
-  Future<List<PlaceVisit>> getAutocomplete(
+  Future<List<AutocompletePrediction>> getAutocomplete(
       String input, List<String> allowedTypes) {
     if (input == null || input == "") {
       return Future.sync(() => []);
     }
 
-    Completer<List<PlaceVisit>> completer = Completer();
+    Completer<List<AutocompletePrediction>> completer = Completer();
     AutocompletionRequest request = AutocompletionRequest()..input = input;
 
     if (allowedTypes.length > 0) {
@@ -25,7 +22,7 @@ class PlacesApiServices {
 
     autocompleteService.getPlacePredictions(request, (result, status) {
       if (status == PlacesServiceStatus.OK) {
-        completer.complete(result.map(autocompleteToPlaceVisit).toList());
+        completer.complete(result);
       } else if (status == PlacesServiceStatus.ZERO_RESULTS) {
         completer.complete([]);
       } else {
@@ -53,12 +50,5 @@ class PlacesApiServices {
       }
     });
     return completer.future;
-  }
-
-  PlaceVisit autocompleteToPlaceVisit(AutocompletePrediction prediction) {
-    return PlaceVisit(
-      name: prediction.description,
-      placesApiPlaceId: prediction.placeId,
-    );
   }
 }

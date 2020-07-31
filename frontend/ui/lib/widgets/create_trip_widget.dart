@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps/google_maps_places.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/services/places_services.dart';
@@ -39,12 +40,12 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
     ));
   }
 
-  void displayImages(PlaceVisit placeVisit) async {
+  void displayImages(AutocompletePrediction suggestion) async {
     List<String> imageUrls =
-        await placesApiServices.getPhotos(placeVisit.placesApiPlaceId);
+        await placesApiServices.getPhotos(suggestion.placeId);
     setState(() {
       _showPics = true;
-      placeId = placeVisit.placesApiPlaceId;
+      placeId = suggestion.placeId;
       if (imageUrls.length == 0) {
         _imageWidget = Text("No images found.");
       } else {

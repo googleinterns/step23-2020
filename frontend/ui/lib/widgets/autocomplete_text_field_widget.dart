@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps/google_maps_places.dart';
-import 'package:tripmeout/model/place_visit.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:tripmeout/services/places_services.dart';
 import 'package:flutter/src/widgets/basic.dart' as basic;
@@ -12,13 +10,13 @@ class MapsApiPlacesTextFieldWidget<T> extends StatefulWidget {
   final _OnClick<T> onClick;
 
   MapsApiPlacesTextFieldWidget(
-      this.allowedTypes, this.placesApiServices, @required this.onClick);
+      this.allowedTypes, this.placesApiServices, this.onClick);
 
   @override
   _MapsApiPlacesTextFieldState createState() => _MapsApiPlacesTextFieldState();
 }
 
-typedef _OnClick<T> = void Function(PlaceVisit);
+typedef _OnClick<T> = void Function(AutocompletePrediction);
 
 class _MapsApiPlacesTextFieldState<T>
     extends State<MapsApiPlacesTextFieldWidget<T>> {
@@ -35,7 +33,7 @@ class _MapsApiPlacesTextFieldState<T>
       children: [
         basic.Padding(
           padding: const EdgeInsets.all(25.0),
-          child: TypeAheadField<PlaceVisit>(
+          child: TypeAheadField<AutocompletePrediction>(
             textFieldConfiguration: TextFieldConfiguration(
                 autofocus: true,
                 decoration: InputDecoration(
@@ -47,11 +45,11 @@ class _MapsApiPlacesTextFieldState<T>
                 placesApiServices.getAutocomplete(pattern, allowedTypes),
             itemBuilder: (context, suggestion) {
               return ListTile(
-                title: Text(suggestion.name),
+                title: Text(suggestion.description),
               );
             },
             onSuggestionSelected: (suggestion) {
-              this._typeAheadController.text = suggestion.name;
+              this._typeAheadController.text = suggestion.description;
               onClick.call(suggestion);
             },
             noItemsFoundBuilder: (BuildContext context) =>

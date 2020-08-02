@@ -24,7 +24,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Should be everything on the create trip screen...
-    expect(find.text('enter your trip name'), findsOneWidget);
+    expect(find.text('Enter your trip name'), findsOneWidget);
     expect(find.text('Enter your Destination'), findsOneWidget);
     // TODO: Enable this when/if a MapWidget is added?
     // expect(find.byType(MapWidget), findsOneWidget);
@@ -45,7 +45,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(
-        find.widgetWithText(TextField, 'enter your trip name'), 'London Trip');
+        find.widgetWithText(TextField, 'Enter your trip name'), 'London Trip');
     await tester.pumpAndSettle();
 
     await tester.tap(find.widgetWithText(RaisedButton, 'Submit'));
@@ -66,7 +66,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(
-        find.widgetWithText(TextField, 'enter your trip name'), 'London Trip');
+        find.widgetWithText(TextField, 'Enter your trip name'), 'London Trip');
     await tester.pumpAndSettle();
 
     Finder autocomplete =

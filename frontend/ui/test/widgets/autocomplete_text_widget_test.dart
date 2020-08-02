@@ -28,9 +28,11 @@ void main() {
     Finder autocomplete =
         find.widgetWithText(TextField, 'Enter your Destination');
     expect(autocomplete, findsOneWidget);
-    await tester.enterText(find.byType(TextField), 'London');
 
+    await tester.enterText(
+        find.widgetWithText(TextField, 'Enter your Destination'), 'London');
     await tester.pumpAndSettle();
+
     expect(find.byType(ListTile), findsNWidgets(2));
 
     await tester.tap(find.widgetWithText(ListTile, 'London, UK'));

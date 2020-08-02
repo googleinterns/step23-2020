@@ -98,7 +98,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'enter your trip name',
+                labelText: 'Enter your trip name',
               ),
             ),
           ),

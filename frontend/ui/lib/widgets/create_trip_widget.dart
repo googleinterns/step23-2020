@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps/google_maps_places.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
 import 'package:tripmeout/router/router.dart';
+import 'package:tripmeout/model/place.dart';
+import 'package:flutter/src/widgets/basic.dart' as basic;
 
 //TODO: Add loading screen after to the Create Trip Widget
 
@@ -36,7 +37,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
     ));
   }
 
-  void displayImages(AutocompletePrediction suggestion) async {
+  void displayImages(PlaceWrapper suggestion) async {
     List<String> imageUrls =
         await placesApiServices.getPhotos(suggestion.placeId);
     setState(() {
@@ -76,7 +77,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
 
     return Column(
       children: [
-        Padding(
+        basic.Padding(
           padding: const EdgeInsets.all(25.0),
           child: Container(
             width: 250.0,
@@ -105,7 +106,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
         MapsApiPlacesTextFieldWidget(
             ['(cities)'], placesApiServices, displayImages),
         _imageWidget,
-        Padding(
+        basic.Padding(
           padding: const EdgeInsets.all(25.0),
           child: RaisedButton(
             onPressed: _onPressed,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps/google_maps_places.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:tripmeout/services/places_services.dart';
+import 'package:tripmeout/model/place.dart';
 import 'package:flutter/src/widgets/basic.dart' as basic;
 
 class MapsApiPlacesTextFieldWidget<T> extends StatefulWidget {
@@ -16,7 +16,7 @@ class MapsApiPlacesTextFieldWidget<T> extends StatefulWidget {
   _MapsApiPlacesTextFieldState createState() => _MapsApiPlacesTextFieldState();
 }
 
-typedef _OnClick<T> = void Function(AutocompletePrediction);
+typedef _OnClick<T> = void Function(PlaceWrapper);
 
 class _MapsApiPlacesTextFieldState<T>
     extends State<MapsApiPlacesTextFieldWidget<T>> {
@@ -33,7 +33,7 @@ class _MapsApiPlacesTextFieldState<T>
       children: [
         basic.Padding(
           padding: const EdgeInsets.all(25.0),
-          child: TypeAheadField<AutocompletePrediction>(
+          child: TypeAheadField<PlaceWrapper>(
             textFieldConfiguration: TextFieldConfiguration(
                 autofocus: true,
                 decoration: InputDecoration(

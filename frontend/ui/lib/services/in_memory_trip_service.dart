@@ -30,4 +30,9 @@ class InMemoryTripService implements TripService {
       return tripWithUuid;
     });
   }
+
+  @override
+  Future<void> deleteTrip(String id) async {
+    return;
+  }
 }

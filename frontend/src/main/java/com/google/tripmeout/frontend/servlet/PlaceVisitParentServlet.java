@@ -1,5 +1,7 @@
 package com.google.tripmeout.frontend.servlet;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PlaceVisitParentServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final Pattern TRIP_NAME_PATTERN = Pattern.compile(".*/trips/([^/]+)/placeVisits");
+  private static final String TRIP_ME_OUT_KIND_NAME = "TripMeOut";
 
   private final PlaceVisitStorage placeStorage;
   private final Gson gson;
@@ -46,9 +49,10 @@ public class PlaceVisitParentServlet extends HttpServlet {
       placeService.validatePlaceId(place.placesApiPlaceId());
 
       String tripId = ServletUtil.matchUriOrThrowError(request, TRIP_NAME_PATTERN).group(1);
-
-      PlaceVisitModel newPlace =
-          place.toBuilder().setId(UUID.randomUUID().toString()).setTripId(tripId).build();
+      Key parentKey = KeyFactory.createKey(TRIP_ME_OUT_KIND_NAME, tripId);
+      String id = KeyFactory.keyToString(
+          KeyFactory.createKey(parentKey, tripId, UUID.randomUUID().toString()));
+      PlaceVisitModel newPlace = place.toBuilder().setId(id).setTripId(tripId).build();
 
       placeStorage.addPlaceVisit(newPlace);
 

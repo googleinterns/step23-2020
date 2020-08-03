@@ -1,5 +1,6 @@
 package com.google.tripmeout.frontend.servlet;
 
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -74,6 +75,8 @@ public class TripParentServlet extends HttpServlet {
   }
 
   private TripModel resolveDefaults(TripModel trip) {
-    return trip.toBuilder().setId(UUID.randomUUID().toString()).setUserId(getUserId()).build();
+    String id =
+        KeyFactory.keyToString(KeyFactory.createKey(getUserId(), UUID.randomUUID().toString()));
+    return trip.toBuilder().setId(id).setUserId(getUserId()).build();
   }
 }

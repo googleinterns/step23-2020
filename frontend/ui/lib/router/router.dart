@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/pages/create_trip_page.dart';
+import 'package:tripmeout/pages/log_in_page.dart';
 import 'package:tripmeout/pages/trip_list_page.dart';
 import 'package:tripmeout/pages/trip_view_page.dart';
+import 'package:tripmeout/services/login_service.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/services/places_services.dart';
 
 class Router {
+  static final String logInRoute = '/login';
   static final String tripListRoute = '/trips';
   static final String createTripRoute = '/trips/new';
   static final RegExp tripViewRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)$');
@@ -14,12 +17,13 @@ class Router {
   final TripService tripService;
   final PlaceVisitService placeVisitService;
   final PlacesApiServices placesApiServices = PlacesApiServices();
+  final LogInService logInService;
 
   static String createTripViewRoute(String tripId) {
     return "/trips/$tripId";
   }
 
-  Router(this.tripService, this.placeVisitService);
+  Router(this.tripService, this.placeVisitService, this.logInService);
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     if (settings.name == tripListRoute) {
@@ -31,6 +35,13 @@ class Router {
     if (settings.name == createTripRoute) {
       return MaterialPageRoute(
         builder: (context) => CreateTripPage(tripService, placesApiServices),
+        settings: settings,
+      );
+    }
+    if (settings.name == logInRoute) {
+      return MaterialPageRoute(
+        builder: (context) => LogInPage(
+            logInService, settings.arguments ?? LogInPageArguments('/trips')),
         settings: settings,
       );
     }

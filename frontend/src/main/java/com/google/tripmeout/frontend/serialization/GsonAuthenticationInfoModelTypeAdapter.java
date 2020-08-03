@@ -25,10 +25,10 @@ public class GsonAuthenticationInfoModelTypeAdapter extends TypeAdapter<Authenti
       String name = reader.nextName();
       switch (name) {
         case RETURN_LINK_JSON_FIELD_NAME:
-          authenticationBuilder.setreturnLink(reader.nextBoolean());
+          authenticationBuilder.setReturnLink(reader.nextString());
           break;
         case LOGGED_IN_JSON_FIELD_NAME:
-          authenticationBuilder.setloggedIn(reader.nextString());
+          authenticationBuilder.setLoggedIn(reader.nextBoolean());
           break;
         default:
           throw new JsonParseException(

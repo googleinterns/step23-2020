@@ -14,8 +14,8 @@ public abstract class AuthenticationInfoModel {
 
   @AutoValue.Builder
   public static abstract class Builder {
-    public abstract String returnLink(String returnLink);
-    public abstract boolean loggedIn(boolean loggedIn);
+    public abstract Builder setReturnLink(String returnLink);
+    public abstract Builder setLoggedIn(boolean loggedIn);
     public abstract AuthenticationInfoModel build();
   }
 }

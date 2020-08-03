@@ -1,8 +1,8 @@
 import 'dart:core';
 
 class PlaceWrapper {
-  PlaceWrapper({this.description, this.placeId});
+  PlaceWrapper({this.name, this.placeId});
 
-  final String description;
+  final String name;
   final String placeId;
 }

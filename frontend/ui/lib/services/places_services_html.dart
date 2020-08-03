@@ -56,6 +56,6 @@ class PlacesApiServices {
 
   PlaceWrapper autocompleteToPlaceWrapper(AutocompletePrediction suggestion) {
     return PlaceWrapper(
-        description: suggestion.description, placeId: suggestion.placeId);
+        name: suggestion.description, placeId: suggestion.placeId);
   }
 }

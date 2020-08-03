@@ -5,6 +5,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,6 +20,8 @@ import java.io.StringReader;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,17 +33,24 @@ import org.mockito.Mock;
 public class TripParentServletTest {
   @Mock TripStorage storage;
   @Mock HttpServletRequest request;
-
+    private final LocalServiceTestHelper helper =
+      new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
   Gson gson;
   TripParentServlet tripParentServlet;
 
   @Before
   public void setup() {
+      helper.setUp();
     initMocks(this);
     gson = new GsonBuilder()
                .registerTypeAdapter(TripModel.class, new GsonTripModelTypeAdapter())
                .create();
     tripParentServlet = new TripParentServlet(storage, gson);
+  }
+
+   @After
+  public void tearDown() {
+    helper.tearDown();
   }
 
   @Test

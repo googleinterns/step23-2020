@@ -5,6 +5,10 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Guice;
@@ -24,8 +28,12 @@ import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -33,7 +41,10 @@ import org.mockito.Mock;
 public class PlaceVisitParentServletTest {
   @Mock HttpServletRequest request;
   @Mock PlaceService placeService;
+   private final LocalServiceTestHelper helper =
+      new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
   private Gson gson;
+  
 
   private static final PlaceVisitModel UK = PlaceVisitModel.builder()
                                                 .setId("123")
@@ -70,9 +81,15 @@ public class PlaceVisitParentServletTest {
 
   @Before
   public void setUp() {
+      helper.setUp();
     initMocks(this);
     Injector injector = Guice.createInjector(new GsonModelSerializationModule());
     gson = injector.getInstance(Gson.class);
+  }
+
+   @After
+  public void tearDown() {
+    helper.tearDown();
   }
 
   @Test
@@ -110,7 +127,10 @@ public class PlaceVisitParentServletTest {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
-    when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
+     Key parentKey = KeyFactory.createKey("TripMeOut", NY.tripId());
+    String id = KeyFactory.keyToString(
+        KeyFactory.createKey(parentKey,NY.tripId(), UUID.randomUUID().toString()));
+    when(request.getRequestURI()).thenReturn("/trips/"+id+"/placeVisits");
     when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(NY))));
 
     servlet.doPost(request, response);
@@ -118,7 +138,7 @@ public class PlaceVisitParentServletTest {
 
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_CREATED);
     assertThat(place.placeName()).isEqualTo("NY Trip");
-    assertThat(place.tripId()).isEqualTo("abc123");
+    assertThat(place.tripId()).isEqualTo(id);
     assertThat(place.placesApiPlaceId()).isEqualTo("NY, USA");
     assertThat(place.userMark()).isEqualTo(PlaceVisitModel.UserMark.MAYBE);
   }
@@ -132,7 +152,10 @@ public class PlaceVisitParentServletTest {
     placeStorage.addPlaceVisit(UK);
 
     PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
-    when(request.getRequestURI()).thenReturn("/trips/abc123/placeVisits");
+    Key parentKey = KeyFactory.createKey("TripMeOut", UK.tripId());
+    String id = KeyFactory.keyToString(
+        KeyFactory.createKey(parentKey,UK.tripId(), UUID.randomUUID().toString()));
+    when(request.getRequestURI()).thenReturn("/trips/"+id+"/placeVisits");
     when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(UK))));
 
     servlet.doPost(request, response);
@@ -140,7 +163,7 @@ public class PlaceVisitParentServletTest {
 
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_CREATED);
     assertThat(place.placeName()).isEqualTo("UK Trip");
-    assertThat(place.tripId()).isEqualTo("abc123");
+    assertThat(place.tripId()).isEqualTo(id);
     assertThat(place.placesApiPlaceId()).isEqualTo("ChIJ3S-JXmauEmsRUcIaWtf4MzE");
     assertThat(place.userMark()).isEqualTo(PlaceVisitModel.UserMark.NO);
   }

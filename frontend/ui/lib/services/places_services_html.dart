@@ -69,25 +69,12 @@ class PlacesApiServices {
   PlaceWrapper autocompleteToPlaceWrapper(AutocompletePrediction suggestion) {
     return PlaceWrapper(
         name: suggestion.description, placeId: suggestion.placeId);
-<<<<<<< HEAD
-  }
-  
-  Future<PlaceResult> getPlaceDetails(String placeId) {
-    Completer<PlaceResult> completer = Completer();
-    final request = PlaceDetailsRequest()..placeId = placeId;
-    placesService.getDetails(request, (result, status) async {
-      if (status == PlacesServiceStatus.OK) {
-        completer.complete(result);
-      } else {
-        completer.completeError("errored getting place details with status code: $status");
-      }
-    });
-    return completer.future;
-  }
-=======
   }
 
   PlaceWrapper placeResultToPlaceWrapper(PlaceResult nearby) {
+    final photoOptions = PhotoOptions()
+          ..maxHeight = 500
+          ..maxWidth = 500;
     return PlaceWrapper(
       name: nearby.name,
       placeId: nearby.placeId,
@@ -96,7 +83,8 @@ class PlacesApiServices {
       website: nearby.website,
       priceLevel: nearby.priceLevel,
       rating: nearby.rating,
+      types: nearby.types,
+      photos: nearby.photos.map((photo) => photo.getUrl(photoOptions)).toList(),
     );
   }
->>>>>>> a09262e... switch to using place wrapper
 }

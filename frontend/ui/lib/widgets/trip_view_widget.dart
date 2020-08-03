@@ -21,7 +21,58 @@ class TripViewWidgetFromService extends StatelessWidget {
       future: tripService.getTrip(tripId),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return TripViewWidget(snapshot.data, placeVisitService, placesApiServices);
+          return PlaceListWidget(snapshot.data, placeVisitService, placesApiServices);
+        }
+        if (snapshot.hasError) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text("Error getting trip"),
+            action: SnackBarAction(
+              label: "Retry",
+              onPressed: () {}, //TODO: Make retry button actually work.
+            ),
+          ));
+          return Container();
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+}
+
+class PlaceListWidget extends StatelessWidget {
+  final Trip trip;
+  final PlaceVisitService placeVisitService;
+  final PlacesApiServices placesApiServices;
+
+  PlaceListWidget(this.trip, this.placeVisitService, this.placesApiServices);
+
+  Future<List<PlaceBlockWidget>> getPlaceBlockWidgets(String tripid) async {
+    //List<PlaceVisit> placeVisits = await placeVisitService.listPlaceVisits(tripid);
+    PlaceVisit seattle = PlaceVisit(
+      name: 'Seattle',
+      id: 'hello world',
+      tripid: 'abc123',
+      placesApiPlaceId: 'ChIJ3S-JXmauEmsRUcIaWtf4MzE',
+      userMark: UserMark.YES
+    );
+    List<PlaceVisit> placeVisits = [seattle];
+
+    List<PlaceBlockWidget> placeBlockWidgets = [];
+    for (int i = 0; i < placeVisits.length; i++) {
+      PlaceVisit placeVisit = placeVisits[i];
+      PlaceWrapper placeDetails = await placesApiServices.getPlaceDetails(placeVisit.placesApiPlaceId);
+      placeBlockWidgets.add(PlaceBlockWidget(placeVisit, placeVisitService, placeDetails));
+    }
+    return placeBlockWidgets;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: getPlaceBlockWidgets(trip.id),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return TripViewWidget(trip, snapshot.data);
         }
         if (snapshot.hasError) {
           Scaffold.of(context).showSnackBar(SnackBar(
@@ -41,12 +92,9 @@ class TripViewWidgetFromService extends StatelessWidget {
 
 class TripViewWidget extends StatelessWidget {
   final Trip trip;
-  final PlaceVisitService placeVisitService;
-  final PlacesApiServices placesApiServices;
+  final List<PlaceBlockWidget> placeBlocks;
 
-  Future<List<PlaceBlockWidget>> places;
-
-  TripViewWidget(this.trip, this.placeVisitService, this.placesApiServices);
+  TripViewWidget(this.trip, this.placeBlocks);
 
   @override
   Widget build(BuildContext context) {
@@ -69,30 +117,11 @@ class TripViewWidget extends StatelessWidget {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              if (index == 5) return null;
-              return Container(child: PlaceBlockWidget('Place ${index + 1}'));
+              return placeBlocks[index];
             },
           ),
         ),
       ],
     );
-  }
-
-  Future<List<PlaceBlockWidget>> getPlaceBlockWidgets(String tripid) async {
-    //List<PlaceVisit> placeVisits = await placeVisitService.listPlaceVisits(tripid);
-    PlaceVisit seattle = PlaceVisit(
-      name: 'Seattle',
-      placesApiPlaceId: 'ChIJ3S-JXmauEmsRUcIaWtf4MzE',
-      userMark: UserMark.YES
-    );
-    List<PlaceVisit> placeVisits = [seattle];
-
-    List<PlaceBlockWidget> placeBlockWidgets = [];
-    for (int i = 0; i < placeVisits.length; i++) {
-      PlaceVisit placeVisit = placeVisits[i];
-      PlaceWrapper placeDetails = await placesApiServices.getPlaceDetails(placeVisit.placesApiPlaceId);
-      placeBlockWidgets.add(PlaceBlockWidget(placeVisit, placeVisitService, placeDetails));
-    }
-    return placeBlockWidgets;
   }
 }

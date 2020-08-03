@@ -19,7 +19,7 @@ class TripViewPage extends StatelessWidget {
     return Scaffold(
       appBar: defaultAppBar(context),
       body: Center(
-          child: TripViewWidgetFromService(this.tripService, this.placeVisitService, this.tripId)),
+          child: TripViewWidgetFromService(this.tripService, this.placeVisitService, this.placesApiServices, this.tripId)),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // TODO: Add place add method to this button

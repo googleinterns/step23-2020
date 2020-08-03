@@ -21,23 +21,12 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
   final PlaceWrapper details;
   _PlaceBlockWidgetState(this.placeVisit, this.placeVisitService, this.details);
 
-  List<Widget> pictures = new List<Widget>();
-  List<Color> colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.orange,
-  ];
-
   bool _selected = false;
   Icon _icon = Icon(Icons.favorite_border);
   Color _color = Colors.black;
 
   @override
   Widget build(BuildContext context) {
-    print(placeVisit.id);
-    print(placeVisit.tripid);
 
     if (placeVisit.userMark == UserMark.YES) {
       setState(() {
@@ -48,7 +37,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
     }
 
     return ExpansionTile(
-        initiallyExpanded: true,
+        initiallyExpanded: false,
         title: Text(placeVisit.name),
         trailing: Container(
             width: 100.0,
@@ -80,15 +69,12 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                 color: Colors.red,
                 tooltip: "Delete this place",
               ),
-            ])),
+            ])
+          ),
         children: [
           Column(children: [
             Padding(
-              padding: EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-                bottom: 10.0
-              ),
+              padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
               child: Row(children: formatTypes(details.types)),
             ),
             Row(
@@ -96,12 +82,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
               children: [
                 Row(children: [
                   Padding(
-                    padding: EdgeInsets.only(
-                      left: 20.0,
-                      right: 20.0,
-                      top: 10.0,
-                      bottom: 10.0
-                    ),
+                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                     child: Row(
                       children: [
                         Text(
@@ -124,12 +105,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                     ),
                   ), 
                   Padding(
-                    padding: EdgeInsets.only(
-                      left: 20.0,
-                      right: 20.0,
-                      top: 10.0,
-                      bottom: 10.0
-                    ),
+                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                     child: Row(
                       children: [
                         Text(
@@ -144,12 +120,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
-                      left: 20.0,
-                      right: 20.0,
-                      top: 10.0,
-                      bottom: 10.0
-                    ),
+                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                     child: Row(
                       children: [
                         Text(
@@ -166,21 +137,11 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                 ]),
                 Row(children: [
                   Padding(
-                    padding: EdgeInsets.only(
-                      left: 20.0,
-                      right: 20.0,
-                      top: 10.0,
-                      bottom: 10.0
-                    ),
+                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                     child: Row(children: getDollarSigns(details.priceLevel))
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
-                      left: 20.0,
-                      right: 20.0,
-                      top: 10.0,
-                      bottom: 10.0
-                    ),
+                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                     child: Row(children: getStars(details.rating))
                   ),
                 ]),

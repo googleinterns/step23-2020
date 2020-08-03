@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps/google_maps_places.dart';
+import 'package:tripmeout/model/place.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 class PlaceBlockWidget extends StatefulWidget {
   final PlaceVisit placeVisit;
   final PlaceVisitService placeVisitService;
-  final PlaceResult details;
+  final PlaceWrapper details;
 
   PlaceBlockWidget(this.placeVisit, this.placeVisitService, this.details);
 
@@ -18,7 +18,7 @@ class PlaceBlockWidget extends StatefulWidget {
 class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
   final PlaceVisit placeVisit;
   final PlaceVisitService placeVisitService;
-  final PlaceResult details;
+  final PlaceWrapper details;
   _PlaceBlockWidgetState(this.placeVisit, this.placeVisitService, this.details);
 
   List<Widget> pictures = new List<Widget>();
@@ -139,7 +139,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                             color: Theme.of(context).accentColor
                           ),
                         ),
-                        Text(details.formattedAddress ?? ""),
+                        Text(details.address ?? ""),
                       ],
                     ),
                   ),
@@ -159,7 +159,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                             color: Theme.of(context).accentColor
                           ),
                         ),
-                        Text(details.formattedPhoneNumber ?? ""),
+                        Text(details.phoneNumber ?? ""),
                       ],
                     ),
                   ),
@@ -254,13 +254,10 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
     return formattedTypes;
   }
 
-  List<Widget> getPhotos(List<PlacePhoto> photos) {
+  List<Widget> getPhotos(List<String> photos) {
     List<Image> imageWidgets = [];
-    PhotoOptions photoOptions = PhotoOptions()
-                ..maxHeight = 400
-                ..maxWidth = 400;
     for (int i = 0; i < photos.length && i < 3; i++) {
-      imageWidgets.add(Image(image: NetworkImage(photos[i].getUrl(photoOptions))));
+      imageWidgets.add(Image(image: NetworkImage(photos[i])));
     }
     return imageWidgets;
   }

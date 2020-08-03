@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps/google_maps_places.dart';
+import 'package:tripmeout/model/place.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/model/trip.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
@@ -90,7 +90,7 @@ class TripViewWidget extends StatelessWidget {
     List<PlaceBlockWidget> placeBlockWidgets = [];
     for (int i = 0; i < placeVisits.length; i++) {
       PlaceVisit placeVisit = placeVisits[i];
-      PlaceResult placeDetails = await placesApiServices.getPlaceDetails(placeVisit.placesApiPlaceId);
+      PlaceWrapper placeDetails = await placesApiServices.getPlaceDetails(placeVisit.placesApiPlaceId);
       placeBlockWidgets.add(PlaceBlockWidget(placeVisit, placeVisitService, placeDetails));
     }
     return placeBlockWidgets;

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:html';
-import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
 import 'package:tripmeout/model/place.dart';
 
@@ -35,6 +34,19 @@ class PlacesApiServices {
     return completer.future;
   }
 
+  Future<PlaceWrapper> getPlaceDetails(String placeId) {
+    Completer<PlaceWrapper> completer = Completer();
+    final request = PlaceDetailsRequest()..placeId = placeId;
+    placesService.getDetails(request, (result, status) async {
+      if (status == PlacesServiceStatus.OK) {
+        completer.complete(placeResultToPlaceWrapper(result));
+      } else {
+        completer.completeError(status);
+      }
+    });
+    return completer.future;
+  }
+
   Future<List<String>> getPhotos(String placeId) {
     Completer<List<String>> completer = Completer();
     final request = PlaceDetailsRequest()..placeId = placeId;
@@ -57,6 +69,7 @@ class PlacesApiServices {
   PlaceWrapper autocompleteToPlaceWrapper(AutocompletePrediction suggestion) {
     return PlaceWrapper(
         name: suggestion.description, placeId: suggestion.placeId);
+<<<<<<< HEAD
   }
   
   Future<PlaceResult> getPlaceDetails(String placeId) {
@@ -71,4 +84,19 @@ class PlacesApiServices {
     });
     return completer.future;
   }
+=======
+  }
+
+  PlaceWrapper placeResultToPlaceWrapper(PlaceResult nearby) {
+    return PlaceWrapper(
+      name: nearby.name,
+      placeId: nearby.placeId,
+      address: nearby.formattedAddress,
+      phoneNumber: nearby.formattedPhoneNumber,
+      website: nearby.website,
+      priceLevel: nearby.priceLevel,
+      rating: nearby.rating,
+    );
+  }
+>>>>>>> a09262e... switch to using place wrapper
 }

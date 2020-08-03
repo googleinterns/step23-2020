@@ -27,7 +27,8 @@ class TripViewPage extends StatelessWidget {
               this.placeVisitService, this.placesApiServices, this.tripId)),
       floatingActionButton: FloatingRoutingButton(
         "/trips/$tripId/placeVisits/new",
-        Icon(Icons.add), "Click to add a place to your trip.",
+        Icon(Icons.add),
+        "Click to add a place to your trip.",
       ),
     );
   }

@@ -32,6 +32,7 @@ void main() {
     await tester.enterText(
         find.widgetWithText(TextField, 'Enter your Destination'), 'London');
     await tester.pumpAndSettle();
+    //debugDumpApp();
 
     expect(find.byType(ListTile), findsNWidgets(2));
 

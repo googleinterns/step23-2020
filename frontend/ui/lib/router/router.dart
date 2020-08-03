@@ -15,7 +15,8 @@ class Router {
   static final String tripListRoute = '/trips';
   static final String createTripRoute = '/trips/new';
   static final RegExp tripViewRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)$');
-  static final RegExp createPlaceVisitRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)/placeVisits/new$');
+  static final RegExp createPlaceVisitRouteRegExp =
+      RegExp(r'/trips/(?<tripId>[^/]+)/placeVisits/new$');
 
   final TripService tripService;
   final PlaceVisitService placeVisitService;
@@ -65,7 +66,8 @@ class Router {
     if (match != null) {
       String tripId = match.namedGroup('tripId');
       return MaterialPageRoute(
-        builder: (context) => CreatePlaceVisitPage(placeVisitService, tripId),
+        builder: (context) =>
+            CreatePlaceVisitPage(placeVisitService, placesApiServices, tripId),
         settings: settings,
       );
     }

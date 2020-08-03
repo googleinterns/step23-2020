@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:tripmeout/model/place.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
-//import 'package:tripmeout/services/places_services.dart';
+import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
 import 'package:tripmeout/router/router.dart';
-import 'package:google_maps/google_maps_places.dart';
 
 //TODO: Add loading screen after to the Create Trip Widget
 
 class CreatePlaceVisitWidget extends StatefulWidget {
   final PlaceVisitService placeVisitService;
-  //final PlacesApiServices placesApiServices;
+  final PlacesApiServices placesApiServices;
   final String tripId;
 
-  CreatePlaceVisitWidget(this.placeVisitService, this.tripId);
+  CreatePlaceVisitWidget(
+      this.placeVisitService, this.placesApiServices, this.tripId);
 
   @override
   _CreatePlaceVisitWidgetState createState() => _CreatePlaceVisitWidgetState();
@@ -22,13 +22,14 @@ class CreatePlaceVisitWidget extends StatefulWidget {
 
 class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
   PlaceVisitService get placeVisitService => widget.placeVisitService;
-  //PlacesApiServices get placesApiServices => widget.placesApiServices;
+  PlacesApiServices get placesApiServices => widget.placesApiServices;
   String get tripId => widget.tripId;
 
   bool _enabled = false;
   bool _selected = false;
   Icon _icon = Icon(Icons.favorite_border);
   Color _color = Colors.black;
+  Widget _imageWidget = Container();
 
   String placesApiSpecifiedName;
   String placeId;
@@ -43,15 +44,26 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
     ));
   }
 
-  void setFields(PlaceVisit suggestion) {
+  void setFields(PlaceWrapper suggestion) async {
+    List<String> imageUrls =
+        await placesApiServices.getPhotos(suggestion.placeId);
+    print(suggestion.placeId);
     setState(() {
       _enabled = true;
-      placeId = suggestion.placesApiPlaceId;
+      placeId = suggestion.placeId;
       placesApiSpecifiedName = suggestion.name;
+      if (imageUrls.length == 0) {
+        _imageWidget = Text("No images found.");
+      } else {
+        List<Widget> imageWidgets = (imageUrls.map<Widget>((url) {
+          return Card(child: Image(image: NetworkImage(url)));
+        })).toList();
+
+        _imageWidget = Container(
+            height: 450, width: 500, child: ListView(children: imageWidgets));
+      }
     });
   }
-
-  List<bool> _selections = List.generate(2, (_) => false);
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +72,10 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
       _onPressed = () {
         submitPlaceVisit().then((placeVisit) {
           Navigator.pushNamed(
-              context, "/trip/${placeVisit.tripid}/placeVisits");
+              context, Router.createTripViewRoute(placeVisit.tripid));
         }, onError: (error) {
           Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text("Error creating trip"),
+            content: Text("Error creating place visit"),
             action: SnackBarAction(
               label: "Dismiss",
               onPressed: () {},
@@ -75,40 +87,43 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
 
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(width: 600, child: MapsApiPlacesTextFieldWidget([])),
-            Container(
-              width: 100.0,
-              child: IconButton(
-                icon: _icon,
-                onPressed: () {
-                  setState(() {
-                    if (_selected == true) {
-                      _selected = false;
-                      _icon = Icon(Icons.favorite_border);
-                      _color = Colors.black;
-                      userMark = UserMark.MAYBE;
-                    } else {
-                      _selected = true;
-                      _icon = Icon(Icons.favorite);
-                      _color = Colors.pink;
-                      userMark = UserMark.YES;
-                    }
-                  });
-                },
-                color: _color,
-                tooltip: "Must Go",
-              ),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+              width: 600,
+              child: MapsApiPlacesTextFieldWidget(
+                  [], placesApiServices, setFields)),
+          Container(
+            width: 100.0,
+            child: IconButton(
+              icon: _icon,
+              onPressed: () {
+                setState(() {
+                  if (_selected == true) {
+                    _selected = false;
+                    _icon = Icon(Icons.favorite_border);
+                    _color = Colors.black;
+                    userMark = UserMark.MAYBE;
+                  } else {
+                    _selected = true;
+                    _icon = Icon(Icons.favorite);
+                    _color = Colors.pink;
+                    userMark = UserMark.YES;
+                  }
+                });
+              },
+              color: _color,
+              tooltip: "Must Go",
             ),
-          ]
-        ),
+          ),
+        ]),
+        _imageWidget,
         Padding(
           padding: const EdgeInsets.all(25.0),
-          child: RaisedButton(
+          child: IconButton(
             onPressed: _onPressed,
-            child: Text('Submit'),
+            icon: Icon(Icons.send),
+            tooltip: "Click this to submit your trip.",
+            color: Colors.green,
           ),
         ),
       ],

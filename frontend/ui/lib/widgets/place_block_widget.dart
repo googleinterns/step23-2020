@@ -12,7 +12,8 @@ class PlaceBlockWidget extends StatefulWidget {
   PlaceBlockWidget(this.placeVisit, this.placeVisitService, this.details);
 
   @override
-  State createState() => _PlaceBlockWidgetState(placeVisit, placeVisitService, details);
+  State createState() =>
+      _PlaceBlockWidgetState(placeVisit, placeVisitService, details);
 }
 
 class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
@@ -27,7 +28,6 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     if (placeVisit.userMark == UserMark.YES) {
       setState(() {
         _selected = true;
@@ -64,13 +64,13 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                 tooltip: "Must Go",
               ),
               IconButton(
-                onPressed: () => placeVisitService.deletePlaceVisit(placeVisit.tripid, placeVisit.id),
+                onPressed: () => placeVisitService.deletePlaceVisit(
+                    placeVisit.tripid, placeVisit.id),
                 icon: Icon(Icons.delete),
                 color: Colors.red,
                 tooltip: "Delete this place",
               ),
-            ])
-          ),
+            ])),
         children: [
           Column(children: [
             Padding(
@@ -88,22 +88,20 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                         Text(
                           'Website: ',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold, 
-                            color: Theme.of(context).accentColor
-                          ),
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).accentColor),
                         ),
                         InkWell(
-                          child: new Text(
-                            details.website ?? "",
-                            style: TextStyle(
-                              color: Colors.blue,
+                            child: new Text(
+                              details.website ?? "",
+                              style: TextStyle(
+                                color: Colors.blue,
+                              ),
                             ),
-                          ),
-                          onTap: () => launch(details.website)
-                        ),
+                            onTap: () => launch(details.website)),
                       ],
                     ),
-                  ), 
+                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                     child: Row(
@@ -111,9 +109,8 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                         Text(
                           'Address: ',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold, 
-                            color: Theme.of(context).accentColor
-                          ),
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).accentColor),
                         ),
                         Text(details.address ?? ""),
                       ],
@@ -126,9 +123,8 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                         Text(
                           'Phone #: ',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold, 
-                            color: Theme.of(context).accentColor
-                          ),
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).accentColor),
                         ),
                         Text(details.phoneNumber ?? ""),
                       ],
@@ -137,22 +133,19 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
                 ]),
                 Row(children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    child: Row(children: getDollarSigns(details.priceLevel))
-                  ),
+                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      child: Row(children: getDollarSigns(details.priceLevel))),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    child: Row(children: getStars(details.rating))
-                  ),
+                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      child: Row(children: getStars(details.rating))),
                 ]),
               ],
             ),
             Padding(
               padding: const EdgeInsets.all(25.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: getPhotos(details.photos)
-              ),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: getPhotos(details.photos)),
             ),
           ])
         ]);
@@ -189,7 +182,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
       totalStars--;
     }
 
-    while(totalStars > 0) {
+    while (totalStars > 0) {
       stars.add(Icon(Icons.star_border, color: Colors.amber));
       totalStars--;
     }
@@ -207,9 +200,8 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
         type = types[i] + ", ";
       }
       formattedTypes.add(Text(
-        type, 
-        style: TextStyle(
-          fontStyle: FontStyle.italic),
+        type,
+        style: TextStyle(fontStyle: FontStyle.italic),
       ));
     }
     return formattedTypes;

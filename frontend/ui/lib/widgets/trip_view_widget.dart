@@ -13,7 +13,8 @@ class TripViewWidgetFromService extends StatelessWidget {
   final PlacesApiServices placesApiServices;
   final String tripId;
 
-  TripViewWidgetFromService(this.tripService, this.placeVisitService, this.placesApiServices, this.tripId);
+  TripViewWidgetFromService(this.tripService, this.placeVisitService,
+      this.placesApiServices, this.tripId);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,8 @@ class TripViewWidgetFromService extends StatelessWidget {
       future: tripService.getTrip(tripId),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return PlaceListWidget(snapshot.data, placeVisitService, placesApiServices);
+          return PlaceListWidget(
+              snapshot.data, placeVisitService, placesApiServices);
         }
         if (snapshot.hasError) {
           Scaffold.of(context).showSnackBar(SnackBar(
@@ -49,19 +51,20 @@ class PlaceListWidget extends StatelessWidget {
   Future<List<PlaceBlockWidget>> getPlaceBlockWidgets(String tripid) async {
     //List<PlaceVisit> placeVisits = await placeVisitService.listPlaceVisits(tripid);
     PlaceVisit seattle = PlaceVisit(
-      name: 'Seattle',
-      id: 'hello world',
-      tripid: 'abc123',
-      placesApiPlaceId: 'ChIJ3S-JXmauEmsRUcIaWtf4MzE',
-      userMark: UserMark.YES
-    );
+        name: 'Seattle',
+        id: 'hello world',
+        tripid: 'abc123',
+        placesApiPlaceId: 'ChIJ3S-JXmauEmsRUcIaWtf4MzE',
+        userMark: UserMark.YES);
     List<PlaceVisit> placeVisits = [seattle];
 
     List<PlaceBlockWidget> placeBlockWidgets = [];
     for (int i = 0; i < placeVisits.length; i++) {
       PlaceVisit placeVisit = placeVisits[i];
-      PlaceWrapper placeDetails = await placesApiServices.getPlaceDetails(placeVisit.placesApiPlaceId);
-      placeBlockWidgets.add(PlaceBlockWidget(placeVisit, placeVisitService, placeDetails));
+      PlaceWrapper placeDetails =
+          await placesApiServices.getPlaceDetails(placeVisit.placesApiPlaceId);
+      placeBlockWidgets
+          .add(PlaceBlockWidget(placeVisit, placeVisitService, placeDetails));
     }
     return placeBlockWidgets;
   }

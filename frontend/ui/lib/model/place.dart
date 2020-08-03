@@ -1,10 +1,16 @@
 import 'dart:core';
 
-
 class PlaceWrapper {
-
   PlaceWrapper(
-      {this.name, this.placeId, this.address, this.phoneNumber, this.website, this.rating, this.priceLevel, this.photos, this.types});
+      {this.name,
+      this.placeId,
+      this.address,
+      this.phoneNumber,
+      this.website,
+      this.rating,
+      this.priceLevel,
+      this.photos,
+      this.types});
 
   final String name;
   final String placeId;
@@ -15,5 +21,4 @@ class PlaceWrapper {
   final num priceLevel;
   final List<String> photos;
   final List<String> types;
-
 }

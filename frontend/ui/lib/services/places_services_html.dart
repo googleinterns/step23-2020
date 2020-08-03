@@ -73,8 +73,8 @@ class PlacesApiServices {
 
   PlaceWrapper placeResultToPlaceWrapper(PlaceResult nearby) {
     final photoOptions = PhotoOptions()
-          ..maxHeight = 500
-          ..maxWidth = 500;
+      ..maxHeight = 500
+      ..maxWidth = 500;
     return PlaceWrapper(
       name: nearby.name,
       placeId: nearby.placeId,

@@ -4,6 +4,7 @@ import 'package:tripmeout/pages/trip_list_page.dart';
 import 'package:tripmeout/pages/trip_view_page.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:tripmeout/services/trip_service.dart';
+import 'package:tripmeout/services/places_services.dart';
 
 class Router {
   static final String tripListRoute = '/trips';
@@ -12,6 +13,7 @@ class Router {
 
   final TripService tripService;
   final PlaceVisitService placeVisitService;
+  final PlacesApiServices placesApiServices = PlacesApiServices();
 
   static String createTripViewRoute(String tripId) {
     return "/trips/$tripId";
@@ -28,7 +30,7 @@ class Router {
     }
     if (settings.name == createTripRoute) {
       return MaterialPageRoute(
-        builder: (context) => CreateTripPage(tripService),
+        builder: (context) => CreateTripPage(tripService, placesApiServices),
         settings: settings,
       );
     }

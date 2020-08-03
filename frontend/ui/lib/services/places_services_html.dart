@@ -66,15 +66,45 @@ class PlacesApiServices {
     return completer.future;
   }
 
+  Future<List<PlaceWrapper>> getNearbyPlaces(TripService tripService, String tripId) async {
+    Completer<List<PlaceWrapper>> completer = Completer();
+    Trip trip = await tripService.getTrip(tripId);
+
+    final detailsRequest = PlaceDetailsRequest()..placeId = trip.placesApiPlaceId;
+    placesService.getDetails(detailsRequest, (result, status) {
+      if (status == PlacesServiceStatus.OK) {
+        LatLng location = result.geometry.location;
+        print(location);
+
+        final request = PlaceSearchRequest()
+          ..location = location
+          ..radius = 40000
+          ..types = ["tourist_attraction"];
+
+        placesService.nearbySearch(request, (result, status, nextPage) {
+          if (status == PlacesServiceStatus.OK) {
+            completer.complete(result.map(placeResultToPlaceWrapper).toList());
+          } else if (status == PlacesServiceStatus.ZERO_RESULTS) {
+            completer.complete([]);
+          } else {
+            completer.completeError(status);
+          }
+        });
+      } else {
+        completer.completeError("could not find trip destination");
+      }
+    });
+
+    
+    return completer.future;
+  }
+
   PlaceWrapper autocompleteToPlaceWrapper(AutocompletePrediction suggestion) {
     return PlaceWrapper(
         name: suggestion.description, placeId: suggestion.placeId);
   }
 
   PlaceWrapper placeResultToPlaceWrapper(PlaceResult nearby) {
-    final photoOptions = PhotoOptions()
-      ..maxHeight = 500
-      ..maxWidth = 500;
     return PlaceWrapper(
       name: nearby.name,
       placeId: nearby.placeId,

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/pages/create_trip_page.dart';
 import 'package:tripmeout/pages/log_in_page.dart';
+<<<<<<< HEAD
 import 'package:tripmeout/pages/create_place_visit_page.dart';
+=======
+import 'package:tripmeout/pages/recommended_page.dart';
+>>>>>>> 7d5467c... add recommendations page
 import 'package:tripmeout/pages/trip_list_page.dart';
 import 'package:tripmeout/pages/trip_view_page.dart';
 import 'package:tripmeout/services/login_service.dart';
@@ -17,6 +21,7 @@ class Router {
   static final RegExp tripViewRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)$');
   static final RegExp createPlaceVisitRouteRegExp =
       RegExp(r'/trips/(?<tripId>[^/]+)/placeVisits/new$');
+  static final RegExp recommendedRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)/recommended$');
 
   final TripService tripService;
   final PlaceVisitService placeVisitService;
@@ -75,13 +80,19 @@ class Router {
     }
 
     match = createPlaceVisitRouteRegExp.firstMatch(settings.name);
-    print(match);
-    print("here");
     if (match != null) {
       String tripId = match.namedGroup('tripId');
       return MaterialPageRoute(
         builder: (context) =>
             CreatePlaceVisitPage(placeVisitService, placesApiServices, tripId),
+      );
+    }
+
+    match = recommendedRouteRegExp.firstMatch(settings.name);
+    if (match != null) {
+      String tripId = match.namedGroup('tripId');
+      return MaterialPageRoute(
+        builder: (context) => RecommendedPage(tripService, placesApiServices, tripId),
         settings: settings,
       );
     }

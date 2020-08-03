@@ -167,8 +167,9 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
     if (numStars == null) {
       return [Text('no ratings found')];
     }
+    num originalNumStars = numStars;
     int totalStars = 5;
-    List<Icon> stars = [];
+    List<Widget> stars = [];
     while (numStars > 1) {
       stars.add(Icon(Icons.star, color: Colors.amber));
       numStars--;
@@ -186,6 +187,8 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
       stars.add(Icon(Icons.star_border, color: Colors.amber));
       totalStars--;
     }
+
+    stars.add(Text(originalNumStars.toStringAsFixed(1)));
 
     return stars;
   }

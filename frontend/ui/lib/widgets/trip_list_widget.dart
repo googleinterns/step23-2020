@@ -29,6 +29,18 @@ class TripListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (trips.isEmpty) {
+      var listItems = ListTile(
+        leading: Icon(Icons.assignment_late, color: Colors.red),
+        title: Center(
+            child: Text(
+                "You have yet to make a trip. Please click here or the \"New Trip\" button to make one.")),
+        onTap: () {
+          Navigator.pushNamed(context, Router.createTripRoute);
+        },
+      );
+      return ListView(children: [listItems]);
+    }
     var listItems = trips
         .map((trip) => ListTile(
               title: Text(trip.name),

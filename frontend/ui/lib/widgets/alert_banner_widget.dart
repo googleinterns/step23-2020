@@ -36,3 +36,35 @@ class AlertBannerWidget extends StatelessWidget {
         ));
   }
 }
+
+class AlertBannerWithDismissidget extends StatelessWidget {
+  String title;
+  String content;
+  String buttonName;
+  VoidCallback anyFunction;
+
+  AlertBannerWithDismissidget(
+      this.title, this.content, this.anyFunction, this.buttonName);
+
+  @override
+  Widget build(BuildContext context) {
+    return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: AlertDialog(
+          title: Text(
+            title,
+          ),
+          content: Text(
+            content,
+          ),
+          actions: [
+            FlatButton(
+              child: Text(buttonName),
+              onPressed: () {
+                anyFunction();
+              },
+            ),
+          ],
+        ));
+  }
+}

@@ -16,6 +16,7 @@
     <auto-value.version>1.7</auto-value.version>
     <guice.version>4.2.3</guice.version>
     <flogger.version>0.5.1</flogger.version>
+    <appengine.version>1.9.59</appengine.version>
   </properties>
 
   <dependencies>
@@ -27,7 +28,7 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
-      <version>1.9.59</version>
+      <version>${appengine.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
@@ -78,6 +79,24 @@
       <artifactId>junit</artifactId>
       <version>4.13</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-testing</artifactId>
+        <version>${appengine.version}</version>
+        <scope>test</scope>
+    </dependency>
+     <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-stubs</artifactId>
+        <version>${appengine.version}</version>
+        <scope>test</scope>
+    </dependency>
+     <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-tools-sdk</artifactId>
+        <version>${appengine.version}</version>
+        <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>

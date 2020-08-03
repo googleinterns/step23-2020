@@ -26,10 +26,13 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
   String get tripId => widget.tripId;
 
   bool _enabled = false;
+  bool _selected = false;
+  Icon _icon = Icon(Icons.favorite_border);
+  Color _color = Colors.black;
 
   String placesApiSpecifiedName;
   String placeId;
-  UserMark userMark = UserMark.UNKNOWN;
+  UserMark userMark = UserMark.MAYBE;
 
   Future<PlaceVisit> submitPlaceVisit() async {
     return placeVisitService.createPlaceVisit(PlaceVisit(
@@ -42,6 +45,7 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
 
   void setFields(PlaceVisit suggestion) {
     setState(() {
+      _enabled = true;
       placeId = suggestion.placesApiPlaceId;
       placesApiSpecifiedName = suggestion.name;
     });
@@ -75,28 +79,29 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(width: 600, child: MapsApiPlacesTextFieldWidget([])),
-            ToggleButtons(
-                children: [
-                  Tooltip(message: "MUST GO", child: Icon(Icons.favorite)),
-                  Tooltip(message: "TIME PERMITS", child: Icon(Icons.alarm)),
-                ],
-                onPressed: (int index) {
+            Container(
+              width: 100.0,
+              child: IconButton(
+                icon: _icon,
+                onPressed: () {
                   setState(() {
-                    if (index == 0) {
-                      _selections[0] = true;
-                      _selections[1] = false;
-                      userMark = UserMark.YES;
+                    if (_selected == true) {
+                      _selected = false;
+                      _icon = Icon(Icons.favorite_border);
+                      _color = Colors.black;
+                      userMark = UserMark.MAYBE;
                     } else {
-                      _selections[0] = false;
-                      _selections[1] = true;
-                      userMark = UserMark.NO;
+                      _selected = true;
+                      _icon = Icon(Icons.favorite);
+                      _color = Colors.pink;
+                      userMark = UserMark.YES;
                     }
                   });
                 },
-                isSelected: _selections,
-                color: Colors.black,
-                selectedColor: Theme.of(context).accentColor,
+                color: _color,
+                tooltip: "Must Go",
               ),
+            ),
           ]
         ),
         Padding(

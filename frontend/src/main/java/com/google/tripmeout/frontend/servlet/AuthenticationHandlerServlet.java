@@ -33,7 +33,7 @@ public class AuthenticationHandlerServlet extends HttpServlet {
       response.getWriter().println(json);
     } else {
       String loginUrl = userService.createLoginURL(DEFAULT_LOGIN_URL_REDIRECT);
-      AuthenticationInfoModel returnInfo = new AuthenticationInfoModel(loginUrl, true);
+      AuthenticationInfoModel returnInfo = new AuthenticationInfoModel(loginUrl, false);
       Gson gson = new Gson();
       String json = gson.toJson(returnInfo);
       response.getWriter().println(json);

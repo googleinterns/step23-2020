@@ -25,7 +25,7 @@ public class GsonAuthenticationInfoModelTypeAdapter extends TypeAdapter<Authenti
       String name = reader.nextName();
       switch (name) {
         case RETURN_LINK_JSON_FIELD_NAME:
-          authenticationBuilder.setreturnLink(reader.nextString());
+          authenticationBuilder.setreturnLink(reader.nextBoolean());
           break;
         case LOGGED_IN_JSON_FIELD_NAME:
           authenticationBuilder.setloggedIn(reader.nextString());
@@ -47,7 +47,8 @@ public class GsonAuthenticationInfoModelTypeAdapter extends TypeAdapter<Authenti
     }
     writer.beginObject();
     writeUnlessNullOrEmpty(writer, RETURN_LINK_JSON_FIELD_NAME, authenticator.returnLink());
-    writeUnlessNullOrEmpty(writer, LOGGED_IN_JSON_FIELD_NAME, authenticator.loggedIn());
+    writer.name(LOGGED_IN_JSON_FIELD_NAME);
+    writer.value(authenticator.loggedIn());
     writer.endObject();
   }
 

@@ -10,7 +10,7 @@ class PlaceBlockWidget extends StatefulWidget {
   final PlaceVisitService placeVisitService;
   final PlaceWrapper details;
 
-  PlaceBlockWidget(this.placeVisit, this.placeVisitService, this.details);
+  PlaceBlockWidget(this.placeVisitService, this.placeVisit, this.details);
 
   @override
   State createState() =>
@@ -55,7 +55,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
             ],
           ),
           Container(
-            height: 500,
+            height: 450,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: getPhotos(details.photos),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tripmeout/model/place.dart';
 import 'package:tripmeout/model/place_visit.dart';
-import 'package:tripmeout/widgets/contact_info_widget.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 
 class UserStatusWidget extends StatefulWidget {
@@ -11,7 +9,8 @@ class UserStatusWidget extends StatefulWidget {
   UserStatusWidget(this.placeVisitService, this.placeVisit);
 
   @override
-  _UserStatusState createState() => _UserStatusState(this.placeVisitService, this.placeVisit);
+  _UserStatusState createState() =>
+      _UserStatusState(this.placeVisitService, this.placeVisit);
 }
 
 class _UserStatusState extends State<UserStatusWidget> {
@@ -22,7 +21,8 @@ class _UserStatusState extends State<UserStatusWidget> {
   PlaceVisit placeVisit;
   PlaceVisit _placeVisit;
 
-  _UserStatusState(this.placeVisitService, this.placeVisit): _placeVisit = placeVisit;
+  _UserStatusState(this.placeVisitService, this.placeVisit)
+      : _placeVisit = placeVisit;
 
   bool _selected = false;
   Icon _icon = Icon(Icons.favorite_border);
@@ -34,7 +34,7 @@ class _UserStatusState extends State<UserStatusWidget> {
       setState(() {
         _selected = true;
         _icon = Icon(Icons.favorite);
-        _color = Colors.red;
+        _color = Colors.pink;
       });
     }
 
@@ -48,12 +48,14 @@ class _UserStatusState extends State<UserStatusWidget> {
                 _selected = false;
                 _icon = Icon(Icons.favorite_border);
                 _color = Colors.black;
-                _placeVisit = PlaceVisit.from(placeVisit, userMark: UserMark.YES);
+                _placeVisit =
+                    PlaceVisit.from(placeVisit, userMark: UserMark.MAYBE);
               } else {
                 _selected = true;
                 _icon = Icon(Icons.favorite);
                 _color = Colors.pink;
-                _placeVisit = PlaceVisit.from(placeVisit, userMark: UserMark.YES);
+                _placeVisit =
+                    PlaceVisit.from(placeVisit, userMark: UserMark.YES);
               }
             });
             placeVisitService.updatePlaceVisitUserMark(_placeVisit);
@@ -71,7 +73,4 @@ class _UserStatusState extends State<UserStatusWidget> {
       ],
     );
   }
-
 }
-
-

@@ -101,17 +101,19 @@ public class NonStaticExtensionDefaulterTest {
 
   @Test
   public void init_defaultContentReturnsNull_throwsServletException() throws Exception {
-    setupConfig(Optional.of("js,css,png"), Optional.empty(), Optional.of("does-not-exist"), ImmutableMap.of());
+    setupConfig(Optional.of("js,css,png"), Optional.empty(), Optional.of("does-not-exist"),
+        ImmutableMap.of());
     NonStaticExtensionDefaulter nonStaticExtensionDefaulter = new NonStaticExtensionDefaulter();
 
     assertThrows(ServletException.class, () -> nonStaticExtensionDefaulter.init(config));
   }
 
   // This is kinda bad because it REALLLLY depends on implementation...
-  private void setupConfig(Optional<String> extensionParam, Optional<String> ignorePrefixRegexParam, Optional<String> defaultContentParam,
-      Map<String, String> resourcesToContents) {
+  private void setupConfig(Optional<String> extensionParam, Optional<String> ignorePrefixRegexParam,
+      Optional<String> defaultContentParam, Map<String, String> resourcesToContents) {
     extensionParam.ifPresent(ep -> when(config.getInitParameter("extensions")).thenReturn(ep));
-    ignorePrefixRegexParam.ifPresent(ipr -> when(config.getInitParameter("ignore-prefix-regex")).thenReturn(ipr));
+    ignorePrefixRegexParam.ifPresent(
+        ipr -> when(config.getInitParameter("ignore-prefix-regex")).thenReturn(ipr));
     defaultContentParam.ifPresent(
         dcp -> when(config.getInitParameter("default-content")).thenReturn(dcp));
     when(config.getServletContext()).thenReturn(context);

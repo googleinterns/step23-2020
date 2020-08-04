@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/model/place.dart';
 import 'package:tripmeout/model/place_visit.dart';
+import 'package:tripmeout/widgets/contact_info_widget.dart';
+import 'package:tripmeout/widgets/user_status_widget.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PlaceBlockWidget extends StatefulWidget {
   final PlaceVisit placeVisit;
@@ -22,57 +23,14 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
   final PlaceWrapper details;
   _PlaceBlockWidgetState(this.placeVisit, this.placeVisitService, this.details);
 
-  bool _selected = false;
-  Icon _icon = Icon(Icons.favorite_border);
-  Color _color = Colors.black;
-
   @override
   Widget build(BuildContext context) {
-    if (placeVisit.userMark == UserMark.YES) {
-      setState(() {
-        _selected = true;
-        _icon = Icon(Icons.favorite);
-        _color = Colors.red;
-      });
-    }
-
     return ExpansionTile(
       initiallyExpanded: false,
       title: Text(placeVisit.name),
       trailing: Container(
         width: 100.0,
-        child: Row(
-          children: [
-            IconButton(
-              icon: _icon,
-              onPressed: () {
-                setState(() {
-                  if (_selected == true) {
-                    _selected = false;
-                    _icon = Icon(Icons.favorite_border);
-                    _color = Colors.black;
-                    placeVisit..userMark = UserMark.MAYBE;
-                  } else {
-                    _selected = true;
-                    _icon = Icon(Icons.favorite);
-                    _color = Colors.pink;
-                    placeVisit..userMark = UserMark.YES;
-                  }
-                });
-                placeVisitService.updatePlaceVisitUserMark(placeVisit);
-              },
-              color: _color,
-              tooltip: "Must Go",
-            ),
-            IconButton(
-              onPressed: () => placeVisitService.deletePlaceVisit(
-                  placeVisit.tripid, placeVisit.id),
-              icon: Icon(Icons.delete),
-              color: Colors.red,
-              tooltip: "Delete this place",
-            ),
-          ],
-        ),
+        child: UserStatusWidget(placeVisitService, placeVisit),
       ),
       children: [
         Column(children: [
@@ -83,61 +41,7 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Website: ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).accentColor,
-                        ),
-                      ),
-                      InkWell(
-                        child: new Text(
-                          details.website ?? "",
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        onTap: () => launch(details.website),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Address: ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).accentColor,
-                        ),
-                      ),
-                      Text(details.address ?? ""),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Phone #: ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).accentColor,
-                        ),
-                      ),
-                      Text(details.phoneNumber ?? ""),
-                    ],
-                  ),
-                ),
-              ]),
+              ContactInfoWidget(details),
               Row(children: [
                 Padding(
                   padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -150,10 +54,10 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
               ]),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Container(
+            height: 500,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
               children: getPhotos(details.photos),
             ),
           ),
@@ -223,17 +127,9 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
 
   List<Widget> getPhotos(List<String> photos) {
     List<Image> imageWidgets = [];
-    for (int i = 0; i < photos.length && i < 3; i++) {
+    for (int i = 0; i < photos.length; i++) {
       imageWidgets.add(Image(image: NetworkImage(photos[i])));
     }
     return imageWidgets;
   }
-}
-
-Widget getPictureWidgets(List<Color> colors) {
-  return new ListView(
-      scrollDirection: Axis.horizontal,
-      children: colors
-          .map((item) => new Container(width: 200.0, color: item))
-          .toList());
 }

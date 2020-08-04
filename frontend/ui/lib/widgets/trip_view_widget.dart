@@ -49,10 +49,10 @@ class PlaceListWidget extends StatelessWidget {
   PlaceListWidget(this.trip, this.placeVisitService, this.placesApiServices);
 
   Future<List<PlaceBlockWidget>> getPlaceBlockWidgets(String tripid) async {
-    List<PlaceVisit> placeVisits =
-        await placeVisitService.listPlaceVisits(tripid);
+    //List<PlaceVisit> placeVisits =
+        //await placeVisitService.listPlaceVisits(tripid);
     // test place visit since currently cannot create
-    /*
+    
     PlaceVisit seattle = PlaceVisit(
         name: 'Seattle',
         id: 'hello world',
@@ -60,7 +60,7 @@ class PlaceListWidget extends StatelessWidget {
         placesApiPlaceId: 'ChIJ3S-JXmauEmsRUcIaWtf4MzE',
         userMark: UserMark.YES);
     List<PlaceVisit> placeVisits = [seattle];
-    */
+    
 
     List<PlaceBlockWidget> placeBlockWidgets = [];
     for (int i = 0; i < placeVisits.length; i++) {

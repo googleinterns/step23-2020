@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/router/router.dart';
+import 'package:tripmeout/services/login_service.dart';
+import 'package:tripmeout/services/rest_api_login_service.dart';
 import 'package:tripmeout/services/rest_api_trip_service.dart';
 import 'package:tripmeout/services/rest_api_place_visit_service.dart';
 import 'package:tripmeout/services/trip_service.dart';
@@ -11,7 +13,9 @@ import 'package:tripmeout/themes/default_theme.dart';
 void main() {
   TripService tripService = RestApiTripService();
   PlaceVisitService placeVisitService = RestApiPlaceVisitService();
-  Router router = Router(tripService, placeVisitService);
+  LogInService logInService = RestApiLogInService();
+
+  Router router = Router(tripService, placeVisitService, logInService);
   runApp(TripMeOut(tripService, placeVisitService, router));
 }
 

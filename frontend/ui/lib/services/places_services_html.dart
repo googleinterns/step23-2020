@@ -50,7 +50,6 @@ class PlacesApiServices {
   Future<List<String>> getPhotos(String placeId) {
     Completer<List<String>> completer = Completer();
     final request = PlaceDetailsRequest()..placeId = placeId;
-    print(placeId);
     placesService.getDetails(request, (result, status) async {
       if (status == PlacesServiceStatus.OK) {
         final photoOptions = PhotoOptions()

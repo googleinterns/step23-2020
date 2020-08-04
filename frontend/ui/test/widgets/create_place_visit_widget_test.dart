@@ -8,8 +8,6 @@ import 'package:tripmeout/model/place_visit.dart';
 
 class MockPlaceVisitService extends Mock implements PlaceVisitService {}
 
-class MockPlacesApiService extends Mock implements PlacesApiServices {}
-
 void main() {
   var placeVisitService = MockPlaceVisitService();
   var placesApiServices = PlacesApiServices();

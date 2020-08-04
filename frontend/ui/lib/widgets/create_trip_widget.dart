@@ -116,7 +116,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
           child: IconButton(
             onPressed: _onPressed,
             icon: Icon(Icons.send),
-            tooltip: "Click this to submit your place to visit.",
+            tooltip: "Click this to submit your trip.",
             color: Colors.green,
           ),
         ),

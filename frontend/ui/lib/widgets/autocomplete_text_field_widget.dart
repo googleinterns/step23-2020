@@ -45,11 +45,11 @@ class _MapsApiPlacesTextFieldState<T>
                 placesApiServices.getAutocomplete(pattern, allowedTypes),
             itemBuilder: (context, suggestion) {
               return ListTile(
-                title: Text(suggestion.description),
+                title: Text(suggestion.name),
               );
             },
             onSuggestionSelected: (suggestion) {
-              this._typeAheadController.text = suggestion.description;
+              this._typeAheadController.text = suggestion.name;
               onClick.call(suggestion);
             },
             noItemsFoundBuilder: (BuildContext context) =>

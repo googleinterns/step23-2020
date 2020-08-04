@@ -19,9 +19,10 @@ void main() {
       var createdTrip1 = await tripService.createTrip(trip);
       var trip2 = Trip(name: 'trip2', placesApiPlaceId: 'abc123');
       var createdTrip2 = await tripService.createTrip(trip2);
-      expect(await tripService.listTrips(), unorderedEquals([createdTrip1, createdTrip2]));
+      expect(await tripService.listTrips(),
+          unorderedEquals([createdTrip1, createdTrip2]));
     });
-    
+
     test('getTrip returns trip for existing id', () async {
       var trip = Trip(name: 'trip', placesApiPlaceId: 'abc123');
       var createdTrip = await tripService.createTrip(trip);
@@ -39,10 +40,9 @@ void main() {
       var createdTrip = await tripService.createTrip(trip);
       expect(await tripService.getTrip(createdTrip.id), equals(createdTrip));
       await tripService.deleteTrip(createdTrip.id);
-      expect(() async => await tripService.getTrip(createdTrip.id), throwsException);
+      expect(() async => await tripService.getTrip(createdTrip.id),
+          throwsException);
     });
-
-    
   });
 }
 

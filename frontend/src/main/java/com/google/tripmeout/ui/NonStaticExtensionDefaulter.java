@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -26,11 +29,13 @@ public class NonStaticExtensionDefaulter extends HttpFilter {
   private static final long serialVersionUID = 0L;
 
   private static final String EXTENSIONS_INIT_PARAM_KEY = "extensions";
+  private static final String IGNORE_PREFIX_REGEX_PARAM_KEY = "ignore-prefix-regex";
   private static final String DEFAULT_CONTENT_INIT_PARAM_KEY = "default-content";
   private static final String DEFAULT_DEFAULT_CONTENT = "/index.html";
   private static final Splitter EXTENSIONS_PARAM_SPLITTER = Splitter.on(',').omitEmptyStrings();
 
   private List<String> extensions = ImmutableList.of();
+  private Optional<Pattern> ignorePrefixPattern = Optional.empty();
 
   private String defaultContent;
 
@@ -43,6 +48,10 @@ public class NonStaticExtensionDefaulter extends HttpFilter {
         extensionsBuilder.add(extension);
       }
       extensions = extensionsBuilder.build();
+    }
+    String ignorePrefixRegex = filterConfig.getInitParameter(IGNORE_PREFIX_REGEX_PARAM_KEY);
+    if (!Strings.isNullOrEmpty(ignorePrefixRegex)) {
+        ignorePrefixPattern = Optional.of(Pattern.compile(ignorePrefixRegex));
     }
     String defaultContentPath = filterConfig.getInitParameter(DEFAULT_CONTENT_INIT_PARAM_KEY);
     if (Strings.isNullOrEmpty(defaultContentPath)) {
@@ -66,7 +75,7 @@ public class NonStaticExtensionDefaulter extends HttpFilter {
   @Override
   public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    if (extensions.stream().anyMatch(request.getRequestURI()::endsWith)) {
+    if (extensions.stream().anyMatch(request.getRequestURI()::endsWith) || ignorePrefixPattern.map(p -> p.matcher(request.getRequestURI()).matches()).orElse(false)) {
       chain.doFilter(request, response);
     } else {
       response.setContentType("text/html; charset=utf-8");

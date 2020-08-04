@@ -94,7 +94,7 @@ public class PersistentPlaceVisitStorageTest {
     assertEquals(
         newPlace.userMark(), storage.getPlaceVisit(place1.tripId(), place1.id()).get().userMark());
   }
-  
+
   @Test
   public void removePlaceVisit_returnListofTrips() throws Exception {
     PlaceVisitModel place1 = createPlaceWithTrip1();

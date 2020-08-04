@@ -29,6 +29,12 @@
       <param-name>extensions</param-name>
       <param-value>js,jpg,png,css</param-value>
     </init-param>
+    <!-- A regex of prefixes to ignore (don't serve the default content for). This
+         allows us to skip the default content for auth. -->
+    <init-param>
+        <param-name>ignore-prefix-regex</param-name>
+        <param-value>^/_ah/.*</param-value>
+    </init-param>
     <!-- The default content to serve for all requests that do not use one of the
          specified extensions. -->
     <init-param>

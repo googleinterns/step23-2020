@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,9 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.User;
-
 
 public class RequestAuthenticatorFilterTest {
   @Mock UserService userService;
@@ -63,7 +62,8 @@ public class RequestAuthenticatorFilterTest {
   @Test
   public void doFilter_userIsNotGoogleDomain_returnsForbidden() throws Exception {
     when(userService.isUserLoggedIn()).thenReturn(true);
-    when(userService.getCurrentUser()).thenReturn(new User("afeenster@gmail.com", "gmail", "userId"));
+    when(userService.getCurrentUser())
+        .thenReturn(new User("afeenster@gmail.com", "gmail", "userId"));
     filter.doFilter(request, response, chain);
     assertThat(response.getStatus()).isEqualTo(403);
   }
@@ -71,7 +71,8 @@ public class RequestAuthenticatorFilterTest {
   @Test
   public void doFilter_userIsLoggedInFromGoogleEmail_continuesChain() throws Exception {
     when(userService.isUserLoggedIn()).thenReturn(true);
-    when(userService.getCurrentUser()).thenReturn(new User("afeenster@google.com", "gmail", "userId"));
+    when(userService.getCurrentUser())
+        .thenReturn(new User("afeenster@google.com", "gmail", "userId"));
     filter.doFilter(request, response, chain);
     verify(chain).doFilter(request, response);
   }

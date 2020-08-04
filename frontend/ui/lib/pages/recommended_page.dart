@@ -16,13 +16,7 @@ class RecommendedPage extends StatelessWidget {
     return Scaffold(
       appBar: defaultAppBar(context),
       body: Center(
-          child: RecommendedWidgetFromService(this.tripService, placesApiServices, this.tripId)),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Add place add method to this button
-        },
-        child: Icon(Icons.add),
-        tooltip: "Click to add a place to your trip.",
+          child: RecommendedWidgetFromService(this.tripService, placesApiServices, this.tripId),
       ),
     );
   }

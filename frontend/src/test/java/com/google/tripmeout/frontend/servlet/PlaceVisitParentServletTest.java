@@ -29,10 +29,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,10 +39,9 @@ import org.mockito.Mock;
 public class PlaceVisitParentServletTest {
   @Mock HttpServletRequest request;
   @Mock PlaceService placeService;
-   private final LocalServiceTestHelper helper =
+  private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
   private Gson gson;
-  
 
   private static final PlaceVisitModel UK = PlaceVisitModel.builder()
                                                 .setId("123")
@@ -81,13 +78,13 @@ public class PlaceVisitParentServletTest {
 
   @Before
   public void setUp() {
-      helper.setUp();
+    helper.setUp();
     initMocks(this);
     Injector injector = Guice.createInjector(new GsonModelSerializationModule());
     gson = injector.getInstance(Gson.class);
   }
 
-   @After
+  @After
   public void tearDown() {
     helper.tearDown();
   }
@@ -127,10 +124,10 @@ public class PlaceVisitParentServletTest {
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     PlaceVisitStorage placeStorage = new InMemoryPlaceVisitStorage();
     PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
-     Key parentKey = KeyFactory.createKey("TripMeOut", NY.tripId());
+    Key parentKey = KeyFactory.createKey("TripMeOut", NY.tripId());
     String id = KeyFactory.keyToString(
-        KeyFactory.createKey(parentKey,NY.tripId(), UUID.randomUUID().toString()));
-    when(request.getRequestURI()).thenReturn("/trips/"+id+"/placeVisits");
+        KeyFactory.createKey(parentKey, NY.tripId(), UUID.randomUUID().toString()));
+    when(request.getRequestURI()).thenReturn("/trips/" + id + "/placeVisits");
     when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(NY))));
 
     servlet.doPost(request, response);
@@ -154,8 +151,8 @@ public class PlaceVisitParentServletTest {
     PlaceVisitParentServlet servlet = new PlaceVisitParentServlet(placeStorage, gson, placeService);
     Key parentKey = KeyFactory.createKey("TripMeOut", UK.tripId());
     String id = KeyFactory.keyToString(
-        KeyFactory.createKey(parentKey,UK.tripId(), UUID.randomUUID().toString()));
-    when(request.getRequestURI()).thenReturn("/trips/"+id+"/placeVisits");
+        KeyFactory.createKey(parentKey, UK.tripId(), UUID.randomUUID().toString()));
+    when(request.getRequestURI()).thenReturn("/trips/" + id + "/placeVisits");
     when(request.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(UK))));
 
     servlet.doPost(request, response);

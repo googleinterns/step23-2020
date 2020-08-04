@@ -20,7 +20,6 @@ import java.io.StringReader;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,14 +32,14 @@ import org.mockito.Mock;
 public class TripParentServletTest {
   @Mock TripStorage storage;
   @Mock HttpServletRequest request;
-    private final LocalServiceTestHelper helper =
+  private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
   Gson gson;
   TripParentServlet tripParentServlet;
 
   @Before
   public void setup() {
-      helper.setUp();
+    helper.setUp();
     initMocks(this);
     gson = new GsonBuilder()
                .registerTypeAdapter(TripModel.class, new GsonTripModelTypeAdapter())
@@ -48,7 +47,7 @@ public class TripParentServletTest {
     tripParentServlet = new TripParentServlet(storage, gson);
   }
 
-   @After
+  @After
   public void tearDown() {
     helper.tearDown();
   }

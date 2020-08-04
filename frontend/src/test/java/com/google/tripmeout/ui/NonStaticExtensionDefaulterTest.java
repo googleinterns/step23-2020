@@ -37,7 +37,7 @@ public class NonStaticExtensionDefaulterTest {
 
   @Test
   public void doFilter_uriDoesNotEndWithExtension_servesDefaultContent() throws Exception {
-    setupConfig(Optional.of("js,css,png"), Optional.of("random-file"),
+    setupConfig(Optional.of("js,css,png"), Optional.empty(), Optional.of("random-file"),
         ImmutableMap.of("random-file", "random-contents"));
     NonStaticExtensionDefaulter nonStaticExtensionDefaulter = new NonStaticExtensionDefaulter();
     nonStaticExtensionDefaulter.init(config);
@@ -53,7 +53,7 @@ public class NonStaticExtensionDefaulterTest {
 
   @Test
   public void doFilter_uriDoesEndWithExtension_callsFilterChain() throws Exception {
-    setupConfig(Optional.of("js,css,png"), Optional.of("random-file"),
+    setupConfig(Optional.of("js,css,png"), Optional.empty(), Optional.of("random-file"),
         ImmutableMap.of("random-file", "random-contents"));
     NonStaticExtensionDefaulter nonStaticExtensionDefaulter = new NonStaticExtensionDefaulter();
     nonStaticExtensionDefaulter.init(config);
@@ -68,8 +68,24 @@ public class NonStaticExtensionDefaulterTest {
   }
 
   @Test
+  public void doFilter_uriDoesStartWithIgnorePrefix_callsFilterChain() throws Exception {
+    setupConfig(Optional.empty(), Optional.of("^/_ah/.*"), Optional.of("random-file"),
+        ImmutableMap.of("random-file", "random-contents"));
+    NonStaticExtensionDefaulter nonStaticExtensionDefaulter = new NonStaticExtensionDefaulter();
+    nonStaticExtensionDefaulter.init(config);
+    StringWriter responseCapture = new StringWriter();
+    when(response.getWriter()).thenReturn(new PrintWriter(responseCapture));
+    when(request.getRequestURI()).thenReturn("/_ah/login");
+
+    nonStaticExtensionDefaulter.doFilter(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+    assertThat(responseCapture.toString()).isEmpty();
+  }
+
+  @Test
   public void doFilter_contentsDefaultToRootIndex() throws Exception {
-    setupConfig(Optional.of("js,css,png"), Optional.empty(),
+    setupConfig(Optional.of("js,css,png"), Optional.empty(), Optional.empty(),
         ImmutableMap.of("random-file", "random-contents", "/index.html", "index-contents"));
     NonStaticExtensionDefaulter nonStaticExtensionDefaulter = new NonStaticExtensionDefaulter();
     nonStaticExtensionDefaulter.init(config);
@@ -85,16 +101,17 @@ public class NonStaticExtensionDefaulterTest {
 
   @Test
   public void init_defaultContentReturnsNull_throwsServletException() throws Exception {
-    setupConfig(Optional.of("js,css,png"), Optional.of("does-not-exist"), ImmutableMap.of());
+    setupConfig(Optional.of("js,css,png"), Optional.empty(), Optional.of("does-not-exist"), ImmutableMap.of());
     NonStaticExtensionDefaulter nonStaticExtensionDefaulter = new NonStaticExtensionDefaulter();
 
     assertThrows(ServletException.class, () -> nonStaticExtensionDefaulter.init(config));
   }
 
   // This is kinda bad because it REALLLLY depends on implementation...
-  private void setupConfig(Optional<String> extensionParam, Optional<String> defaultContentParam,
+  private void setupConfig(Optional<String> extensionParam, Optional<String> ignorePrefixRegexParam, Optional<String> defaultContentParam,
       Map<String, String> resourcesToContents) {
     extensionParam.ifPresent(ep -> when(config.getInitParameter("extensions")).thenReturn(ep));
+    ignorePrefixRegexParam.ifPresent(ipr -> when(config.getInitParameter("ignore-prefix-regex")).thenReturn(ipr));
     defaultContentParam.ifPresent(
         dcp -> when(config.getInitParameter("default-content")).thenReturn(dcp));
     when(config.getServletContext()).thenReturn(context);

@@ -6,8 +6,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripNotFoundException;
+import com.google.tripmeout.frontend.servlet.Annotations.UserId;
 import com.google.tripmeout.frontend.storage.TripStorage;
 import java.io.IOException;
+import javax.inject.Provider;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,11 +23,13 @@ public final class TripServlet extends HttpServlet {
 
   private final Gson gson;
   private final TripStorage storage;
+  private final Provider<String> userId;
 
   @Inject
-  public TripServlet(TripStorage storage, Gson gson) {
+  public TripServlet(TripStorage storage, Gson gson, @UserId Provider<String> userId) {
     this.storage = storage;
     this.gson = gson;
+    this.userId = userId;
   }
 
   @Override
@@ -36,9 +40,13 @@ public final class TripServlet extends HttpServlet {
     try {
       final String tripId = TripName.fromRequestUri(request.getRequestURI()).id();
       TripModel trip = storage.getTrip(tripId);
-      response.setContentType(APPLICATION_JSON_CONTENT_TYPE);
-      response.getWriter().print(gson.toJson(trip));
-      response.getWriter().flush();
+      if (trip.userId().equals(userId.get())) {
+        response.setContentType(APPLICATION_JSON_CONTENT_TYPE);
+        response.getWriter().print(gson.toJson(trip));
+        response.getWriter().flush();
+      } else {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      }
     } catch (TripNotFoundException e) {
       logger.atWarning().withCause(e).log("not found");
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);

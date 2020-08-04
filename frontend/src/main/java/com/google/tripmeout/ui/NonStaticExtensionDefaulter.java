@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -51,7 +50,7 @@ public class NonStaticExtensionDefaulter extends HttpFilter {
     }
     String ignorePrefixRegex = filterConfig.getInitParameter(IGNORE_PREFIX_REGEX_PARAM_KEY);
     if (!Strings.isNullOrEmpty(ignorePrefixRegex)) {
-        ignorePrefixPattern = Optional.of(Pattern.compile(ignorePrefixRegex));
+      ignorePrefixPattern = Optional.of(Pattern.compile(ignorePrefixRegex));
     }
     String defaultContentPath = filterConfig.getInitParameter(DEFAULT_CONTENT_INIT_PARAM_KEY);
     if (Strings.isNullOrEmpty(defaultContentPath)) {
@@ -75,7 +74,9 @@ public class NonStaticExtensionDefaulter extends HttpFilter {
   @Override
   public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    if (extensions.stream().anyMatch(request.getRequestURI()::endsWith) || ignorePrefixPattern.map(p -> p.matcher(request.getRequestURI()).matches()).orElse(false)) {
+    if (extensions.stream().anyMatch(request.getRequestURI()::endsWith)
+        || ignorePrefixPattern.map(p -> p.matcher(request.getRequestURI()).matches())
+               .orElse(false)) {
       chain.doFilter(request, response);
     } else {
       response.setContentType("text/html; charset=utf-8");

@@ -37,118 +37,129 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
     }
 
     return ExpansionTile(
-        initiallyExpanded: false,
-        title: Text(placeVisit.name),
-        trailing: Container(
-            width: 100.0,
-            child: Row(children: [
-              IconButton(
-                icon: _icon,
-                onPressed: () {
-                  setState(() {
-                    if (_selected == true) {
-                      _selected = false;
-                      _icon = Icon(Icons.favorite_border);
-                      _color = Colors.black;
-                      placeVisit..userMark = UserMark.MAYBE;
-                    } else {
-                      _selected = true;
-                      _icon = Icon(Icons.favorite);
-                      _color = Colors.pink;
-                      placeVisit..userMark = UserMark.YES;
-                    }
-                  });
-                  placeVisitService.updatePlaceVisitUserMark(placeVisit);
-                },
-                color: _color,
-                tooltip: "Must Go",
-              ),
-              IconButton(
-                onPressed: () => placeVisitService.deletePlaceVisit(
-                    placeVisit.tripid, placeVisit.id),
-                icon: Icon(Icons.delete),
-                color: Colors.red,
-                tooltip: "Delete this place",
-              ),
-            ])),
-        children: [
-          Column(children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-              child: Row(children: formatTypes(details.types)),
+      initiallyExpanded: false,
+      title: Text(placeVisit.name),
+      trailing: Container(
+        width: 100.0,
+        child: Row(
+          children: [
+            IconButton(
+              icon: _icon,
+              onPressed: () {
+                setState(() {
+                  if (_selected == true) {
+                    _selected = false;
+                    _icon = Icon(Icons.favorite_border);
+                    _color = Colors.black;
+                    placeVisit..userMark = UserMark.MAYBE;
+                  } else {
+                    _selected = true;
+                    _icon = Icon(Icons.favorite);
+                    _color = Colors.pink;
+                    placeVisit..userMark = UserMark.YES;
+                  }
+                });
+                placeVisitService.updatePlaceVisitUserMark(placeVisit);
+              },
+              color: _color,
+              tooltip: "Must Go",
             ),
-            Row(
+            IconButton(
+              onPressed: () => placeVisitService.deletePlaceVisit(
+                  placeVisit.tripid, placeVisit.id),
+              icon: Icon(Icons.delete),
+              color: Colors.red,
+              tooltip: "Delete this place",
+            ),
+          ],
+        ),
+      ),
+      children: [
+        Column(children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+            child: Row(children: formatTypes(details.types)),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Website: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                      InkWell(
+                        child: new Text(
+                          details.website ?? "",
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onTap: () => launch(details.website),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Address: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                      Text(details.address ?? ""),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Phone #: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                      Text(details.phoneNumber ?? ""),
+                    ],
+                  ),
+                ),
+              ]),
+              Row(children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  child: Row(children: getDollarSigns(details.priceLevel)),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  child: Row(children: getStars(details.rating)),
+                ),
+              ]),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Website: ',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).accentColor),
-                        ),
-                        InkWell(
-                            child: new Text(
-                              details.website ?? "",
-                              style: TextStyle(
-                                color: Colors.blue,
-                              ),
-                            ),
-                            onTap: () => launch(details.website)),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Address: ',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).accentColor),
-                        ),
-                        Text(details.address ?? ""),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Phone #: ',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).accentColor),
-                        ),
-                        Text(details.phoneNumber ?? ""),
-                      ],
-                    ),
-                  ),
-                ]),
-                Row(children: [
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      child: Row(children: getDollarSigns(details.priceLevel))),
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      child: Row(children: getStars(details.rating))),
-                ]),
-              ],
+              children: getPhotos(details.photos),
             ),
-            Padding(
-              padding: const EdgeInsets.all(25.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: getPhotos(details.photos)),
-            ),
-          ])
-        ]);
+          ),
+        ])
+      ],
+    );
   }
 
   List<Widget> getDollarSigns(num numSigns) {

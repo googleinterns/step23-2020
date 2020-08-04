@@ -51,7 +51,12 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
         })).toList();
 
         _imageWidget = Container(
-            height: 450, width: 500, child: ListView(children: imageWidgets));
+            height: 400,
+            width: 500,
+            child: ListView(
+              children: imageWidgets,
+              scrollDirection: Axis.horizontal,
+            ));
       }
     });
   }
@@ -75,7 +80,7 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
       };
     }
 
-    return Column(
+    return ListView(
       children: [
         basic.Padding(
           padding: const EdgeInsets.all(25.0),

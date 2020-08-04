@@ -60,7 +60,13 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
         })).toList();
 
         _imageWidget = Container(
-            height: 450, width: 500, child: ListView(children: imageWidgets));
+          height: 400,
+          width: 1000,
+          child: ListView(
+            children: imageWidgets,
+            scrollDirection: Axis.horizontal,
+          ),
+        );
       }
     });
   }

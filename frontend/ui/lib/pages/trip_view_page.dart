@@ -6,6 +6,7 @@ import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/trip_view_widget.dart';
 import 'package:tripmeout/widgets/default_app_bar.dart';
 import 'package:tripmeout/widgets/routing_button_widget.dart';
+import 'package:tripmeout/router/router.dart';
 
 class TripViewPage extends StatelessWidget {
   final TripService tripService;
@@ -26,7 +27,7 @@ class TripViewPage extends StatelessWidget {
           child: TripViewWidgetFromService(this.tripService,
               this.placeVisitService, this.placesApiServices, this.tripId)),
       floatingActionButton: FloatingRoutingButton(
-        "/trips/$tripId/placeVisits/new",
+        Router.createCreatePlaceVisitRoute(tripId),
         Icon(Icons.add),
         "Click to add a place to your trip.",
       ),

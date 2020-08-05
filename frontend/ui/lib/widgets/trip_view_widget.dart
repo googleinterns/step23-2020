@@ -19,8 +19,6 @@ class TripViewWidgetFromService extends StatelessWidget {
 
   Future<List<PlaceBlockWidget>> getPlaceBlockWidgets() async {
     List<PlaceVisit> placeVisits = await placeVisitService.listPlaceVisits(tripId);
-    //test place visit since currently cannot create
-
     List<PlaceBlockWidget> placeBlockWidgets = [];
     for (int i = 0; i < placeVisits.length; i++) {
       PlaceVisit placeVisit = placeVisits[i];

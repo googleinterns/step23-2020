@@ -9,6 +9,7 @@ import com.google.tripmeout.frontend.storage.PlaceVisitStorage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -45,6 +46,10 @@ public class PlaceVisitIndividualServlet extends HttpServlet {
       String tripId = matcher.group(1);
       String id = matcher.group(2);
 
+      if (id == null || id.equals("null")) {
+        id = UUID.randomUUID().toString();
+      }
+
       PlaceVisitModel place =
           ServletUtil.extractFromRequestBody(request.getReader(), gson, PlaceVisitModel.class);
 
@@ -52,7 +57,7 @@ public class PlaceVisitIndividualServlet extends HttpServlet {
 
       PlaceVisitModel.UserMark status = place.userMark();
 
-      PlaceVisitModel newPlace = PlaceVisitModel.builder()
+      PlaceVisitModel newPlace = place.toBuilder()
                                      .setTripId(tripId)
                                      .setId(id)
                                      .setPlacesApiPlaceId(place.placesApiPlaceId())

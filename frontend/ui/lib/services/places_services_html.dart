@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:html';
+import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
 import 'package:tripmeout/model/place.dart';
+import 'package:tripmeout/model/trip.dart';
+import 'package:tripmeout/services/trip_service.dart';
 
 class PlacesApiServices {
   final AutocompleteService autocompleteService = AutocompleteService();
@@ -78,7 +81,7 @@ class PlacesApiServices {
 
         final request = PlaceSearchRequest()
           ..location = location
-          ..radius = 40000
+          ..radius = 50000
           ..types = ["tourist_attraction"];
 
         placesService.nearbySearch(request, (result, status, nextPage) {
@@ -105,6 +108,9 @@ class PlacesApiServices {
   }
 
   PlaceWrapper placeResultToPlaceWrapper(PlaceResult nearby) {
+    final photoOptions = PhotoOptions()
+          ..maxHeight = 500
+          ..maxWidth = 500;
     return PlaceWrapper(
       name: nearby.name,
       placeId: nearby.placeId,

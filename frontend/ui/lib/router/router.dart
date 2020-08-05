@@ -92,7 +92,7 @@ class Router {
     if (match != null) {
       String tripId = match.namedGroup('tripId');
       return MaterialPageRoute(
-        builder: (context) => RecommendedPage(tripService, placesApiServices, tripId),
+        builder: (context) => RecommendedPage(tripService, placeVisitService, placesApiServices, tripId),
         settings: settings,
       );
     }

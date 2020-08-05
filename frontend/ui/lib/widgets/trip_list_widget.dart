@@ -43,14 +43,15 @@ class TripListWidget extends StatelessWidget {
       return ListView(children: [listItems]);
     }
     var listItems = trips
-        .map((trip) => ListTile(
+        .map((trip) => Card(
+                child: ListTile(
               title: Text(trip.name),
               onTap: () {
                 Navigator.pushNamed(
                     context, Router.createTripViewRoute(trip.id));
               },
               trailing: TripDeleterButton(tripService, trip),
-            ))
+            )))
         .toList();
     return ListView(children: listItems);
   }

@@ -26,7 +26,7 @@ class Router {
   static String createTripViewRoute(String tripId) {
     return "/trips/$tripId";
   }
-  
+
   static String createCreatePlaceVisitRoute(String tripId) {
     return "/trips/$tripId/placeVisits/new";
   }

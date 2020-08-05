@@ -46,7 +46,8 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
   }
 
   void setFields(PlaceWrapper suggestion) async {
-    PlaceWrapper placeDetails = await placesApiServices.getPlaceDetails(suggestion.placeId);
+    PlaceWrapper placeDetails =
+        await placesApiServices.getPlaceDetails(suggestion.placeId);
     setState(() {
       _enabled = true;
       placeId = suggestion.placeId;

@@ -14,12 +14,12 @@ AppBar defaultAppBar(BuildContext context) {
       RoutingButton(
           Router.createTripRoute, Icon(Icons.add), "Click to make New Trip"),
       RoutingButton(Router.tripListRoute, Icon(Icons.assignment),
-          "Click to view your trips,")
+          "Click to view your trips")
     ],
   );
 }
 
-AppBar defaultAppBarWithNoBackArrow(BuildContext context) {
+AppBar defaultAppBarWithNoExtras(BuildContext context) {
   return AppBar(
     title: Image.asset(
       'app_bar_logo_200x200.png',
@@ -29,10 +29,8 @@ AppBar defaultAppBarWithNoBackArrow(BuildContext context) {
     actions: [
       RoutingButton(
           Router.logInRoute, Icon(Icons.account_box), "Click to Login"),
-      RoutingButton(
-          Router.createTripRoute, Icon(Icons.add), "Click to make New Trip"),
       RoutingButton(Router.tripListRoute, Icon(Icons.assignment),
-          "Click to view your trips,")
+          "Click to view your trips")
     ],
   );
 }

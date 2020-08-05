@@ -100,9 +100,9 @@ class PlaceDetailsWidget extends StatelessWidget {
   }
 
   List<Widget> getPhotos(List<String> photos) {
-    List<Image> imageWidgets = [];
+    List<Widget> imageWidgets = [];
     for (int i = 0; i < photos.length; i++) {
-      imageWidgets.add(Image(image: NetworkImage(photos[i])));
+      imageWidgets.add(Card(child: Image(image: NetworkImage(photos[i]))));
     }
     return imageWidgets;
   }

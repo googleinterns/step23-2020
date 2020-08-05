@@ -18,9 +18,8 @@ class TripViewWidgetFromService extends StatelessWidget {
       this.placesApiServices, this.tripId);
 
   Future<List<PlaceBlockWidget>> getPlaceBlockWidgets() async {
-    List<PlaceVisit> placeVisits = await placeVisitService.listPlaceVisits(tripId);
-    //test place visit since currently cannot create
-
+    List<PlaceVisit> placeVisits =
+        await placeVisitService.listPlaceVisits(tripId);
     List<PlaceBlockWidget> placeBlockWidgets = [];
     for (int i = 0; i < placeVisits.length; i++) {
       PlaceVisit placeVisit = placeVisits[i];
@@ -39,7 +38,7 @@ class TripViewWidgetFromService extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return PlaceListFromServiceWidget(
-              snapshot.data, getPlaceBlockWidgets);
+              snapshot.data, snapshot.data.name, getPlaceBlockWidgets);
         }
         if (snapshot.hasError) {
           Scaffold.of(context).showSnackBar(SnackBar(

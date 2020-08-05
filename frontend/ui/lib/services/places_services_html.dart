@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:html';
+import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
 import 'package:tripmeout/model/place.dart';
+import 'package:tripmeout/model/trip.dart';
+import 'package:tripmeout/services/trip_service.dart';
 
 class PlacesApiServices {
   final AutocompleteService autocompleteService = AutocompleteService();
@@ -63,6 +66,40 @@ class PlacesApiServices {
         completer.complete([]);
       }
     });
+    return completer.future;
+  }
+
+  Future<List<PlaceWrapper>> getNearbyPlaces(
+      TripService tripService, String tripId) async {
+    Completer<List<PlaceWrapper>> completer = Completer();
+    Trip trip = await tripService.getTrip(tripId);
+
+    final detailsRequest = PlaceDetailsRequest()
+      ..placeId = trip.placesApiPlaceId;
+    placesService.getDetails(detailsRequest, (result, status) {
+      if (status == PlacesServiceStatus.OK) {
+        LatLng location = result.geometry.location;
+        print(location);
+
+        final request = PlaceSearchRequest()
+          ..location = location
+          ..radius = 50000
+          ..types = ["tourist_attraction"];
+
+        placesService.nearbySearch(request, (result, status, nextPage) {
+          if (status == PlacesServiceStatus.OK) {
+            completer.complete(result.map(placeResultToPlaceWrapper).toList());
+          } else if (status == PlacesServiceStatus.ZERO_RESULTS) {
+            completer.complete([]);
+          } else {
+            completer.completeError(status);
+          }
+        });
+      } else {
+        completer.completeError("could not find trip destination");
+      }
+    });
+
     return completer.future;
   }
 

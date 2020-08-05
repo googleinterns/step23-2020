@@ -57,8 +57,8 @@ class _UserStatusState extends State<UserStatusWidget> {
                 _placeVisit =
                     PlaceVisit.from(placeVisit, userMark: UserMark.YES);
               }
+              placeVisitService.updatePlaceVisitUserMark(_placeVisit);
             });
-            placeVisitService.updatePlaceVisitUserMark(_placeVisit);
           },
           color: _color,
           tooltip: "Must Go",

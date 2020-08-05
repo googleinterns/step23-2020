@@ -1,82 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:tripmeout/model/place.dart';
+import 'package:tripmeout/model/place_visit.dart';
+import 'package:tripmeout/widgets/place_details_widget.dart';
+import 'package:tripmeout/widgets/user_status_widget.dart';
+import 'package:tripmeout/services/place_visit_service.dart';
 
 class PlaceBlockWidget extends StatefulWidget {
-  final String placeName;
+  final PlaceVisit placeVisit;
+  final PlaceVisitService placeVisitService;
+  final PlaceWrapper details;
 
-  PlaceBlockWidget(this.placeName);
+  PlaceBlockWidget(this.placeVisitService, this.placeVisit, this.details);
 
   @override
-  State createState() => _PlaceBlockWidgetState(placeName);
+  State createState() =>
+      _PlaceBlockWidgetState(placeVisit, placeVisitService, details);
 }
 
 class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
-  final String placeName;
-  _PlaceBlockWidgetState(this.placeName);
-
-  List<Widget> pictures = new List<Widget>();
-  List<Color> colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.orange,
-  ];
-
-  bool _selected = false;
-  Icon _icon = Icon(Icons.favorite_border);
-  Color _color = Colors.black;
+  final PlaceVisit placeVisit;
+  final PlaceVisitService placeVisitService;
+  final PlaceWrapper details;
+  _PlaceBlockWidgetState(this.placeVisit, this.placeVisitService, this.details);
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-        initiallyExpanded: true,
-        title: Text(placeName),
-        trailing: Container(
-            width: 100.0,
-            child: Row(children: [
-              IconButton(
-                icon: _icon,
-                onPressed: () {
-                  setState(() {
-                    if (_selected == true) {
-                      _selected = false;
-                      _icon = Icon(Icons.favorite_border);
-                      _color = Colors.black;
-                    } else {
-                      _selected = true;
-                      _icon = Icon(Icons.favorite);
-                      _color = Colors.pink;
-                    }
-                  });
-                },
-                color: _color,
-                tooltip: "Must Go",
-              ),
-              IconButton(
-                onPressed: () => {}, //TODO: Add delete place method to Button
-                icon: Icon(Icons.delete),
-                color: Colors.red,
-                tooltip: "Delete this place",
-              ),
-            ])),
-        children: [
-          Container(
-              height: 200,
-              child: ListView(children: [
-                Container(
-                    height: 100, child: Center(child: Text('Description'))),
-                Container(height: 200, child: getPictureWidgets(colors)),
-                Container(height: 100, child: Center(child: Text('Bar'))),
-                Container(height: 100, child: Center(child: Text('Baz'))),
-              ]))
-        ]);
+      initiallyExpanded: false,
+      title: Text(placeVisit.name),
+      trailing: Container(
+        width: 100.0,
+        child: UserStatusWidget(placeVisitService, placeVisit),
+      ),
+      children: [PlaceDetailsWidget(details)]
+    );
   }
-}
-
-Widget getPictureWidgets(List<Color> colors) {
-  return new ListView(
-      scrollDirection: Axis.horizontal,
-      children: colors
-          .map((item) => new Container(width: 200.0, color: item))
-          .toList());
 }

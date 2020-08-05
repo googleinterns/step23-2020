@@ -31,7 +31,8 @@ class TripListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (trips.isEmpty) {
-      var listItems = ListTile(
+      var listItems = Card(
+          child: ListTile(
         leading: Icon(Icons.assignment_late, color: Colors.red),
         title: Center(
             child: Text(
@@ -39,7 +40,7 @@ class TripListWidget extends StatelessWidget {
         onTap: () {
           Navigator.pushNamed(context, Router.createTripRoute);
         },
-      );
+      ));
       return ListView(children: [listItems]);
     }
     var listItems = trips
@@ -53,6 +54,15 @@ class TripListWidget extends StatelessWidget {
               trailing: TripDeleterButton(tripService, trip),
             )))
         .toList();
-    return ListView(children: listItems);
+    return Column(children: [
+      Card(
+          child: Container(
+              child: Center(
+                  child: Text("List of Trips",
+                      style: TextStyle(
+                        fontSize: 30,
+                      ))))),
+      Expanded(child: ListView(children: listItems))
+    ]);
   }
 }

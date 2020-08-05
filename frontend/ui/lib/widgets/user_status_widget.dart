@@ -32,8 +32,9 @@ class _UserStatusState extends State<UserStatusWidget> {
 
   _showDialog(BuildContext context, PlaceVisit placeVisit, PlaceVisitService placeVisitService) {
     VoidCallback continueCallBack = () => {
-          placeVisitService.deletePlaceVisit(placeVisit.tripid, placeVisit.id),
-          Navigator.pushNamed(context, Router.createTripViewRoute(placeVisit.tripid)),
+          placeVisitService.deletePlaceVisit(placeVisit.tripid, placeVisit.id).then((_) {
+            Navigator.popAndPushNamed(context, Router.createTripViewRoute(placeVisit.tripid));
+          }),
         };
     AlertBannerWidget alert = AlertBannerWidget("Delete Place",
         "Are you sure you would like to delete this place?", continueCallBack);

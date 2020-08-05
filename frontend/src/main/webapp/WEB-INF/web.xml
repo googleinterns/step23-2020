@@ -27,7 +27,7 @@
     <!-- A comma seperated list of extensions to not filter. -->
     <init-param>
       <param-name>extensions</param-name>
-      <param-value>js,jpg,png,css</param-value>
+      <param-value>js,jpg,png,css,json</param-value>
     </init-param>
     <!-- A regex of prefixes to ignore (don't serve the default content for). This
          allows us to skip the default content for auth. -->

@@ -4,7 +4,10 @@ import 'package:tripmeout/widgets/routing_button_widget.dart';
 
 AppBar defaultAppBar(BuildContext context) {
   return AppBar(
-    title: Row(children: [Icon(Icons.airplanemode_active), Text('TripMeOut')]),
+    title: Image.asset(
+      'app_bar_logo_200x200.png',
+      fit: BoxFit.contain,
+    ),
     actions: [
       RoutingButton(
           Router.logInRoute, Icon(Icons.account_box), "Click to Login"),
@@ -18,7 +21,10 @@ AppBar defaultAppBar(BuildContext context) {
 
 AppBar defaultAppBarWithNoBackArrow(BuildContext context) {
   return AppBar(
-    title: Row(children: [Icon(Icons.airplanemode_active), Text('TripMeOut')]),
+    title: Image.asset(
+      'app_bar_logo_200x200.png',
+      fit: BoxFit.contain,
+    ),
     automaticallyImplyLeading: false, //Gets rid of appBar back arrow
     actions: [
       RoutingButton(

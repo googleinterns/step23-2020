@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
+import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
@@ -27,6 +28,14 @@ import org.mockito.Mock;
 
 @RunWith(JUnit4.class)
 public class TripParentServletTest {
+  private static final String STUB_USER_ID = "userId";
+  private static final Provider<String> STUB_USER_ID_PROVIDER = new Provider<String>() {
+    @Override
+    public String get() {
+      return STUB_USER_ID;
+    }
+  };
+
   @Mock TripStorage storage;
   @Mock HttpServletRequest request;
 
@@ -39,13 +48,13 @@ public class TripParentServletTest {
     gson = new GsonBuilder()
                .registerTypeAdapter(TripModel.class, new GsonTripModelTypeAdapter())
                .create();
-    tripParentServlet = new TripParentServlet(storage, gson);
+    tripParentServlet = new TripParentServlet(storage, gson, STUB_USER_ID_PROVIDER);
   }
 
   @Test
   public void doGet_noTrips() throws Exception {
     // TODO(issues/66): Use specif userId string
-    when(storage.getAllUserTrips(TripParentServlet.STUB_USER_ID)).thenReturn(ImmutableList.of());
+    when(storage.getAllUserTrips(STUB_USER_ID)).thenReturn(ImmutableList.of());
 
     FakeHttpServletResponse response = new FakeHttpServletResponse();
 
@@ -58,10 +67,9 @@ public class TripParentServletTest {
   @Test
   public void doGet_someTrips() throws Exception {
     // TODO(issues/66): Use specif userId string
-    TripModel trip1 = createTripWithUserId(TripParentServlet.STUB_USER_ID);
-    TripModel trip2 = createTripWithUserId(TripParentServlet.STUB_USER_ID);
-    when(storage.getAllUserTrips(TripParentServlet.STUB_USER_ID))
-        .thenReturn(ImmutableList.of(trip1, trip2));
+    TripModel trip1 = createTripWithUserId(STUB_USER_ID);
+    TripModel trip2 = createTripWithUserId(STUB_USER_ID);
+    when(storage.getAllUserTrips(STUB_USER_ID)).thenReturn(ImmutableList.of(trip1, trip2));
     FakeHttpServletResponse response = new FakeHttpServletResponse();
     tripParentServlet.doGet(request, response);
     assertThat(response.getContentType()).isEqualTo("application/json");
@@ -102,7 +110,7 @@ public class TripParentServletTest {
     assertThat(responseTrip.name()).isEqualTo(trip.name());
     assertThat(responseTrip.placesApiPlaceId()).isEqualTo(trip.placesApiPlaceId());
     assertThat(responseTrip.id()).isNotEmpty();
-    assertThat(responseTrip.userId()).isEqualTo(TripParentServlet.STUB_USER_ID);
+    assertThat(responseTrip.userId()).isEqualTo(STUB_USER_ID);
     ArgumentCaptor<TripModel> storageCaptor = ArgumentCaptor.forClass(TripModel.class);
     verify(storage).addTrip(storageCaptor.capture());
     assertThat(responseTrip).isEqualTo(storageCaptor.getValue());

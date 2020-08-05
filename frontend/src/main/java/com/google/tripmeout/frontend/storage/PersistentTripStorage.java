@@ -4,9 +4,10 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Transaction;
 import com.google.inject.Inject;
 import com.google.tripmeout.frontend.TripModel;
@@ -22,13 +23,14 @@ class PersistentTripStorage implements TripStorage {
   private static final String PLACE_API_ID_PROPERTY_NAME = "placeId";
 
   private final DatastoreService datastore;
+
   @Inject
   PersistentTripStorage(DatastoreService datastore) {
     this.datastore = datastore;
   }
 
   public void addTrip(TripModel trip) throws TripAlreadyExistsException {
-    Key tripKey = KeyFactory.stringToKey(trip.id());
+    Key tripKey = DatastoreUtil.tripKey(trip.id());
     Transaction transaction = datastore.beginTransaction();
     try {
       datastore.get(transaction, tripKey);
@@ -51,7 +53,7 @@ class PersistentTripStorage implements TripStorage {
     transaction.commit();
   }
   public void removeTrip(String tripId) throws TripNotFoundException {
-    Key tripKey = KeyFactory.stringToKey(tripId);
+    Key tripKey = DatastoreUtil.tripKey(tripId);
     Transaction transaction = datastore.beginTransaction();
     try {
       datastore.get(transaction, tripKey);
@@ -64,7 +66,7 @@ class PersistentTripStorage implements TripStorage {
   }
 
   public void updateTripName(String tripId, String tripName) throws TripNotFoundException {
-    Key tripKey = KeyFactory.stringToKey(tripId);
+    Key tripKey = DatastoreUtil.tripKey(tripId);
     try {
       Entity tripEntity = datastore.get(tripKey);
       tripEntity.setProperty(NAME_PROPERTY_NAME, tripName);
@@ -75,35 +77,33 @@ class PersistentTripStorage implements TripStorage {
   }
 
   public TripModel getTrip(String tripId) throws TripNotFoundException {
-    Key tripKey = KeyFactory.stringToKey(tripId);
+    Key tripKey = DatastoreUtil.tripKey(tripId);
     try {
       Entity tripEntity = datastore.get(tripKey);
-
-      return TripModel.builder()
-          .setId((String) tripEntity.getProperty(TRIP_ID_PROPERTY_NAME))
-          .setName((String) tripEntity.getProperty(NAME_PROPERTY_NAME))
-          .setUserId((String) tripEntity.getProperty(USER_ID_PROPERTY_NAME))
-          .setPlacesApiPlaceId((String) tripEntity.getProperty(PLACE_API_ID_PROPERTY_NAME))
-          .build();
-
+      return entityToTrip(tripEntity);
     } catch (EntityNotFoundException e) {
       throw new TripNotFoundException("Trip with id: " + tripId + " not found");
     }
   }
 
   public List<TripModel> getAllUserTrips(String userId) {
-    Query query = new Query(userId);
+    FilterPredicate filterPredicate =
+        new FilterPredicate(USER_ID_PROPERTY_NAME, FilterOperator.EQUAL, userId);
+    Query query = new Query(DatastoreUtil.TRIP_ENTITY_TYPE).setFilter(filterPredicate);
     PreparedQuery results = datastore.prepare(query);
     List<TripModel> trips = new ArrayList<>();
     for (Entity tripEntity : results.asIterable()) {
-      trips.add(
-          TripModel.builder()
-              .setId((String) tripEntity.getProperty(TRIP_ID_PROPERTY_NAME))
-              .setName((String) tripEntity.getProperty(NAME_PROPERTY_NAME))
-              .setUserId((String) tripEntity.getProperty(USER_ID_PROPERTY_NAME))
-              .setPlacesApiPlaceId((String) tripEntity.getProperty(PLACE_API_ID_PROPERTY_NAME))
-              .build());
+      trips.add(entityToTrip(tripEntity));
     }
     return trips;
+  }
+
+  private static TripModel entityToTrip(Entity entity) {
+    return TripModel.builder()
+        .setId((String) entity.getProperty(TRIP_ID_PROPERTY_NAME))
+        .setName((String) entity.getProperty(NAME_PROPERTY_NAME))
+        .setUserId((String) entity.getProperty(USER_ID_PROPERTY_NAME))
+        .setPlacesApiPlaceId((String) entity.getProperty(PLACE_API_ID_PROPERTY_NAME))
+        .build();
   }
 }

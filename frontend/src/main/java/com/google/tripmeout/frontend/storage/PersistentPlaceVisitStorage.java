@@ -36,7 +36,7 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   public void addPlaceVisit(PlaceVisitModel placeVisit) throws PlaceVisitAlreadyExistsException {
-    Key placeKey = KeyFactory.stringToKey(placeVisit.id());
+    Key placeKey = DatastoreUtil.placeVisitKey(placeVisit.tripId(), placeVisit.id());
     Transaction transaction = datastore.beginTransaction();
     try {
       datastore.get(transaction, placeKey);
@@ -62,7 +62,7 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   public void removePlaceVisit(String tripId, String placeVisitId)
       throws PlaceVisitNotFoundException {
-    Key placeKey = KeyFactory.stringToKey(placeVisitId);
+    Key placeKey = DatastoreUtil.placeVisitKey(tripId, placeVisitId);
     Transaction transaction = datastore.beginTransaction();
     try {
       datastore.get(transaction, placeKey);
@@ -78,7 +78,7 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   public Optional<PlaceVisitModel> getPlaceVisit(String tripId, String placeVisitId) {
-    Key placeKey = KeyFactory.stringToKey(placeVisitId);
+    Key placeKey = DatastoreUtil.placeVisitKey(tripId, placeVisitId);
     Optional<PlaceVisitModel> optionalPlace = Optional.empty();
     try {
       Entity placeEntity = datastore.get(placeKey);
@@ -101,7 +101,7 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   public PlaceVisitModel updateUserMarkOrAddPlaceVisit(
       PlaceVisitModel placeVisit, PlaceVisitModel.UserMark newStatus) {
-    Key placeKey = KeyFactory.stringToKey(placeVisit.id());
+    Key placeKey = DatastoreUtil.placeVisitKey(placeVisit.tripId(), placeVisit.id());
     PlaceVisitModel newPlaceVisit = placeVisit;
     try {
       Entity placeEntity = datastore.get(placeKey);
@@ -122,7 +122,8 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   public List<PlaceVisitModel> getTripPlaceVisits(String tripId) {
-    Query query = new Query(tripId);
+    Query query =
+        new Query(DatastoreUtil.PLACE_VISIT_ENTITY_TYPE).setAncestor(DatastoreUtil.tripKey(tripId));
     PreparedQuery results = datastore.prepare(query);
     List<PlaceVisitModel> places = new ArrayList<>();
     for (Entity placeEntity : results.asIterable()) {
@@ -142,8 +143,8 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   public void removeTripPlaceVisits(String tripId) throws TripNotFoundException {
     Transaction transaction = datastore.beginTransaction();
-    Key parentKey = KeyFactory.createKey("TripMeOut", tripId);
-    Query query = new Query(parentKey);
+    Query query =
+        new Query(DatastoreUtil.PLACE_VISIT_ENTITY_TYPE).setAncestor(DatastoreUtil.tripKey(tripId));
     PreparedQuery results = datastore.prepare(transaction, query);
     int count = 0;
     for (Entity placeEntity : results.asIterable()) {

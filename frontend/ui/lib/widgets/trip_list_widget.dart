@@ -57,9 +57,9 @@ class TripListWidget extends StatelessWidget {
     return Column(children: [
       SizedBox(height: 15),
       Container(
-              child: Center(
-                  child: Text("List of Trips",
-                      style: Theme.of(context).textTheme.headline4))),
+          child: Center(
+              child: Text("List of Trips",
+                  style: Theme.of(context).textTheme.headline4))),
       SizedBox(height: 15),
       Expanded(child: ListView(children: listItems))
     ]);

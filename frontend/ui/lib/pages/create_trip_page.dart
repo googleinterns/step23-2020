@@ -15,7 +15,10 @@ class CreateTripPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BasicPage(
-      child: CreateTripWidget(this.tripService, this.placesApiServices, key: GlobalKey(),)
-    );
+        child: CreateTripWidget(
+      this.tripService,
+      this.placesApiServices,
+      key: GlobalKey(),
+    ));
   }
 }

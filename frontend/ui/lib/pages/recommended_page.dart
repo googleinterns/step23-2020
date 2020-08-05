@@ -22,12 +22,12 @@ class RecommendedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BasicPage(
-      child: RecommendedWidgetFromService(this.tripService,
-            this.placeVisitService, this.placesApiServices, this.tripId, key: GlobalKey()),
-      floatingActionButton: FloatingRoutingButton(
-          Router.createTripViewRoute(tripId),
-          Icon(Icons.send),
-          'Click here to continue')
-    );
+        child: RecommendedWidgetFromService(this.tripService,
+            this.placeVisitService, this.placesApiServices, this.tripId,
+            key: GlobalKey()),
+        floatingActionButton: FloatingRoutingButton(
+            Router.createTripViewRoute(tripId),
+            Icon(Icons.send),
+            'Click here to continue'));
   }
 }

@@ -16,7 +16,9 @@ class RecommendedWidgetFromService extends StatelessWidget {
   final String tripId;
 
   RecommendedWidgetFromService(this.tripService, this.placeVisitService,
-      this.placesApiServices, this.tripId, {Key key}) : super(key: key);
+      this.placesApiServices, this.tripId,
+      {Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

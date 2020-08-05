@@ -23,8 +23,9 @@ class TripViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BasicPage(
-      child: TripViewWidgetFromService(this.tripService,
-              this.placeVisitService, this.placesApiServices, this.tripId, key: GlobalKey()),
+      child: TripViewWidgetFromService(this.tripService, this.placeVisitService,
+          this.placesApiServices, this.tripId,
+          key: GlobalKey()),
       floatingActionButton: FloatingRoutingButton(
         Router.createCreatePlaceVisitRoute(tripId),
         Icon(Icons.add),

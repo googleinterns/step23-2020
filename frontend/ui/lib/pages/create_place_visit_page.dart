@@ -19,7 +19,11 @@ class CreatePlaceVisitPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BasicPage(
       child: CreatePlaceVisitWidget(
-              this.placeVisitService, this.placesApiServices, this.tripId, key: GlobalKey(),),
+        this.placeVisitService,
+        this.placesApiServices,
+        this.tripId,
+        key: GlobalKey(),
+      ),
     );
   }
 }

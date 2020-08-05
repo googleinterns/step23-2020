@@ -14,15 +14,13 @@ class TripListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BasicPage(
-      child: Column(
-        key: GlobalKey(),
-        children: [
-          Expanded(
-            child: ServiceLoadedTripListWidget(this.tripService),
-          )
-        ]),
-        floatingActionButton: FloatingRoutingButton(
-            Router.createTripRoute, Icon(Icons.add), "Click to make New Trip"),
+      child: Column(key: GlobalKey(), children: [
+        Expanded(
+          child: ServiceLoadedTripListWidget(this.tripService),
+        )
+      ]),
+      floatingActionButton: FloatingRoutingButton(
+          Router.createTripRoute, Icon(Icons.add), "Click to make New Trip"),
     );
   }
 }

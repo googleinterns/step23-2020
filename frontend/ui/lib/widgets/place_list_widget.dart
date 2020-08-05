@@ -53,33 +53,33 @@ class PlaceListWidget extends StatelessWidget {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          floating: true,
-          snap: true,
-          expandedHeight: 250.0,
-          automaticallyImplyLeading: false, //Gets rid of appBar back arrow
-          flexibleSpace: FlexibleSpaceBar(
-            title: Text(pageName),
-            background: Image.network(
-              'https://www.gannett-cdn.com/presto/2019/02/01/USAT/2af52e69-3fd1-4438-99d7-487a9b51d03c-GettyImages-878868924.jpg',
-              fit: BoxFit.cover,
-            ), //Everybackground is seattle
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            floating: true,
+            snap: true,
+            expandedHeight: 250.0,
+            automaticallyImplyLeading: false, //Gets rid of appBar back arrow
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(pageName),
+              background: Image.network(
+                'https://www.gannett-cdn.com/presto/2019/02/01/USAT/2af52e69-3fd1-4438-99d7-487a9b51d03c-GettyImages-878868924.jpg',
+                fit: BoxFit.cover,
+              ), //Everybackground is seattle
+            ),
           ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              if (index < placeBlocks.length) {
-              return placeBlocks[index];
-              }
-              return null;
-            },
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                if (index < placeBlocks.length) {
+                  return placeBlocks[index];
+                }
+                return null;
+              },
+            ),
           ),
-        ),
-      ],
-    ),
+        ],
+      ),
     );
   }
 }

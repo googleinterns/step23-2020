@@ -17,7 +17,7 @@ class LogInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BasicPage(
-      child: LogInWidget(logInService, arguments.redirectUrl ?? '/trips', key: GlobalKey())
-    );
+        child: LogInWidget(logInService, arguments.redirectUrl ?? '/trips',
+            key: GlobalKey()));
   }
 }

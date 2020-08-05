@@ -30,10 +30,14 @@ class _UserStatusState extends State<UserStatusWidget> {
   Icon _icon = Icon(Icons.favorite_border);
   Color _color = Colors.black;
 
-  _showDialog(BuildContext context, PlaceVisit placeVisit, PlaceVisitService placeVisitService) {
+  _showDialog(BuildContext context, PlaceVisit placeVisit,
+      PlaceVisitService placeVisitService) {
     VoidCallback continueCallBack = () => {
-          placeVisitService.deletePlaceVisit(placeVisit.tripid, placeVisit.id).then((_) {
-            Navigator.popAndPushNamed(context, Router.createTripViewRoute(placeVisit.tripid));
+          placeVisitService
+              .deletePlaceVisit(placeVisit.tripid, placeVisit.id)
+              .then((_) {
+            Navigator.popAndPushNamed(
+                context, Router.createTripViewRoute(placeVisit.tripid));
           }),
         };
     AlertBannerWidget alert = AlertBannerWidget("Delete Place",

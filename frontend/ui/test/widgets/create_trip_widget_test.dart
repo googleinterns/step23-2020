@@ -5,30 +5,24 @@ import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/widgets/create_trip_widget.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/model/trip.dart';
+import 'package:tripmeout/model/place.dart';
 import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
 
 class MockTripService extends Mock implements TripService {}
 
-class MockPlacesApiServices extends Mock implements PlacesApiServices {}
-
 void main() {
-  final PlacesApiServices placesApiServices = MockPlacesApiServices();
-
+  PlacesApiServices placesApiServices = PlacesApiServices();
   testWidgets('Showing the text on page correctly shows up',
       (WidgetTester tester) async {
     var tripService = MockTripService();
     var createTripsWidget = CreateTripWidget(tripService, placesApiServices);
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
-    //TODO: Add test for loading screen after it's added to the Create Trip Widget
-
     await tester.pumpAndSettle();
 
     // Should be everything on the create trip screen...
     expect(find.text('Enter your trip name'), findsOneWidget);
     expect(find.text('Enter your Destination'), findsOneWidget);
-    // TODO: Enable this when/if a MapWidget is added?
-    // expect(find.byType(MapWidget), findsOneWidget);
-    expect(find.byType(RaisedButton), findsOneWidget);
+    expect(find.byType(IconButton), findsOneWidget);
     expect(find.byType(MapsApiPlacesTextFieldWidget), findsOneWidget);
   });
 
@@ -48,7 +42,7 @@ void main() {
         find.widgetWithText(TextField, 'Enter your trip name'), 'London Trip');
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(RaisedButton, 'Submit'));
+    await tester.tap(find.byType(IconButton));
     await tester.pumpAndSettle();
 
     verifyNever(tripService.createTrip(captureAny));
@@ -59,7 +53,7 @@ void main() {
     var tripService = MockTripService();
 
     when(tripService.createTrip(any))
-        .thenAnswer((t) => Future.value(t.positionalArguments[0]));
+        .thenAnswer((t) => Future.value(t.positionalArguments[0]..id = '123'));
 
     var createTripsWidget = CreateTripWidget(tripService, placesApiServices);
     await tester.pumpWidget(wrapForDirectionality(createTripsWidget));
@@ -69,30 +63,23 @@ void main() {
         find.widgetWithText(TextField, 'Enter your trip name'), 'London Trip');
     await tester.pumpAndSettle();
 
-    Finder autocomplete =
-        find.widgetWithText(TextField, 'Enter your Destination');
-    expect(autocomplete, findsOneWidget);
-
     await tester.enterText(
         find.widgetWithText(TextField, 'Enter your Destination'), 'London');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(seconds: 2));
 
-    TextField textbox = autocomplete.evaluate().first.widget;
-    expect(textbox.controller.text, 'London');
-
-    //TODO figure out why it can't find any list tiles
     expect(find.byType(ListTile), findsNWidgets(2));
 
     await tester.tap(find.widgetWithText(ListTile, 'London, UK'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(RaisedButton, 'Submit'));
-    await tester.pumpAndSettle();
+    await tester.tap(find.byType(IconButton));
+    await tester.pumpAndSettle(Duration(seconds: 2));
 
     Trip createdTrip =
         verify(tripService.createTrip(captureAny)).captured.single;
 
     expect(createdTrip.name, equals('London Trip'));
+    expect(createdTrip.placesApiPlaceId, equals('LCY'));
   });
 }
 

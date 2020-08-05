@@ -33,7 +33,7 @@
          allows us to skip the default content for auth. -->
     <init-param>
         <param-name>ignore-prefix-regex</param-name>
-        <param-value>^/_ah/.*</param-value>
+        <param-value>/_ah/.*</param-value>
     </init-param>
     <!-- The default content to serve for all requests that do not use one of the
          specified extensions. -->

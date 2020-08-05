@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/model/place.dart';
-import 'package:flutter/src/widgets/basic.dart' as basic;
 
 class MapsApiPlacesTextFieldWidget<T> extends StatefulWidget {
   final List<String> allowedTypes;
@@ -31,7 +30,7 @@ class _MapsApiPlacesTextFieldState<T>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        basic.Padding(
+        Padding(
           padding: const EdgeInsets.all(25.0),
           child: TypeAheadField<PlaceWrapper>(
             textFieldConfiguration: TextFieldConfiguration(

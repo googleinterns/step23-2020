@@ -29,7 +29,7 @@ class TripMeOut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Trip Me Out',
+      title: 'TripMeOut',
       theme: defaultTheme,
       onGenerateRoute: router.generateRoute,
       initialRoute: Router.tripListRoute,

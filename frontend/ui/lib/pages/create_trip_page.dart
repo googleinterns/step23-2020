@@ -14,7 +14,7 @@ class CreateTripPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: defaultAppBar(context),
+      appBar: defaultAppBarWithNoExtras(context),
       body: Center(
           child: CreateTripWidget(this.tripService, this.placesApiServices)),
     );

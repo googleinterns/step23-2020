@@ -13,7 +13,7 @@ class TripListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: defaultAppBarWithNoBackArrow(context),
+        appBar: defaultAppBarWithNoExtras(context),
         body: Column(children: [
           Expanded(
             child: ServiceLoadedTripListWidget(this.tripService),

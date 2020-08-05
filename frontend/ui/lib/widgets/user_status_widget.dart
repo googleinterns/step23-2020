@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
+import 'package:tripmeout/widgets/alert_banner_widget.dart';
+import 'package:tripmeout/router/router.dart';
 
 class UserStatusWidget extends StatefulWidget {
   PlaceVisitService placeVisitService;
@@ -27,6 +29,23 @@ class _UserStatusState extends State<UserStatusWidget> {
   bool _selected = false;
   Icon _icon = Icon(Icons.favorite_border);
   Color _color = Colors.black;
+
+  _showDialog(BuildContext context, PlaceVisit placeVisit, PlaceVisitService placeVisitService) {
+    VoidCallback continueCallBack = () => {
+          placeVisitService.deletePlaceVisit(placeVisit.tripid, placeVisit.id).then((_) {
+            Navigator.popAndPushNamed(context, Router.createTripViewRoute(placeVisit.tripid));
+          }),
+        };
+    AlertBannerWidget alert = AlertBannerWidget("Delete Place",
+        "Are you sure you would like to delete this place?", continueCallBack);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext build) {
@@ -64,8 +83,7 @@ class _UserStatusState extends State<UserStatusWidget> {
           tooltip: "Must Go",
         ),
         IconButton(
-          onPressed: () => placeVisitService.deletePlaceVisit(
-              _placeVisit.tripid, _placeVisit.id),
+          onPressed: () => _showDialog(context, placeVisit, placeVisitService),
           icon: Icon(Icons.delete),
           color: Colors.red,
           tooltip: "Delete this place",

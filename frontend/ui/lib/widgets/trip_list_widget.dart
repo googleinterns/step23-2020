@@ -55,13 +55,12 @@ class TripListWidget extends StatelessWidget {
             )))
         .toList();
     return Column(children: [
-      Card(
-          child: Container(
+      SizedBox(height: 15),
+      Container(
               child: Center(
                   child: Text("List of Trips",
-                      style: TextStyle(
-                        fontSize: 30,
-                      ))))),
+                      style: Theme.of(context).textTheme.headline4))),
+      SizedBox(height: 15),
       Expanded(child: ListView(children: listItems))
     ]);
   }

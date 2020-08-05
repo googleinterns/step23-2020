@@ -50,7 +50,9 @@ class PlaceListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: CustomScrollView(
       slivers: [
         SliverAppBar(
           pinned: true,
@@ -69,11 +71,15 @@ class PlaceListWidget extends StatelessWidget {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
+              if (index < placeBlocks.length) {
               return placeBlocks[index];
+              }
+              return null;
             },
           ),
         ),
       ],
+    ),
     );
   }
 }

@@ -6,4 +6,6 @@ final ThemeData defaultTheme = ThemeData(
     accentColor: const Color(0xff6fa15a),
     buttonTheme: ButtonThemeData(
       buttonColor: const Color(0xff6fa15a),
-    ));
+    ),
+    backgroundColor: Colors.white,
+);

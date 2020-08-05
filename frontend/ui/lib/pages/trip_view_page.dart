@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/model/trip.dart';
+import 'package:tripmeout/pages/basic_page.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/services/trip_service.dart';
@@ -21,11 +22,10 @@ class TripViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: defaultAppBar(context),
-      body: Center(
-          child: TripViewWidgetFromService(this.tripService,
-              this.placeVisitService, this.placesApiServices, this.tripId)),
+    return BasicPage(
+      child: TripViewWidgetFromService(this.tripService, this.placeVisitService,
+          this.placesApiServices, this.tripId,
+          key: GlobalKey()),
       floatingActionButton: FloatingRoutingButton(
         Router.createCreatePlaceVisitRoute(tripId),
         Icon(Icons.add),

@@ -1,3 +1,4 @@
+import 'package:tripmeout/pages/basic_page.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/widgets/create_place_visit_widget.dart';
@@ -16,11 +17,13 @@ class CreatePlaceVisitPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: defaultAppBar(context),
-      body: Center(
-          child: CreatePlaceVisitWidget(
-              this.placeVisitService, this.placesApiServices, this.tripId)),
+    return BasicPage(
+      child: CreatePlaceVisitWidget(
+        this.placeVisitService,
+        this.placesApiServices,
+        this.tripId,
+        key: GlobalKey(),
+      ),
     );
   }
 }

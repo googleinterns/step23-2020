@@ -13,7 +13,8 @@ class CreateTripWidget extends StatefulWidget {
   final TripService tripService;
   final PlacesApiServices placesApiServices;
 
-  CreateTripWidget(this.tripService, this.placesApiServices);
+  CreateTripWidget(this.tripService, this.placesApiServices, {Key key})
+      : super(key: key);
 
   @override
   _CreateTripWidgetState createState() => _CreateTripWidgetState();

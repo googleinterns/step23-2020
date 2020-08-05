@@ -15,7 +15,9 @@ class TripViewWidgetFromService extends StatelessWidget {
   final String tripId;
 
   TripViewWidgetFromService(this.tripService, this.placeVisitService,
-      this.placesApiServices, this.tripId);
+      this.placesApiServices, this.tripId,
+      {Key key})
+      : super(key: key);
 
   Future<List<PlaceBlockWidget>> getPlaceBlockWidgets() async {
     List<PlaceVisit> placeVisits =

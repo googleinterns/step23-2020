@@ -4,6 +4,7 @@ import 'package:tripmeout/model/place_visit.dart';
 import 'package:tripmeout/services/place_visit_service.dart';
 import 'package:tripmeout/services/places_services.dart';
 import 'package:tripmeout/widgets/autocomplete_text_field_widget.dart';
+import 'package:tripmeout/widgets/place_details_widget.dart';
 import 'package:tripmeout/router/router.dart';
 
 //TODO: Add loading screen after to the Create Trip Widget
@@ -29,7 +30,7 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
   bool _selected = false;
   Icon _icon = Icon(Icons.favorite_border);
   Color _color = Colors.black;
-  Widget _imageWidget = Container();
+  Widget _detailsWidget = Container();
 
   String placesApiSpecifiedName;
   String placeId;
@@ -45,29 +46,12 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
   }
 
   void setFields(PlaceWrapper suggestion) async {
-    List<String> imageUrls =
-        await placesApiServices.getPhotos(suggestion.placeId);
-    print(suggestion.placeId);
+    PlaceWrapper placeDetails = await placesApiServices.getPlaceDetails(suggestion.placeId);
     setState(() {
       _enabled = true;
       placeId = suggestion.placeId;
       placesApiSpecifiedName = suggestion.name;
-      if (imageUrls.length == 0) {
-        _imageWidget = Text("No images found.");
-      } else {
-        List<Widget> imageWidgets = (imageUrls.map<Widget>((url) {
-          return Card(child: Image(image: NetworkImage(url)));
-        })).toList();
-
-        _imageWidget = Container(
-          height: 400,
-          width: 1000,
-          child: ListView(
-            children: imageWidgets,
-            scrollDirection: Axis.horizontal,
-          ),
-        );
-      }
+      _detailsWidget = PlaceDetailsWidget(placeDetails);
     });
   }
 
@@ -122,7 +106,7 @@ class _CreatePlaceVisitWidgetState extends State<CreatePlaceVisitWidget> {
             ),
           ),
         ]),
-        _imageWidget,
+        _detailsWidget,
         Padding(
           padding: const EdgeInsets.all(25.0),
           child: IconButton(

@@ -13,6 +13,7 @@ import 'package:tripmeout/widgets/contact_info_widget.dart';
 import 'package:tripmeout/widgets/trip_view_widget.dart';
 import 'package:tripmeout/widgets/place_block_widget.dart';
 import 'package:tripmeout/widgets/user_status_widget.dart';
+import 'package:tripmeout/widgets/place_details_widget.dart';
 
 class MockTripService extends Mock implements TripService {}
 
@@ -42,13 +43,7 @@ void main() {
 
     expect(find.text("Place1"), findsOneWidget);
     expect(find.byType(UserStatusWidget), findsOneWidget);
-    expect(find.byType(ContactInfoWidget), findsNothing);
-    expect(find.byIcon(Icons.star), findsNothing);
-    expect(find.byIcon(Icons.star_border), findsNothing);
-    expect(find.byIcon(Icons.star_half), findsNothing);
-    expect(find.byIcon(Icons.attach_money), findsNothing);
-
-    //Shows that it toggles between favorite and not
+    expect(find.byType(PlaceDetailsWidget), findsNothing);
   });
 
   testWidgets('showing that tapping on tile shows more info',
@@ -75,12 +70,7 @@ void main() {
 
     expect(find.text("Place1"), findsOneWidget);
     expect(find.byType(UserStatusWidget), findsOneWidget);
-    expect(find.byType(ContactInfoWidget), findsOneWidget);
-    expect(find.byIcon(Icons.star), findsNWidgets(4));
-    expect(find.byIcon(Icons.star_border), findsNothing);
-    expect(find.byIcon(Icons.star_half), findsOneWidget);
-    expect(find.text('4.6'), findsOneWidget);
-    expect(find.byIcon(Icons.attach_money), findsNWidgets(3));
+    expect(find.byType(PlaceDetailsWidget), findsOneWidget);
   });
 }
 

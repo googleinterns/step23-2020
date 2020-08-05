@@ -6,11 +6,13 @@ import com.google.gson.JsonParseException;
 import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.TripModel;
 import com.google.tripmeout.frontend.error.TripMeOutException;
+import com.google.tripmeout.frontend.servlet.Annotations.UserId;
 import com.google.tripmeout.frontend.storage.TripStorage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.UUID;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,15 +21,15 @@ import javax.servlet.http.HttpServletResponse;
 public class TripParentServlet extends HttpServlet {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
-  static final String STUB_USER_ID = "fakeUserId";
-
   private final Gson gson;
   private final TripStorage storage;
+  private final Provider<String> userId;
 
   @Inject
-  public TripParentServlet(TripStorage storage, Gson gson) {
+  public TripParentServlet(TripStorage storage, Gson gson, @UserId Provider<String> userId) {
     this.gson = gson;
     this.storage = storage;
+    this.userId = userId;
   }
 
   @Override
@@ -35,10 +37,9 @@ public class TripParentServlet extends HttpServlet {
     logger.atInfo().log(
         "%s serving GET %s", TripParentServlet.class.getSimpleName(), request.getRequestURI());
     try (PrintWriter writer = response.getWriter()) {
-      String userId = getUserId();
       response.setContentType("application/json");
       response.setStatus(HttpServletResponse.SC_OK);
-      writer.print(gson.toJson(storage.getAllUserTrips(userId)));
+      writer.print(gson.toJson(storage.getAllUserTrips(userId.get())));
     } catch (Exception e) {
       logger.atWarning().withCause(e).log("internal error");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -68,12 +69,7 @@ public class TripParentServlet extends HttpServlet {
     }
   }
 
-  private String getUserId() {
-    // TODO(issues/66): Gte userId from Userservice
-    return STUB_USER_ID;
-  }
-
   private TripModel resolveDefaults(TripModel trip) {
-    return trip.toBuilder().setId(UUID.randomUUID().toString()).setUserId(getUserId()).build();
+    return trip.toBuilder().setId(UUID.randomUUID().toString()).setUserId(userId.get()).build();
   }
 }

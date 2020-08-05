@@ -9,7 +9,15 @@ class RestApiLogInService extends LogInService {
 
   @override
   Future<String> getLogInLink(String redirectUrl) async {
-    final response = await http.get('$endpoint/api/login');
+    final response = await http.post(
+      '$endpoint/api/login',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'redirectLink': '/#$redirectUrl',
+      }),
+    );
     if (response.statusCode == 200) {
       final asMap = json.decode(response.body);
       final loggedIn = asMap['loggedIn'];

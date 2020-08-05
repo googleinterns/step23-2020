@@ -9,10 +9,7 @@ AppBar defaultAppBar(BuildContext context) {
       fit: BoxFit.contain,
     ),
     actions: [
-      RoutingButton(
-          Router.logInRoute, Icon(Icons.account_box), "Click to Login"),
-      RoutingButton(
-          Router.createTripRoute, Icon(Icons.add), "Click to make New Trip"),
+      LoginRouteButton(),
       RoutingButton(Router.tripListRoute, Icon(Icons.assignment),
           "Click to view your trips")
     ],
@@ -27,10 +24,20 @@ AppBar defaultAppBarWithNoExtras(BuildContext context) {
     ),
     automaticallyImplyLeading: false, //Gets rid of appBar back arrow
     actions: [
-      RoutingButton(
-          Router.logInRoute, Icon(Icons.account_box), "Click to Login"),
+      LoginRouteButton(),
       RoutingButton(Router.tripListRoute, Icon(Icons.assignment),
           "Click to view your trips")
     ],
   );
+}
+
+class LoginRouteButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => Router.routeToLoginPage(context),
+      icon: Icon(Icons.account_box),
+      tooltip: 'Click to Login',
+    );
+  }
 }

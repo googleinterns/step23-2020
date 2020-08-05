@@ -1,3 +1,4 @@
+import 'package:tripmeout/pages/basic_page.dart';
 import 'package:tripmeout/widgets/create_trip_widget.dart';
 import 'package:tripmeout/widgets/default_app_bar.dart';
 import 'package:tripmeout/services/trip_service.dart';
@@ -13,10 +14,8 @@ class CreateTripPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: defaultAppBarWithNoExtras(context),
-      body: Center(
-          child: CreateTripWidget(this.tripService, this.placesApiServices)),
+    return BasicPage(
+      child: CreateTripWidget(this.tripService, this.placesApiServices, key: GlobalKey(),)
     );
   }
 }

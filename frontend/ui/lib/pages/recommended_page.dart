@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tripmeout/pages/basic_page.dart';
 import 'package:tripmeout/services/places_services_html.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/recommended_widget.dart';
@@ -20,16 +21,13 @@ class RecommendedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: defaultAppBar(context),
-      body: Center(
-        child: RecommendedWidgetFromService(this.tripService,
-            this.placeVisitService, this.placesApiServices, this.tripId),
-      ),
+    return BasicPage(
+      child: RecommendedWidgetFromService(this.tripService,
+            this.placeVisitService, this.placesApiServices, this.tripId, key: GlobalKey()),
       floatingActionButton: FloatingRoutingButton(
           Router.createTripViewRoute(tripId),
           Icon(Icons.send),
-          'Click here to continue'),
+          'Click here to continue')
     );
   }
 }

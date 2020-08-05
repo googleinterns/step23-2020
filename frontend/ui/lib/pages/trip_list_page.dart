@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tripmeout/pages/basic_page.dart';
 import 'package:tripmeout/services/trip_service.dart';
 import 'package:tripmeout/widgets/default_app_bar.dart';
 import 'package:tripmeout/widgets/routing_button_widget.dart';
@@ -12,14 +13,16 @@ class TripListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: defaultAppBarWithNoExtras(context),
-        body: Column(children: [
+    return BasicPage(
+      child: Column(
+        key: GlobalKey(),
+        children: [
           Expanded(
             child: ServiceLoadedTripListWidget(this.tripService),
           )
         ]),
         floatingActionButton: FloatingRoutingButton(
-            Router.createTripRoute, Icon(Icons.add), "Click to make New Trip"));
+            Router.createTripRoute, Icon(Icons.add), "Click to make New Trip"),
+    );
   }
 }

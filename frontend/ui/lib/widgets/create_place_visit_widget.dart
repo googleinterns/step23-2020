@@ -15,7 +15,7 @@ class CreatePlaceVisitWidget extends StatefulWidget {
   final String tripId;
 
   CreatePlaceVisitWidget(
-      this.placeVisitService, this.placesApiServices, this.tripId);
+      this.placeVisitService, this.placesApiServices, this.tripId, {Key key}): super(key: key);
 
   @override
   _CreatePlaceVisitWidgetState createState() => _CreatePlaceVisitWidgetState();

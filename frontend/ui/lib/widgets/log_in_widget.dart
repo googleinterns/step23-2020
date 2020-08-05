@@ -6,7 +6,7 @@ class LogInWidget extends StatelessWidget {
   final LogInService service;
   final String redirectUrl;
 
-  LogInWidget(this.service, this.redirectUrl);
+  LogInWidget(this.service, this.redirectUrl, {Key key}) : super(key: key);
 
   void _redirectToLogInUrl() async {
     String url = await service.getLogInLink(redirectUrl);

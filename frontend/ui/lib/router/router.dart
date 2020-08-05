@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tripmeout/pages/create_trip_page.dart';
 import 'package:tripmeout/pages/log_in_page.dart';
-<<<<<<< HEAD
 import 'package:tripmeout/pages/create_place_visit_page.dart';
-=======
 import 'package:tripmeout/pages/recommended_page.dart';
->>>>>>> 7d5467c... add recommendations page
 import 'package:tripmeout/pages/trip_list_page.dart';
 import 'package:tripmeout/pages/trip_view_page.dart';
 import 'package:tripmeout/services/login_service.dart';

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 class PersistentPlaceVisitStorage implements PlaceVisitStorage {
-
   private static final String TRIP_ID_PROPERTY_NAME = "tripId";
   private static final String USER_MARK_PROPERTY_NAME = "userMark";
   private static final String ID_PROPERTY_NAME = "id";
@@ -123,7 +122,8 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
   }
 
   public List<PlaceVisitModel> getTripPlaceVisits(String tripId) {
-    Query query = new Query(DatastoreUtil.PLACE_VISIT_ENTITY_TYPE).setAncestor(DatastoreUtil.tripKey(tripId));
+    Query query =
+        new Query(DatastoreUtil.PLACE_VISIT_ENTITY_TYPE).setAncestor(DatastoreUtil.tripKey(tripId));
     PreparedQuery results = datastore.prepare(query);
     List<PlaceVisitModel> places = new ArrayList<>();
     for (Entity placeEntity : results.asIterable()) {
@@ -143,7 +143,8 @@ class PersistentPlaceVisitStorage implements PlaceVisitStorage {
 
   public void removeTripPlaceVisits(String tripId) throws TripNotFoundException {
     Transaction transaction = datastore.beginTransaction();
-    Query query = new Query(DatastoreUtil.PLACE_VISIT_ENTITY_TYPE).setAncestor(DatastoreUtil.tripKey(tripId));
+    Query query =
+        new Query(DatastoreUtil.PLACE_VISIT_ENTITY_TYPE).setAncestor(DatastoreUtil.tripKey(tripId));
     PreparedQuery results = datastore.prepare(transaction, query);
     int count = 0;
     for (Entity placeEntity : results.asIterable()) {

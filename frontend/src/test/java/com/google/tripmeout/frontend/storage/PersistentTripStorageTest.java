@@ -54,7 +54,8 @@ public class PersistentTripStorageTest {
   public void getTrip_returnTripNotFoundException() throws Exception {
     TripModel TOKYO_TRIP1 = createTripForUser1();
     storage.addTrip(TOKYO_TRIP1);
-    Assert.assertThrows(TripNotFoundException.class, () -> storage.getTrip(UUID.randomUUID().toString()));
+    Assert.assertThrows(
+        TripNotFoundException.class, () -> storage.getTrip(UUID.randomUUID().toString()));
   }
 
   @Test
@@ -123,7 +124,8 @@ public class PersistentTripStorageTest {
   public void removeTrip_returnTripNotFoundException() throws Exception {
     TripModel NEW_JERSEY_TRIP = createTripForUser1();
     storage.addTrip(NEW_JERSEY_TRIP);
-    Assert.assertThrows(TripNotFoundException.class, () -> storage.removeTrip(UUID.randomUUID().toString()));
+    Assert.assertThrows(
+        TripNotFoundException.class, () -> storage.removeTrip(UUID.randomUUID().toString()));
   }
 
   @Test
@@ -138,8 +140,8 @@ public class PersistentTripStorageTest {
   public void updateTripName_returnTripNotFoundException() throws Exception {
     TripModel NEW_JERSEY_TRIP = createTripForUser1();
     storage.addTrip(NEW_JERSEY_TRIP);
-    Assert.assertThrows(
-        TripNotFoundException.class, () -> storage.updateTripName(UUID.randomUUID().toString(), "JERSEY 2020"));
+    Assert.assertThrows(TripNotFoundException.class,
+        () -> storage.updateTripName(UUID.randomUUID().toString(), "JERSEY 2020"));
   }
 
   private static TripModel createTripForUser2() {

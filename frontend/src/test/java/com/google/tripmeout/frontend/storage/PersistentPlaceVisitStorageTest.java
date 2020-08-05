@@ -77,11 +77,8 @@ public class PersistentPlaceVisitStorageTest {
 
   @Test
   public void updateUserMark_returnNewPlace() throws Exception {
-    Key parentKey = KeyFactory.createKey("TripMeOut", "trip3");
-    String id = KeyFactory.keyToString(
-        KeyFactory.createKey(parentKey, "trip3", UUID.randomUUID().toString()));
     PlaceVisitModel place1 = PlaceVisitModel.builder()
-                                 .setId(id)
+                                 .setId(UUID.randomUUID().toString())
                                  .setPlaceName("placeName")
                                  .setPlacesApiPlaceId("placeId")
                                  .setTripId("trip3")
@@ -159,11 +156,8 @@ public class PersistentPlaceVisitStorageTest {
   }
 
   private PlaceVisitModel createPlaceWithTrip1() {
-    Key parentKey = KeyFactory.createKey("TripMeOut", "trip1");
-    String id = KeyFactory.keyToString(
-        KeyFactory.createKey(parentKey, "trip1", UUID.randomUUID().toString()));
     return PlaceVisitModel.builder()
-        .setId(id)
+        .setId(UUID.randomUUID().toString())
         .setPlaceName("placeName")
         .setPlacesApiPlaceId("placeId")
         .setTripId("trip1")
@@ -172,11 +166,8 @@ public class PersistentPlaceVisitStorageTest {
   }
 
   private PlaceVisitModel createPlaceWithTrip2() {
-    Key parentKey = KeyFactory.createKey("TripMeOut", "trip2");
-    String id = KeyFactory.keyToString(
-        KeyFactory.createKey(parentKey, "trip2", UUID.randomUUID().toString()));
     return PlaceVisitModel.builder()
-        .setId(id)
+        .setId(UUID.randomUUID().toString())
         .setPlaceName("placeName")
         .setPlacesApiPlaceId("placeId")
         .setTripId("trip2")

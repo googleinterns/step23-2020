@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.tripmeout.frontend.TripModel;
@@ -56,8 +54,7 @@ public class PersistentTripStorageTest {
   public void getTrip_returnTripNotFoundException() throws Exception {
     TripModel TOKYO_TRIP1 = createTripForUser1();
     storage.addTrip(TOKYO_TRIP1);
-    String id = KeyFactory.keyToString(KeyFactory.createKey("user1", UUID.randomUUID().toString()));
-    Assert.assertThrows(TripNotFoundException.class, () -> storage.getTrip(id));
+    Assert.assertThrows(TripNotFoundException.class, () -> storage.getTrip(UUID.randomUUID().toString()));
   }
 
   @Test
@@ -126,8 +123,7 @@ public class PersistentTripStorageTest {
   public void removeTrip_returnTripNotFoundException() throws Exception {
     TripModel NEW_JERSEY_TRIP = createTripForUser1();
     storage.addTrip(NEW_JERSEY_TRIP);
-    String id = KeyFactory.keyToString(KeyFactory.createKey("user1", UUID.randomUUID().toString()));
-    Assert.assertThrows(TripNotFoundException.class, () -> storage.removeTrip(id));
+    Assert.assertThrows(TripNotFoundException.class, () -> storage.removeTrip(UUID.randomUUID().toString()));
   }
 
   @Test
@@ -142,15 +138,13 @@ public class PersistentTripStorageTest {
   public void updateTripName_returnTripNotFoundException() throws Exception {
     TripModel NEW_JERSEY_TRIP = createTripForUser1();
     storage.addTrip(NEW_JERSEY_TRIP);
-    String id = KeyFactory.keyToString(KeyFactory.createKey("user1", UUID.randomUUID().toString()));
     Assert.assertThrows(
-        TripNotFoundException.class, () -> storage.updateTripName(id, "JERSEY 2020"));
+        TripNotFoundException.class, () -> storage.updateTripName(UUID.randomUUID().toString(), "JERSEY 2020"));
   }
 
   private static TripModel createTripForUser2() {
-    String id = KeyFactory.keyToString(KeyFactory.createKey("user2", UUID.randomUUID().toString()));
     return TripModel.builder()
-        .setId(id)
+        .setId(UUID.randomUUID().toString())
         .setName("name")
         .setUserId("user2")
         .setPlacesApiPlaceId("place-api-place-id")
@@ -158,9 +152,8 @@ public class PersistentTripStorageTest {
   }
 
   private static TripModel createTripForUser1() {
-    String id = KeyFactory.keyToString(KeyFactory.createKey("user1", UUID.randomUUID().toString()));
     return TripModel.builder()
-        .setId(id)
+        .setId(UUID.randomUUID().toString())
         .setName("name")
         .setUserId("user1")
         .setPlacesApiPlaceId("place-api-place-id")

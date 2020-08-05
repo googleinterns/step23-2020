@@ -6,7 +6,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.tripmeout.frontend.places.PlacesApiPlaceServiceBindingModule;
 import com.google.tripmeout.frontend.serialization.GsonModelSerializationModule;
 import com.google.tripmeout.frontend.servlet.ServletsModule;
-import com.google.tripmeout.frontend.storage.InMemoryStorageBindingModule;
+import com.google.tripmeout.frontend.storage.PersistentStorageBindingModule;
 
 /**
  * Provides an {@link Injector} configured to serve the frontend application routes.
@@ -17,6 +17,6 @@ public class FrontendGuiceServletContextListener extends GuiceServletContextList
   @Override
   protected Injector getInjector() {
     return Guice.createInjector(new GsonModelSerializationModule(), new ServletsModule(),
-        new InMemoryStorageBindingModule(), new PlacesApiPlaceServiceBindingModule());
+        new PersistentStorageBindingModule(), new PlacesApiPlaceServiceBindingModule());
   }
 }

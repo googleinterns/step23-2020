@@ -69,11 +69,13 @@ class PlacesApiServices {
     return completer.future;
   }
 
-  Future<List<PlaceWrapper>> getNearbyPlaces(TripService tripService, String tripId) async {
+  Future<List<PlaceWrapper>> getNearbyPlaces(
+      TripService tripService, String tripId) async {
     Completer<List<PlaceWrapper>> completer = Completer();
     Trip trip = await tripService.getTrip(tripId);
 
-    final detailsRequest = PlaceDetailsRequest()..placeId = trip.placesApiPlaceId;
+    final detailsRequest = PlaceDetailsRequest()
+      ..placeId = trip.placesApiPlaceId;
     placesService.getDetails(detailsRequest, (result, status) {
       if (status == PlacesServiceStatus.OK) {
         LatLng location = result.geometry.location;
@@ -98,7 +100,6 @@ class PlacesApiServices {
       }
     });
 
-    
     return completer.future;
   }
 
@@ -109,8 +110,8 @@ class PlacesApiServices {
 
   PlaceWrapper placeResultToPlaceWrapper(PlaceResult nearby) {
     final photoOptions = PhotoOptions()
-          ..maxHeight = 500
-          ..maxWidth = 500;
+      ..maxHeight = 500
+      ..maxWidth = 500;
     return PlaceWrapper(
       name: nearby.name,
       placeId: nearby.placeId,

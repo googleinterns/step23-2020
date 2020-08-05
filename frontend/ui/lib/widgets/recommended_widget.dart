@@ -15,29 +15,30 @@ class RecommendedWidgetFromService extends StatelessWidget {
   final PlacesApiServices placesApiServices;
   final String tripId;
 
-  RecommendedWidgetFromService(this.tripService, this.placeVisitService, this.placesApiServices, this.tripId);
+  RecommendedWidgetFromService(this.tripService, this.placeVisitService,
+      this.placesApiServices, this.tripId);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: tripService.getTrip(tripId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return RecommendedWidget(tripService, placeVisitService, placesApiServices, snapshot.data);
-        }
-        if (snapshot.hasError) {
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text("Error getting trip"),
-            action: SnackBarAction(
-              label: "Retry",
-              onPressed: () {}, //TODO: Make retry button actually work.
-            ),
-          ));
-          return Container();
-        }
-        return CircularProgressIndicator();
-      }
-    );
+        future: tripService.getTrip(tripId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return RecommendedWidget(tripService, placeVisitService,
+                placesApiServices, snapshot.data);
+          }
+          if (snapshot.hasError) {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text("Error getting trip"),
+              action: SnackBarAction(
+                label: "Retry",
+                onPressed: () {}, //TODO: Make retry button actually work.
+              ),
+            ));
+            return Container();
+          }
+          return CircularProgressIndicator();
+        });
   }
 }
 
@@ -47,19 +48,24 @@ class RecommendedWidget extends StatelessWidget {
   final PlacesApiServices placesApiService;
   final Trip trip;
 
-  RecommendedWidget(this.tripService, this.placeVisitService, this.placesApiService, this.trip);
+  RecommendedWidget(this.tripService, this.placeVisitService,
+      this.placesApiService, this.trip);
 
   Future<List<PlaceBlockWidget>> getNearbyPlaceBlockWidgets() async {
-    List<PlaceWrapper> placeWrappers = await placesApiService.getNearbyPlaces(tripService, trip.id);
-    List<PlaceVisit> placeVisits = placeWrappers.map((placeWrapper) => PlaceVisit(
-      name: placeWrapper.name,
-      tripid: trip.id,
-      placesApiPlaceId: placeWrapper.placeId,
-    )).toList();
+    List<PlaceWrapper> placeWrappers =
+        await placesApiService.getNearbyPlaces(tripService, trip.id);
+    List<PlaceVisit> placeVisits = placeWrappers
+        .map((placeWrapper) => PlaceVisit(
+              name: placeWrapper.name,
+              tripid: trip.id,
+              placesApiPlaceId: placeWrapper.placeId,
+            ))
+        .toList();
 
     List<PlaceBlockWidget> placeBlocks = [];
     for (int i = 0; i < placeWrappers.length; i++) {
-      placeBlocks.add(PlaceBlockWidget(placeVisitService, placeVisits[i], placeWrappers[i]));
+      placeBlocks.add(PlaceBlockWidget(
+          placeVisitService, placeVisits[i], placeWrappers[i]));
     }
 
     return placeBlocks;
@@ -67,6 +73,7 @@ class RecommendedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlaceListFromServiceWidget(trip, 'Recommended Places To Visit', getNearbyPlaceBlockWidgets);
+    return PlaceListFromServiceWidget(
+        trip, 'Recommended Places To Visit', getNearbyPlaceBlockWidgets);
   }
 }

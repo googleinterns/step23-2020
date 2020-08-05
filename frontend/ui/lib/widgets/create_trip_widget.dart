@@ -67,7 +67,8 @@ class _CreateTripWidgetState extends State<CreateTripWidget> {
     if (_enabled && _showPics) {
       _onPressed = () {
         submitTrip().then((trip) {
-          Navigator.pushNamed(context, Router.createTripViewRoute(trip.id) + "/recommended");
+          Navigator.pushNamed(
+              context, Router.createTripViewRoute(trip.id) + "/recommended");
         }, onError: (error) {
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text("Error creating trip"),

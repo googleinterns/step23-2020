@@ -14,7 +14,8 @@ class PlaceListFromServiceWidget extends StatelessWidget {
   final String pageName;
   final _OnLoad getPlaceBlockWidgets;
 
-  PlaceListFromServiceWidget(this.trip, this.pageName, this.getPlaceBlockWidgets);
+  PlaceListFromServiceWidget(
+      this.trip, this.pageName, this.getPlaceBlockWidgets);
 
   @override
   Widget build(BuildContext context) {

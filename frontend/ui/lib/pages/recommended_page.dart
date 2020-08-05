@@ -13,16 +13,23 @@ class RecommendedPage extends StatelessWidget {
   final PlacesApiServices placesApiServices;
   final String tripId;
 
-  RecommendedPage(this.tripService, this.placeVisitService, this.placesApiServices, this.tripId, {Key key}) : super(key: key);
+  RecommendedPage(this.tripService, this.placeVisitService,
+      this.placesApiServices, this.tripId,
+      {Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: defaultAppBar(context),
       body: Center(
-          child: RecommendedWidgetFromService(this.tripService, this.placeVisitService, this.placesApiServices, this.tripId),
+        child: RecommendedWidgetFromService(this.tripService,
+            this.placeVisitService, this.placesApiServices, this.tripId),
       ),
-      floatingActionButton: FloatingRoutingButton(Router.createTripViewRoute(tripId), Icon(Icons.send), 'Click here to continue'),
+      floatingActionButton: FloatingRoutingButton(
+          Router.createTripViewRoute(tripId),
+          Icon(Icons.send),
+          'Click here to continue'),
     );
   }
 }

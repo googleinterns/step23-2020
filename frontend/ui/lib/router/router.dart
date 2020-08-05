@@ -18,7 +18,8 @@ class Router {
   static final RegExp tripViewRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)$');
   static final RegExp createPlaceVisitRouteRegExp =
       RegExp(r'/trips/(?<tripId>[^/]+)/placeVisits/new$');
-  static final RegExp recommendedRouteRegExp = RegExp(r'/trips/(?<tripId>[^/]+)/recommended$');
+  static final RegExp recommendedRouteRegExp =
+      RegExp(r'/trips/(?<tripId>[^/]+)/recommended$');
 
   final TripService tripService;
   final PlaceVisitService placeVisitService;
@@ -28,7 +29,7 @@ class Router {
   static String createTripViewRoute(String tripId) {
     return "/trips/$tripId";
   }
-  
+
   static String createCreatePlaceVisitRoute(String tripId) {
     return "/trips/$tripId/placeVisits/new";
   }
@@ -89,7 +90,8 @@ class Router {
     if (match != null) {
       String tripId = match.namedGroup('tripId');
       return MaterialPageRoute(
-        builder: (context) => RecommendedPage(tripService, placeVisitService, placesApiServices, tripId),
+        builder: (context) => RecommendedPage(
+            tripService, placeVisitService, placesApiServices, tripId),
         settings: settings,
       );
     }

@@ -18,7 +18,8 @@ void main() {
   LogInService logInService = RestApiLogInService();
   PlacesApiServices placesApiServices = PlacesApiServices();
 
-  Router router = Router(tripService, placeVisitService, logInService, placesApiServices);
+  Router router =
+      Router(tripService, placeVisitService, logInService, placesApiServices);
   runApp(TripMeOut(tripService, placeVisitService, router));
 }
 

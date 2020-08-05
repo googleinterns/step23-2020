@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.tripmeout.frontend.AuthenticationInfoModel;
+import com.google.tripmeout.frontend.LoginRequest;
 import com.google.tripmeout.frontend.PlaceVisitModel;
 import com.google.tripmeout.frontend.TripModel;
 
@@ -21,6 +22,7 @@ public class GsonModelSerializationModule extends AbstractModule {
         .registerTypeHierarchyAdapter(TripModel.class, new GsonTripModelTypeAdapter())
         .registerTypeHierarchyAdapter(
             AuthenticationInfoModel.class, new GsonAuthenticationInfoModelTypeAdapter())
+        .registerTypeAdapter(LoginRequest.class, new GsonLoginRequestTypeAdapter())
         .create();
   }
 }

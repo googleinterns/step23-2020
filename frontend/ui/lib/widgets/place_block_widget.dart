@@ -26,13 +26,12 @@ class _PlaceBlockWidgetState extends State<PlaceBlockWidget> {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      initiallyExpanded: false,
-      title: Text(placeVisit.name),
-      trailing: Container(
-        width: 100.0,
-        child: UserStatusWidget(placeVisitService, placeVisit),
-      ),
-      children: [PlaceDetailsWidget(details)]
-    );
+        initiallyExpanded: false,
+        title: Text(placeVisit.name),
+        trailing: Container(
+          width: 100.0,
+          child: UserStatusWidget(placeVisitService, placeVisit),
+        ),
+        children: [PlaceDetailsWidget(details)]);
   }
 }

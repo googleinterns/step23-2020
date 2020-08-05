@@ -24,7 +24,17 @@ class Router {
     return "/trips/$tripId";
   }
 
-  Router(this.tripService, this.placeVisitService, this.logInService, this.placesApiServices);
+  static void routeToLoginPage(BuildContext context) {
+    final currentRoute = ModalRoute.of(context).settings.name;
+    Navigator.pushNamed(
+      context,
+      logInRoute,
+      arguments: LogInPageArguments(currentRoute),
+    );
+  }
+
+  Router(this.tripService, this.placeVisitService, this.logInService,
+      this.placesApiServices);
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     if (settings.name == tripListRoute) {

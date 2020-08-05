@@ -16,7 +16,6 @@ import 'package:tripmeout/widgets/user_status_widget.dart';
 import 'package:tripmeout/widgets/place_details_widget.dart';
 
 void main() {
-
   testWidgets('Showing that the widget has all the correct elements',
       (WidgetTester tester) async {
     PlaceWrapper placeWrapper = PlaceWrapper(
@@ -29,8 +28,7 @@ void main() {
       photos: [],
     );
 
-    var placeDetailsWidget =
-        PlaceDetailsWidget(placeWrapper);
+    var placeDetailsWidget = PlaceDetailsWidget(placeWrapper);
     await tester.pumpWidget(wrapForDirectionality(placeDetailsWidget));
     await tester.pumpAndSettle();
 
@@ -43,7 +41,6 @@ void main() {
     expect(find.text('restaurant, '), findsOneWidget);
     expect(find.text('hotel'), findsOneWidget);
   });
-
 }
 
 Widget wrapForDirectionality(Widget wrapped) {

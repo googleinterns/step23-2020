@@ -1,12 +1,28 @@
 {
-    "name": "ui",
-    "short_name": "ui",
+    "name": "TripMeOut",
+    "short_name": "TripMeOut",
     "start_url": ".",
     "display": "minimal-ui",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A web app for managing trips and exploring places!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
-    "icons": []
+    "icons": [
+        {
+            "src": "assets/app_bar_logo_200x200.png",
+            "sizes": "200x200",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/logo_with_text_200x200.png",
+            "sizes": "200x200",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/logo_without_text_200x200.png",
+            "sizes": "200x200",
+            "type": "image/png"
+        }
+    ]
 }

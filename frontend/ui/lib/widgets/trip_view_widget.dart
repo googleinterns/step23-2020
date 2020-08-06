@@ -28,7 +28,7 @@ class TripViewWidgetFromService extends StatelessWidget {
       PlaceWrapper placeDetails =
           await placesApiServices.getPlaceDetails(placeVisit.placesApiPlaceId);
       placeBlockWidgets
-          .add(PlaceBlockWidget(placeVisitService, placeVisit, placeDetails));
+          .add(PlaceBlockWidget(placeVisitService, placeVisit, placeDetails, true));
     }
     return placeBlockWidgets;
   }

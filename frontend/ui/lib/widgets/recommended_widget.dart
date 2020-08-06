@@ -67,7 +67,7 @@ class RecommendedWidget extends StatelessWidget {
     List<PlaceBlockWidget> placeBlocks = [];
     for (int i = 0; i < placeWrappers.length; i++) {
       placeBlocks.add(PlaceBlockWidget(
-          placeVisitService, placeVisits[i], placeWrappers[i]));
+          placeVisitService, placeVisits[i], placeWrappers[i], false));
     }
 
     return placeBlocks;

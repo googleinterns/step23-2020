@@ -69,6 +69,31 @@ class PlacesApiServices {
     return completer.future;
   }
 
+  Future<String> getGoodBannerPhoto(String placeId) {
+    Completer<String> completer = Completer();
+    final request = PlaceDetailsRequest()..placeId = placeId;
+    placesService.getDetails(request, (result, status) async {
+      if (status == PlacesServiceStatus.OK) {
+        num widthHeightRatio = 1;
+        int idealIndex = 0;
+
+        for (int i = 0; i < result.photos.length; i++) {
+          PlacePhoto photo = result.photos[i];
+          if (photo.width / photo.height > widthHeightRatio) {
+            widthHeightRatio = photo.width/photo.height;
+            idealIndex = i;
+          }
+        }
+
+        completer.complete(result.photos[idealIndex].getUrl(PhotoOptions()));
+      }
+      else {
+        completer.complete(null);
+      }
+    });
+    return completer.future;
+  }
+
   Future<List<PlaceWrapper>> getNearbyPlaces(
       TripService tripService, String tripId) async {
     Completer<List<PlaceWrapper>> completer = Completer();

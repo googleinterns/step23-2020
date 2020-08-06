@@ -47,15 +47,15 @@ class RecommendedWidgetFromService extends StatelessWidget {
 class RecommendedWidget extends StatelessWidget {
   final TripService tripService;
   final PlaceVisitService placeVisitService;
-  final PlacesApiServices placesApiService;
+  final PlacesApiServices placesApiServices;
   final Trip trip;
 
   RecommendedWidget(this.tripService, this.placeVisitService,
-      this.placesApiService, this.trip);
+      this.placesApiServices, this.trip);
 
   Future<List<PlaceBlockWidget>> getNearbyPlaceBlockWidgets() async {
     List<PlaceWrapper> placeWrappers =
-        await placesApiService.getNearbyPlaces(tripService, trip.id);
+        await placesApiServices.getNearbyPlaces(tripService, trip.id);
     List<PlaceVisit> placeVisits = placeWrappers
         .map((placeWrapper) => PlaceVisit(
               name: placeWrapper.name,
@@ -76,6 +76,6 @@ class RecommendedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlaceListFromServiceWidget(
-        trip, 'Recommended Places To Visit', getNearbyPlaceBlockWidgets);
+        trip, 'Recommended Places To Visit', placesApiServices, getNearbyPlaceBlockWidgets);
   }
 }

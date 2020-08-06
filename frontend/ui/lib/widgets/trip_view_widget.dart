@@ -40,7 +40,7 @@ class TripViewWidgetFromService extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return PlaceListFromServiceWidget(
-              snapshot.data, snapshot.data.name, getPlaceBlockWidgets);
+              snapshot.data, snapshot.data.name, placesApiServices, getPlaceBlockWidgets);
         }
         if (snapshot.hasError) {
           Scaffold.of(context).showSnackBar(SnackBar(
